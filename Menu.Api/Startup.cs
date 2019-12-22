@@ -2,10 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Menu.Data;
+using Menu.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -22,13 +26,32 @@ namespace Menu.Api
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                options.DefaultRequestCulture = new RequestCulture("tr-TR", "tr-TR");
+            });
+
+            services.AddScoped<ICityService, CityService>();
+
+            services.AddScoped<IVenueService, VenueService>();
+
+            services.AddScoped<IUserService, UserService>();
+
+            services.AddScoped<ICategoryService, CategoryService>();
+
+            services.AddScoped<IProductService, ProductService>();
+
+            services.AddScoped<IOptionService, OptionService>();
+
+            services.AddScoped<IOptionItemService, OptionItemService>();
+
+            services.AddDbContext<MenuContext>(o => o.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
             services.AddControllers();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -41,6 +64,8 @@ namespace Menu.Api
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseRequestLocalization();
 
             app.UseEndpoints(endpoints =>
             {
