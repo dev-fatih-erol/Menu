@@ -51,4 +51,21 @@ namespace Menu.Api.Models
             };
         }
     }
+
+    public static class CategoryMapper
+    {
+        public static CategoryDto ConvertToDto(this Category category)
+        {
+            return new CategoryDto
+            {
+                Id = category.Id,
+                Name = category.Name
+            };
+        }
+
+        public static IEnumerable<CategoryDto> ConvertToDto(this IEnumerable<Category> categories)
+        {
+            return categories.Select(c => c.ConvertToDto());
+        }
+    }
 }
