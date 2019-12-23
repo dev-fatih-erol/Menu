@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net;
+using AutoMapper;
 using Menu.Api.Models;
 using Menu.Service;
 using Microsoft.AspNetCore.Mvc;
@@ -11,12 +13,17 @@ namespace Menu.Api.Controllers
     {
         private readonly ILogger<CategoryController> _logger;
 
+        private readonly IMapper _mapper;
+
         private readonly ICategoryService _categoryService;
 
         public CategoryController(ILogger<CategoryController> logger,
+            IMapper mapper,
             ICategoryService categoryService)
         {
             _logger = logger;
+
+            _mapper = mapper;
 
             _categoryService = categoryService;
         }
@@ -59,7 +66,7 @@ namespace Menu.Api.Controllers
                 {
                     Success = true,
                     StatusCode = (int)HttpStatusCode.OK,
-                    Result = categories.ToCategoryDto()
+                    Result = _mapper.Map<List<CategoryDto>>(categories)
                 });
             }
 
@@ -84,7 +91,7 @@ namespace Menu.Api.Controllers
                 {
                     Success = true,
                     StatusCode = (int)HttpStatusCode.OK,
-                    Result = category.ToCategoryDto()
+                    Result = _mapper.Map<CategoryDto>(category)
                 });
             }
 

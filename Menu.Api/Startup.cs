@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Menu.Data;
 using Menu.Service;
 using Microsoft.AspNetCore.Builder;
@@ -48,6 +49,8 @@ namespace Menu.Api
             services.AddScoped<IOptionItemService, OptionItemService>();
 
             services.AddDbContext<MenuContext>(o => o.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddAutoMapper(typeof(Startup));
 
             services.AddControllers();
         }

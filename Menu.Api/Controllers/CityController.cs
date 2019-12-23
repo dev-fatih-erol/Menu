@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net;
+using AutoMapper;
 using Menu.Api.Models;
 using Menu.Service;
 using Microsoft.AspNetCore.Mvc;
@@ -11,12 +13,17 @@ namespace Menu.Api.Controllers
     {
         private readonly ILogger<CityController> _logger;
 
+        private readonly IMapper _mapper;
+
         private readonly ICityService _cityService;
 
         public CityController(ILogger<CityController> logger,
+            IMapper mapper,
             ICityService cityService)
         {
             _logger = logger;
+
+            _mapper = mapper;
 
             _cityService = cityService;
         }
@@ -34,7 +41,7 @@ namespace Menu.Api.Controllers
                 {
                     Success = true,
                     StatusCode = (int)HttpStatusCode.OK,
-                    Result = city.ToCityDto()
+                    Result = _mapper.Map<CityDto>(city)
                 });
             }
 
@@ -59,7 +66,7 @@ namespace Menu.Api.Controllers
                 {
                     Success = true,
                     StatusCode = (int)HttpStatusCode.OK,
-                    Result = cities.ToCityDto()
+                    Result = _mapper.Map<List<CityDto>>(cities)
                 });
             }
 

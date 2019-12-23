@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using AutoMapper;
 using Menu.Api.Models;
 using Menu.Service;
 using Microsoft.AspNetCore.Mvc;
@@ -10,12 +11,17 @@ namespace Menu.Api.Controllers
     {
         private readonly ILogger<VenueController> _logger;
 
+        private readonly IMapper _mapper;
+
         private readonly IVenueService _venueService;
 
         public VenueController(ILogger<VenueController> logger,
+            IMapper mapper,
             IVenueService venueService)
         {
             _logger = logger;
+
+            _mapper = mapper;
 
             _venueService = venueService;
         }
@@ -33,7 +39,7 @@ namespace Menu.Api.Controllers
                 {
                     Success = true,
                     StatusCode = (int)HttpStatusCode.OK,
-                    Result = venue.ToVenueDto()
+                    Result = _mapper.Map<VenueDto>(venue)
                 });
             }
 
