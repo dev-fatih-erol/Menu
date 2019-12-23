@@ -41,7 +41,7 @@ namespace Menu.Api.Controllers
                 {
                     Success = true,
                     StatusCode = (int)HttpStatusCode.OK,
-                    Result = categoriesAndProducts
+                    Result = _mapper.Map<List<CategoriesAndProductsDto>>(categoriesAndProducts)
                 });
             }
 
