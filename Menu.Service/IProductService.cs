@@ -1,9 +1,12 @@
-﻿using Menu.Core.Models;
+﻿using System.Collections.Generic;
+using Menu.Core.Models;
 
 namespace Menu.Service
 {
     public interface IProductService
     {
+        List<Product> GetByCategoryId(int categoryId);
+
         Product GetById(int id);
 
         void Create(Product product);

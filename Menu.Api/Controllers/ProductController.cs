@@ -1,4 +1,6 @@
-﻿using System.Net;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using AutoMapper;
 using Menu.Api.Models;
 using Menu.Service;
@@ -24,6 +26,31 @@ namespace Menu.Api.Controllers
             _mapper = mapper;
 
             _productService = productService;
+        }
+
+        // GET category/5/products
+        [HttpGet]
+        [Route("Category/{categoryId:int}/Products")]
+        public IActionResult GetByCategoryId(int categoryId)
+        {
+            var products = _productService.GetByCategoryId(categoryId);
+
+            if (products.Any())
+            {
+                return Ok(new
+                {
+                    Success = true,
+                    StatusCode = (int)HttpStatusCode.OK,
+                    Result = _mapper.Map<List<ProductDto>>(products)
+                });
+            }
+
+            return NotFound(new
+            {
+                Success = false,
+                StatusCode = (int)HttpStatusCode.NotFound,
+                Message = "Ürün bulunamadı"
+            });
         }
 
         // GET product/5
