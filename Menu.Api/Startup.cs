@@ -52,6 +52,8 @@ namespace Menu.Api
 
             services.AddAutoMapper(typeof(Startup));
 
+            services.AddDataProtection();
+
             services.AddControllers();
         }
 
