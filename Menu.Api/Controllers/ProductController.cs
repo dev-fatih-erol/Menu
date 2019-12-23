@@ -28,6 +28,31 @@ namespace Menu.Api.Controllers
             _productService = productService;
         }
 
+        // GET product/5/details
+        [HttpGet]
+        [Route("Product/{id:int}/Details")]
+        public IActionResult GetDetailById(int id)
+        {
+            var product = _productService.GetDetailById(id);
+
+            if (product != null)
+            {
+                return Ok(new
+                {
+                    Success = true,
+                    StatusCode = (int)HttpStatusCode.OK,
+                    Result = _mapper.Map<ProductDetailDto>(product)
+                });
+            }
+
+            return NotFound(new
+            {
+                Success = false,
+                StatusCode = (int)HttpStatusCode.NotFound,
+                Message = "Ürün bulunamadı"
+            });
+        }
+
         // GET category/5/products
         [HttpGet]
         [Route("Category/{categoryId:int}/Products")]

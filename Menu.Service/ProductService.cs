@@ -14,6 +14,36 @@ namespace Menu.Service
             _context = context;
         }
 
+        public Product GetDetailById(int id)
+        {
+            return _context.Products
+                           .Where(p => p.Id == id)
+                           .Select(p => new Product
+                           {
+                               Id = p.Id,
+                               Code = p.Code,
+                               Name = p.Name,
+                               Photo = p.Photo,
+                               Description = p.Description,
+                               Price = p.Price,
+                               StartTime = p.StartTime,
+                               EndTime = p.EndTime,
+                               DisplayOrder = p.DisplayOrder,
+                               CreatedDate = p.CreatedDate,
+                               CategoryId = p.CategoryId,
+                               Option = p.Option
+                                         .Select(o => new Option
+                                         {
+                                             Id = o.Id,
+                                             Title = o.Title,
+                                             OptionType = o.OptionType,
+                                             CreatedDate = o.CreatedDate,
+                                             ProductId = o.ProductId,
+                                             OptionItem = o.OptionItem
+                                         }).ToList()
+                           }).FirstOrDefault();
+        }
+
         public List<Product> GetByCategoryId(int categoryId)
         {
             return _context.Products

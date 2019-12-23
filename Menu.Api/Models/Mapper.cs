@@ -20,8 +20,23 @@ namespace Menu.Api.Models
                 .ForMember(d => d.EndTime, o => o.MapFrom(s => new TimeSpan(s.EndTime)))
                 .ForMember(d => d.IsAvailable, o => o.MapFrom(s => IsAvailable(s)));
 
+            CreateMap<Option, OptionDto>();
+
+            CreateMap<OptionItem, OptionItemDto>()
+                .ForMember(d => d.Price, o => o.MapFrom(s => string.Format("{0:N2}", s.Price)));
+
+            CreateMap<Option, OptionOptionItemDto>()
+                .ForMember(d => d.OptionItems, o => o.MapFrom(s => s.OptionItem));
+
             CreateMap<Category, CategoryProductDto>()
                 .ForMember(d => d.Products, o => o.MapFrom(s => s.Product));
+
+            CreateMap<Product, ProductDetailDto>()
+                .ForMember(d => d.Price, o => o.MapFrom(s => string.Format("{0:N2}", s.Price)))
+                .ForMember(d => d.StartTime, o => o.MapFrom(s => new TimeSpan(s.StartTime)))
+                .ForMember(d => d.EndTime, o => o.MapFrom(s => new TimeSpan(s.EndTime)))
+                .ForMember(d => d.IsAvailable, o => o.MapFrom(s => IsAvailable(s)))
+                .ForMember(d => d.Options, o => o.MapFrom(s => s.Option));
         }
 
         private bool IsAvailable(Product product)
