@@ -20,7 +20,7 @@ namespace Menu.Api.Models
                 .ForMember(d => d.EndTime, o => o.MapFrom(s => new TimeSpan(s.EndTime)))
                 .ForMember(d => d.IsAvailable, o => o.MapFrom(s => IsAvailable(s)));
 
-            CreateMap<Category, CategoriesAndProductsDto>()
+            CreateMap<Category, CategoryProductDto>()
                 .ForMember(d => d.Products, o => o.MapFrom(s => s.Product));
         }
 

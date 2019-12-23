@@ -2,7 +2,7 @@
 
 namespace Menu.Api.Models
 {
-    public class CategoriesAndProductsDto
+    public class CategoryProductDto
     {
         public int Id { get; set; }
 
