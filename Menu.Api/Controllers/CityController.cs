@@ -34,7 +34,7 @@ namespace Menu.Api.Controllers
                 {
                     Success = true,
                     StatusCode = (int)HttpStatusCode.OK,
-                    Result = city.ConvertToDto()
+                    Result = city.ToCityDto()
                 });
             }
 
@@ -59,7 +59,7 @@ namespace Menu.Api.Controllers
                 {
                     Success = true,
                     StatusCode = (int)HttpStatusCode.OK,
-                    Result = cities.ConvertToDto()
+                    Result = cities.ToCityDto()
                 });
             }
 

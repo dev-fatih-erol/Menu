@@ -33,7 +33,7 @@ namespace Menu.Api.Controllers
                 {
                     Success = true,
                     StatusCode = (int)HttpStatusCode.OK,
-                    Result = venue.ConvertToDto()
+                    Result = venue.ToVenueDto()
                 });
             }
 

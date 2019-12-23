@@ -7,7 +7,7 @@ namespace Menu.Api.Models
 {
     public static class CityMapper
     {
-        public static CityDto ConvertToDto(this City city)
+        public static CityDto ToCityDto(this City city)
         {
             return new CityDto
             {
@@ -16,15 +16,15 @@ namespace Menu.Api.Models
             };
         }
 
-        public static IEnumerable<CityDto> ConvertToDto(this IEnumerable<City> cities)
+        public static IEnumerable<CityDto> ToCityDto(this IEnumerable<City> cities)
         {
-            return cities.Select(c => c.ConvertToDto());
+            return cities.Select(c => c.ToCityDto());
         }
     }
 
     public static class VenueMapper
     {
-        public static VenueDto ConvertToDto(this Venue venue)
+        public static VenueDto ToVenueDto(this Venue venue)
         {
             return new VenueDto
             {
@@ -36,9 +36,9 @@ namespace Menu.Api.Models
             };
         }
 
-        public static IEnumerable<VenueDto> ConvertToDto(this IEnumerable<Venue> venues)
+        public static IEnumerable<VenueDto> ToVenueDto(this IEnumerable<Venue> venues)
         {
-            return venues.Select(v => v.ConvertToDto());
+            return venues.Select(v => v.ToVenueDto());
         }
 
         private static string ToVenueType(this VenueType venueType)
@@ -54,7 +54,7 @@ namespace Menu.Api.Models
 
     public static class CategoryMapper
     {
-        public static CategoryDto ConvertToDto(this Category category)
+        public static CategoryDto ToCategoryDto(this Category category)
         {
             return new CategoryDto
             {
@@ -63,9 +63,9 @@ namespace Menu.Api.Models
             };
         }
 
-        public static IEnumerable<CategoryDto> ConvertToDto(this IEnumerable<Category> categories)
+        public static IEnumerable<CategoryDto> ToCategoryDto(this IEnumerable<Category> categories)
         {
-            return categories.Select(c => c.ConvertToDto());
+            return categories.Select(c => c.ToCategoryDto());
         }
     }
 }

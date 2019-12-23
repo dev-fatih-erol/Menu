@@ -59,7 +59,7 @@ namespace Menu.Api.Controllers
                 {
                     Success = true,
                     StatusCode = (int)HttpStatusCode.OK,
-                    Result = categories.ConvertToDto()
+                    Result = categories.ToCategoryDto()
                 });
             }
 
@@ -84,7 +84,7 @@ namespace Menu.Api.Controllers
                 {
                     Success = true,
                     StatusCode = (int)HttpStatusCode.OK,
-                    Result = category.ConvertToDto()
+                    Result = category.ToCategoryDto()
                 });
             }
 
