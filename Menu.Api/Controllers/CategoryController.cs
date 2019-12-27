@@ -28,9 +28,9 @@ namespace Menu.Api.Controllers
             _categoryService = categoryService;
         }
 
-        // GET venue/5/categories/products
+        // GET venue/5/menu
         [HttpGet]
-        [Route("Venue/{venueId:int}/Categories/Products")]
+        [Route("Venue/{venueId:int}/Menu")]
         public IActionResult GetCategoriesAndProductsByVenueId(int venueId)
         {
             var categoriesAndProducts = _categoryService.GetCategoriesAndProductsByVenueId(venueId);
