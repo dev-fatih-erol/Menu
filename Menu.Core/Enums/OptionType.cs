@@ -2,7 +2,7 @@
 {
     public enum OptionType
     {
-        Select = 1,
-        CheckBox = 2
+        Select = 0,
+        CheckBox = 1
     }
 }

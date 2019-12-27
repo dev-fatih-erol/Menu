@@ -2,7 +2,7 @@
 {
     public enum VenueType
     {
-        Cafe = 1,
-        Restaurant = 2,
+        Cafe = 0,
+        Restaurant = 1
     }
 }
