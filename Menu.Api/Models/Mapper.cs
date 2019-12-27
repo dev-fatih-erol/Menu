@@ -16,8 +16,8 @@ namespace Menu.Api.Models
 
             CreateMap<Product, ProductDto>()
                 .ForMember(d => d.Price, o => o.MapFrom(s => string.Format("{0:N2}", s.Price)))
-                .ForMember(d => d.StartTime, o => o.MapFrom(s => new TimeSpan(s.StartTime)))
-                .ForMember(d => d.EndTime, o => o.MapFrom(s => new TimeSpan(s.EndTime)))
+                .ForMember(d => d.OpeningTime, o => o.MapFrom(s => new TimeSpan(s.OpeningTime)))
+                .ForMember(d => d.ClosingTime, o => o.MapFrom(s => new TimeSpan(s.ClosingTime)))
                 .ForMember(d => d.IsAvailable, o => o.MapFrom(s => IsAvailable(s)));
 
             CreateMap<Option, OptionDto>();
@@ -33,21 +33,21 @@ namespace Menu.Api.Models
 
             CreateMap<Product, ProductDetailDto>()
                 .ForMember(d => d.Price, o => o.MapFrom(s => string.Format("{0:N2}", s.Price)))
-                .ForMember(d => d.StartTime, o => o.MapFrom(s => new TimeSpan(s.StartTime)))
-                .ForMember(d => d.EndTime, o => o.MapFrom(s => new TimeSpan(s.EndTime)))
+                .ForMember(d => d.OpeningTime, o => o.MapFrom(s => new TimeSpan(s.OpeningTime)))
+                .ForMember(d => d.ClosingTime, o => o.MapFrom(s => new TimeSpan(s.ClosingTime)))
                 .ForMember(d => d.IsAvailable, o => o.MapFrom(s => IsAvailable(s)))
                 .ForMember(d => d.Options, o => o.MapFrom(s => s.Option));
         }
 
         private bool IsAvailable(Product product)
         {
-            var startTime = new TimeSpan(product.StartTime);
+            var openingTime = new TimeSpan(product.OpeningTime);
 
-            var endTime = new TimeSpan(product.EndTime);
+            var closingTime = new TimeSpan(product.ClosingTime);
 
             var currentTime = DateTime.Now.TimeOfDay;
 
-            if ((currentTime >= startTime) && (currentTime <= endTime))
+            if ((currentTime >= openingTime) && (currentTime <= closingTime))
             {
                 return true;
             }

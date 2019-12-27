@@ -15,9 +15,9 @@ namespace Menu.Api.Models
 
         public string Price { get; set; }
 
-        public TimeSpan StartTime { get; set; }
+        public TimeSpan OpeningTime { get; set; }
 
-        public TimeSpan EndTime { get; set; }
+        public TimeSpan ClosingTime { get; set; }
 
         public bool IsAvailable { get; set; }
 

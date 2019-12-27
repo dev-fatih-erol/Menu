@@ -17,9 +17,9 @@ namespace Menu.Core.Models
 
         public decimal Price { get; set; }
 
-        public long StartTime { get; set; }
+        public long OpeningTime { get; set; }
 
-        public long EndTime { get; set; }
+        public long ClosingTime { get; set; }
 
         public int DisplayOrder { get; set; }
 
