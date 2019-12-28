@@ -13,6 +13,15 @@ namespace Menu.Service
             _context = context;
         }
 
+        public User GetByPhoneNumberAndPassword(string phoneNumber, string password)
+        {
+            return _context.Users
+                           .Where(u =>
+                                  u.PhoneNumber == phoneNumber &&
+                                  u.Password == password)
+                           .FirstOrDefault();
+        }
+
         public User GetByPhoneNumber(string phoneNumber)
         {
             return _context.Users
