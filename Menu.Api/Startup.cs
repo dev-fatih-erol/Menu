@@ -73,6 +73,8 @@ namespace Menu.Api
 
             services.AddScoped<IOptionItemService, OptionItemService>();
 
+            services.AddSingleton(Configuration);
+
             services.AddDbContext<MenuContext>(o => o.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddAutoMapper(typeof(Startup));
