@@ -10,7 +10,9 @@ namespace Menu.Api.Models
         {
             CreateMap<City, CityDto>();
 
-            CreateMap<Venue, VenueDto>();
+            CreateMap<Venue, VenueDto>()
+                .ForMember(d => d.OpeningTime, o => o.MapFrom(s => new TimeSpan(s.OpeningTime)))
+                .ForMember(d => d.ClosingTime, o => o.MapFrom(s => new TimeSpan(s.ClosingTime)));
 
             CreateMap<Category, CategoryDto>();
 

@@ -10,6 +10,10 @@ namespace Menu.Core.Models
 
         public string Name { get; set; }
 
+        public long OpeningTime { get; set; }
+
+        public long ClosingTime { get; set; }
+
         public decimal Latitude { get; set; }
 
         public decimal Longitude { get; set; }

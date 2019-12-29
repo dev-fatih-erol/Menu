@@ -1,10 +1,16 @@
-﻿namespace Menu.Api.Models
+﻿using System;
+
+namespace Menu.Api.Models
 {
     public class VenueDto
     {
         public int Id { get; set; }
 
         public string Name { get; set; }
+
+        public TimeSpan OpeningTime { get; set; }
+
+        public TimeSpan ClosingTime { get; set; }
 
         public decimal Latitude { get; set; }
 
