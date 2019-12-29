@@ -1,4 +1,7 @@
-﻿using System.Net;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using AutoMapper;
 using Menu.Api.Models;
 using Menu.Service;
@@ -24,6 +27,68 @@ namespace Menu.Api.Controllers
             _mapper = mapper;
 
             _venueService = venueService;
+        }
+
+        // GET venue/5
+        [HttpGet]
+        [Route("Venue/Filter/{name?}/{venueType?}/{offset?}/{limit?}")]
+        public IActionResult Filter(string name, string venueType, int offset, int limit)
+        {
+            var venues = _venueService.Get();
+
+            if (!string.IsNullOrEmpty(name))
+            {
+                venues = venues.Where(v => v.Name.Contains(name));
+            }
+
+            if (!string.IsNullOrEmpty(venueType))
+            {
+                venues = venues.Where(v => v.VenueType == Core.Enums.VenueType.Cafe);
+            }
+
+            venues = venues.Skip(offset).Take(limit);
+
+            if (venues.Any())
+            {
+                return Ok(new
+                {
+                    Success = true,
+                    StatusCode = (int)HttpStatusCode.OK,
+                    Result = _mapper.Map<List<VenueDto>>(venues.ToList())
+                });
+            }
+
+            return NotFound(new
+            {
+                Success = false,
+                StatusCode = (int)HttpStatusCode.NotFound,
+                Message = "Mekan bulunamadı"
+            });
+        }
+
+        // GET venue/5/details
+        [HttpGet]
+        [Route("Venue/{id:int}/details")]
+        public IActionResult GetDetailById(int id)
+        {
+            var venue = _venueService.GetDetailById(id);
+
+            if (venue != null)
+            {
+                return Ok(new
+                {
+                    Success = true,
+                    StatusCode = (int)HttpStatusCode.OK,
+                    Result = _mapper.Map<VenueDetailDto>(venue)
+                });
+            }
+
+            return NotFound(new
+            {
+                Success = false,
+                StatusCode = (int)HttpStatusCode.NotFound,
+                Message = "Mekan bulunamadı"
+            });
         }
 
         // GET venue/5

@@ -13,11 +13,23 @@ namespace Menu.Service
             _context = context;
         }
 
+        public Venue GetDetailById(int id)
+        {
+            return _context.Venues
+                           .Where(v => v.Id == id)
+                           .FirstOrDefault();
+        }
+
         public Venue GetById(int id)
         {
             return _context.Venues
                            .Where(v => v.Id == id)
                            .FirstOrDefault();
+        }
+
+        public IQueryable<Venue> Get()
+        {
+            return _context.Venues.AsQueryable();
         }
 
         public void Create(Venue venue)
