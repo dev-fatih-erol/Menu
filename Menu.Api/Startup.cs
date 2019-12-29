@@ -95,6 +95,8 @@ namespace Menu.Api
 
             app.UseRouting();
 
+            app.UseAuthentication();
+
             app.UseAuthorization();
 
             app.UseRequestLocalization();

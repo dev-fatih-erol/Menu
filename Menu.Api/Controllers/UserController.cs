@@ -4,8 +4,10 @@ using System.Net;
 using System.Security.Claims;
 using System.Text;
 using AutoMapper;
+using Menu.Api.Extensions;
 using Menu.Api.Models;
 using Menu.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -39,9 +41,20 @@ namespace Menu.Api.Controllers
 
         [HttpPost]
         [Route("Auth")]
+        [AllowAnonymous]
         public IActionResult Authenticate(AuthenticateDto dto)
         {
-            var user = _userService.GetByPhoneNumberAndPassword(dto.PhoneNumber, dto.Password);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new
+                {
+                    Success = false,
+                    StatusCode = (int)HttpStatusCode.BadRequest,
+                    Errors = ModelState.GetErrors()
+                });
+            }
+
+            var user = _userService.GetByPhoneNumberAndPassword(dto.PhoneNumber, dto.Password.ToMD5());
 
             if (user != null)
             {
@@ -55,7 +68,7 @@ namespace Menu.Api.Controllers
                     {
                         new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
                     }),
-                    Expires = DateTime.UtcNow.AddDays(1),
+                    Expires = DateTime.Now.AddDays(1),
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
                         SecurityAlgorithms.HmacSha256Signature)
                 };
