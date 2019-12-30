@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Menu.Core.Models;
+﻿using Menu.Core.Models;
 
 namespace Menu.Service
 {
