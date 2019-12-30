@@ -27,11 +27,6 @@ namespace Menu.Service
                            .FirstOrDefault();
         }
 
-        public IQueryable<Venue> Get()
-        {
-            return _context.Venues.AsQueryable();
-        }
-
         public void Create(Venue venue)
         {
             _context.Venues.Add(venue);

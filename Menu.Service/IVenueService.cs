@@ -9,8 +9,6 @@ namespace Menu.Service
 
         Venue GetById(int id);
 
-        IQueryable<Venue> Get();
-
         void Create(Venue venue);
 
         void SaveChanges();
