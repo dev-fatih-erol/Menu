@@ -1,4 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Menu.Core.Enums;
 using Menu.Core.Models;
 using Menu.Data;
 
@@ -11,6 +14,23 @@ namespace Menu.Service
         public VenueService(MenuContext context)
         {
             _context = context;
+        }
+
+        public List<Venue> GetRandomByVenueType(VenueType venueType, int count)
+        {
+            return _context.Venues
+                           .Where(v => v.VenueType == venueType)
+                           .OrderBy(v => Guid.NewGuid())
+                           .Take(count)
+                           .ToList();
+        }
+
+        public List<Venue> GetRandom(int count)
+        {
+            return _context.Venues
+                           .OrderBy(v => Guid.NewGuid())
+                           .Take(count)
+                           .ToList();
         }
 
         public Venue GetDetailById(int id)
