@@ -6,9 +6,7 @@ namespace Menu.Service
 {
     public interface IVenueService
     {
-        List<Venue> GetRandomByVenueType(VenueType venueType, int count);
-
-        List<Venue> GetRandom(int count);
+        List<Venue> GetRandom(VenueType? venueType, int take);
 
         Venue GetDetailById(int id);
 

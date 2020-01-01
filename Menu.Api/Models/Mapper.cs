@@ -33,6 +33,13 @@ namespace Menu.Api.Models
             CreateMap<Category, CategoryProductDto>()
                 .ForMember(d => d.Products, o => o.MapFrom(s => s.Product));
 
+            CreateMap<Venue, RandomVenueDto>()
+                .ForMember(d => d.OpeningTime, o => o.MapFrom(s => new TimeSpan(s.OpeningTime)))
+                .ForMember(d => d.ClosingTime, o => o.MapFrom(s => new TimeSpan(s.ClosingTime)))
+                .ForMember(d => d.Address, o => o.MapFrom(s => "Yalı, Turgut Özal Blv. No:189, 34844 Maltepe/İstanbul"))
+                .ForMember(d => d.Rate, o => o.MapFrom(s => 4))
+                .ForMember(d => d.CommentCount, o => o.MapFrom(s => 287));
+
             CreateMap<Venue, VenueDetailDto>()
                 .ForMember(d => d.OpeningTime, o => o.MapFrom(s => new TimeSpan(s.OpeningTime)))
                 .ForMember(d => d.ClosingTime, o => o.MapFrom(s => new TimeSpan(s.ClosingTime)))

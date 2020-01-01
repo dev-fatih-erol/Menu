@@ -2,7 +2,7 @@
 
 namespace Menu.Api.Models
 {
-    public class VenueDto
+    public class RandomVenueDto
     {
         public int Id { get; set; }
 
@@ -12,12 +12,12 @@ namespace Menu.Api.Models
 
         public TimeSpan ClosingTime { get; set; }
 
-        public decimal Latitude { get; set; }
-
-        public decimal Longitude { get; set; }
-
         public string VenueType { get; set; }
 
         public string Address { get; set; }
+
+        public int Rate { get; set; }
+
+        public int CommentCount { get; set; }
     }
 }

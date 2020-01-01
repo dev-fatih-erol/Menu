@@ -8,4 +8,7 @@
     <ProjectReference Include="..\Menu.Data\Menu.Data.csproj" />
     <ProjectReference Include="..\Menu.Core\Menu.Core.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+  </ItemGroup>
 </Project>

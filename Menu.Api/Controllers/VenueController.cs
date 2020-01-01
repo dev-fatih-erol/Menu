@@ -1,6 +1,9 @@
-﻿using System.Net;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using AutoMapper;
 using Menu.Api.Models;
+using Menu.Core.Enums;
 using Menu.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -24,6 +27,31 @@ namespace Menu.Api.Controllers
             _mapper = mapper;
 
             _venueService = venueService;
+        }
+
+        // GET venue/random
+        [HttpGet]
+        [Route("Venue/Random")]
+        public IActionResult GetRandom(VenueType? venueType, int limit = 5)
+        {
+            var venues = _venueService.GetRandom(venueType, limit);
+
+            if (venues.Any())
+            {
+                return Ok(new
+                {
+                    Success = true,
+                    StatusCode = (int)HttpStatusCode.OK,
+                    Result = _mapper.Map<List<RandomVenueDto>>(venues)
+                });
+            }
+
+            return NotFound(new
+            {
+                Success = false,
+                StatusCode = (int)HttpStatusCode.NotFound,
+                Message = "Mekan bulunamadı"
+            });
         }
 
         // GET venue/5/details

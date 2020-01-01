@@ -4,6 +4,7 @@ using System.Linq;
 using Menu.Core.Enums;
 using Menu.Core.Models;
 using Menu.Data;
+using Menu.Service.Extensions;
 
 namespace Menu.Service
 {
@@ -16,20 +17,12 @@ namespace Menu.Service
             _context = context;
         }
 
-        public List<Venue> GetRandomByVenueType(VenueType venueType, int count)
+        public List<Venue> GetRandom(VenueType? venueType, int take)
         {
             return _context.Venues
-                           .Where(v => v.VenueType == venueType)
+                           .WhereIf(venueType != null, v => v.VenueType == venueType)
                            .OrderBy(v => Guid.NewGuid())
-                           .Take(count)
-                           .ToList();
-        }
-
-        public List<Venue> GetRandom(int count)
-        {
-            return _context.Venues
-                           .OrderBy(v => Guid.NewGuid())
-                           .Take(count)
+                           .Take(take)
                            .ToList();
         }
 
