@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using AutoMapper;
 using Menu.Core.Models;
 
@@ -37,13 +38,13 @@ namespace Menu.Api.Models
                 .ForMember(d => d.OpeningTime, o => o.MapFrom(s => new TimeSpan(s.OpeningTime)))
                 .ForMember(d => d.ClosingTime, o => o.MapFrom(s => new TimeSpan(s.ClosingTime)))
                 .ForMember(d => d.Rate, o => o.MapFrom(s => 4))
-                .ForMember(d => d.CommentCount, o => o.MapFrom(s => 287));
+                .ForMember(d => d.CommentCount, o => o.MapFrom(s => s.Comment.Count()));
 
             CreateMap<Venue, VenueDetailDto>()
                 .ForMember(d => d.OpeningTime, o => o.MapFrom(s => new TimeSpan(s.OpeningTime)))
                 .ForMember(d => d.ClosingTime, o => o.MapFrom(s => new TimeSpan(s.ClosingTime)))
                 .ForMember(d => d.Rate, o => o.MapFrom(s => 4))
-                .ForMember(d => d.CommentCount, o => o.MapFrom(s => 287))
+                .ForMember(d => d.CommentCount, o => o.MapFrom(s => s.Comment.Count()))
                 .ForMember(d => d.Speed, o => o.MapFrom(s => 7))
                 .ForMember(d => d.Waiter, o => o.MapFrom(s => 9))
                 .ForMember(d => d.Flavor, o => o.MapFrom(s => 8));

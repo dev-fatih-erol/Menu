@@ -23,14 +23,38 @@ namespace Menu.Service
                            .WhereIf(venueType != null, v => v.VenueType == venueType)
                            .OrderBy(v => Guid.NewGuid())
                            .Take(take)
-                           .ToList();
+                           .Select(v => new Venue
+                           {
+                               Id = v.Id,
+                               Name = v.Name,
+                               Photo = v.Photo,
+                               Address = v.Address,
+                               OpeningTime = v.OpeningTime,
+                               ClosingTime = v.ClosingTime,
+                               Latitude = v.Latitude,
+                               Longitude = v.Longitude,
+                               VenueType = v.VenueType,
+                               Comment = v.Comment
+                           }).ToList();
         }
 
         public Venue GetDetailById(int id)
         {
             return _context.Venues
                            .Where(v => v.Id == id)
-                           .FirstOrDefault();
+                           .Select(v => new Venue
+                           {
+                               Id = v.Id,
+                               Name = v.Name,
+                               Photo = v.Photo,
+                               Address = v.Address,
+                               OpeningTime = v.OpeningTime,
+                               ClosingTime = v.ClosingTime,
+                               Latitude = v.Latitude,
+                               Longitude = v.Longitude,
+                               VenueType = v.VenueType,
+                               Comment = v.Comment
+                           }).FirstOrDefault();
         }
 
         public Venue GetById(int id)

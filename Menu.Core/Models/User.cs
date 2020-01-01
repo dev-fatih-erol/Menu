@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Menu.Core.Models
 {
@@ -24,5 +25,8 @@ namespace Menu.Core.Models
         public int CityId { get; set; }
 
         public virtual City City { get; set; }
+
+
+        public virtual List<Comment> Comment { get; set; }
     }
 }
