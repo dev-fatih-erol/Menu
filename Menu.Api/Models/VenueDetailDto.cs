@@ -22,7 +22,7 @@ namespace Menu.Api.Models
 
         public string VenueType { get; set; }
 
-        public int Rate { get; set; }
+        public int Rating { get; set; }
 
         public int CommentCount { get; set; }
 

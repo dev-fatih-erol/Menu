@@ -34,5 +34,8 @@ namespace Menu.Core.Models
 
 
         public virtual List<Rate> Rate { get; set; }
+
+
+        public virtual List<CommentRating> CommentRating { get; set; }
     }
 }

@@ -2,11 +2,17 @@
 
 namespace Menu.Core.Models
 {
-    public class Comment
+    public class CommentRating
     {
         public int Id { get; set; }
 
         public string Text { get; set; }
+
+        public byte Speed { get; set; }
+
+        public byte Waiter { get; set; }
+
+        public byte Flavor { get; set; }
 
         public DateTime CreatedDate { get; set; }
 

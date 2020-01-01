@@ -37,14 +37,14 @@ namespace Menu.Api.Models
             CreateMap<Venue, RandomVenueDto>()
                 .ForMember(d => d.OpeningTime, o => o.MapFrom(s => new TimeSpan(s.OpeningTime)))
                 .ForMember(d => d.ClosingTime, o => o.MapFrom(s => new TimeSpan(s.ClosingTime)))
-                .ForMember(d => d.Rate, o => o.MapFrom(s => CalculateRating(s)))
-                .ForMember(d => d.CommentCount, o => o.MapFrom(s => s.Comment.Count()));
+                .ForMember(d => d.Rating, o => o.MapFrom(s => CalculateRating(s)))
+                .ForMember(d => d.CommentCount, o => o.MapFrom(s => s.CommentRating.Count()));
 
             CreateMap<Venue, VenueDetailDto>()
                 .ForMember(d => d.OpeningTime, o => o.MapFrom(s => new TimeSpan(s.OpeningTime)))
                 .ForMember(d => d.ClosingTime, o => o.MapFrom(s => new TimeSpan(s.ClosingTime)))
-                .ForMember(d => d.Rate, o => o.MapFrom(s => CalculateRating(s)))
-                .ForMember(d => d.CommentCount, o => o.MapFrom(s => s.Comment.Count()))
+                .ForMember(d => d.Rating, o => o.MapFrom(s => CalculateRating(s)))
+                .ForMember(d => d.CommentCount, o => o.MapFrom(s => s.CommentRating.Count()))
                 .ForMember(d => d.Speed, o => o.MapFrom(s => CalculateSpeed(s)))
                 .ForMember(d => d.Waiter, o => o.MapFrom(s => CalculateWaiter(s)))
                 .ForMember(d => d.Flavor, o => o.MapFrom(s => CalculateFlavor(s)));
@@ -75,26 +75,26 @@ namespace Menu.Api.Models
 
         private int CalculateRating(Venue venue)
         {
-            return venue.Rate.Any() ?
-                venue.Rate.Sum(r => r.Speed + r.Waiter + r.Flavor) / venue.Rate.Count() / 3 : 0;
+            return venue.CommentRating.Any() ?
+                venue.CommentRating.Sum(r => r.Speed + r.Waiter + r.Flavor) / venue.CommentRating.Count() / 3 : 0;
         }
 
         private int CalculateSpeed(Venue venue)
         {
-            return venue.Rate.Any() ?
-                venue.Rate.Sum(r => r.Speed) / venue.Rate.Count() : 0;
+            return venue.CommentRating.Any() ?
+                venue.CommentRating.Sum(r => r.Speed) / venue.CommentRating.Count() : 0;
         }
 
         private int CalculateWaiter(Venue venue)
         {
-            return venue.Rate.Any() ?
-                venue.Rate.Sum(r => r.Waiter) / venue.Rate.Count() : 0;
+            return venue.CommentRating.Any() ?
+                venue.CommentRating.Sum(r => r.Waiter) / venue.CommentRating.Count() : 0;
         }
 
         private int CalculateFlavor(Venue venue)
         {
-            return venue.Rate.Any() ?
-                venue.Rate.Sum(r => r.Flavor) / venue.Rate.Count() : 0;
+            return venue.CommentRating.Any() ?
+                venue.CommentRating.Sum(r => r.Flavor) / venue.CommentRating.Count() : 0;
         }
     }
 }

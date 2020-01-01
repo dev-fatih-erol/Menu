@@ -26,9 +26,7 @@ namespace Menu.Data
 
         public DbSet<OptionItem> OptionItems { get; set; }
 
-        public DbSet<Comment> Comments { get; set; }
-
-        public DbSet<Rate> Rates { get; set; }
+        public DbSet<CommentRating> CommentRatings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -53,11 +51,8 @@ namespace Menu.Data
             modelBuilder.Entity<OptionItem>()
                 .ToTable("OptionItem");
 
-            modelBuilder.Entity<Comment>()
-                .ToTable("Comment");
-
-            modelBuilder.Entity<Rate>()
-                .ToTable("Rate");
+            modelBuilder.Entity<CommentRating>()
+                .ToTable("CommentRating");
 
             modelBuilder.Entity<Venue>()
                 .Property(v => v.VenueType)
