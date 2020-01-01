@@ -28,5 +28,8 @@ namespace Menu.Core.Models
 
 
         public virtual List<Comment> Comment { get; set; }
+
+
+        public virtual List<Rate> Rate { get; set; }
     }
 }

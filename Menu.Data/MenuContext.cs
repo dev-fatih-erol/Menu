@@ -28,6 +28,8 @@ namespace Menu.Data
 
         public DbSet<Comment> Comments { get; set; }
 
+        public DbSet<Rate> Rates { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<City>()
@@ -53,6 +55,9 @@ namespace Menu.Data
 
             modelBuilder.Entity<Comment>()
                 .ToTable("Comment");
+
+            modelBuilder.Entity<Rate>()
+                .ToTable("Rate");
 
             modelBuilder.Entity<Venue>()
                 .Property(v => v.VenueType)

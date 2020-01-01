@@ -34,7 +34,8 @@ namespace Menu.Service
                                Latitude = v.Latitude,
                                Longitude = v.Longitude,
                                VenueType = v.VenueType,
-                               Comment = v.Comment
+                               Comment = v.Comment,
+                               Rate = v.Rate
                            }).ToList();
         }
 
@@ -53,7 +54,8 @@ namespace Menu.Service
                                Latitude = v.Latitude,
                                Longitude = v.Longitude,
                                VenueType = v.VenueType,
-                               Comment = v.Comment
+                               Comment = v.Comment,
+                               Rate = v.Rate
                            }).FirstOrDefault();
         }
 
