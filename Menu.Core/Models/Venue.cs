@@ -10,6 +10,10 @@ namespace Menu.Core.Models
 
         public string Name { get; set; }
 
+        public string Photo { get; set; }
+
+        public string Address { get; set; }
+
         public long OpeningTime { get; set; }
 
         public long ClosingTime { get; set; }

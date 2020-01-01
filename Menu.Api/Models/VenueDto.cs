@@ -8,6 +8,10 @@ namespace Menu.Api.Models
 
         public string Name { get; set; }
 
+        public string Photo { get; set; }
+
+        public string Address { get; set; }
+
         public TimeSpan OpeningTime { get; set; }
 
         public TimeSpan ClosingTime { get; set; }
@@ -17,7 +21,5 @@ namespace Menu.Api.Models
         public decimal Longitude { get; set; }
 
         public string VenueType { get; set; }
-
-        public string Address { get; set; }
     }
 }
