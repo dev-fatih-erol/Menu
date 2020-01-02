@@ -18,6 +18,7 @@ namespace Menu.Service
         {
             return _context.CommentRatings
                            .Where(c => c.VenueId == venueId)
+                           .OrderByDescending(c => c.CreatedDate)
                            .Select(c => new CommentRating
                            {
                                Id = c.Id,
@@ -29,9 +30,7 @@ namespace Menu.Service
                                UserId = c.UserId,
                                User = c.User,
                                VenueId = c.VenueId
-                           })
-                           .OrderByDescending(c => c.CreatedDate)
-                           .ToList();
+                           }).ToList();
         }
 
         public void Create(CommentRating commentRating)
