@@ -31,5 +31,8 @@ namespace Menu.Core.Models
 
 
         public virtual List<CommentRating> CommentRating { get; set; }
+
+
+        public virtual List<Favorite> Favorite { get; set; }
     }
 }

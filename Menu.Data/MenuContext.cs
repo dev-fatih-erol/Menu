@@ -28,6 +28,8 @@ namespace Menu.Data
 
         public DbSet<CommentRating> CommentRatings { get; set; }
 
+        public DbSet<Favorite> Favorites { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<City>()
@@ -53,6 +55,9 @@ namespace Menu.Data
 
             modelBuilder.Entity<CommentRating>()
                 .ToTable("CommentRating");
+
+            modelBuilder.Entity<Favorite>()
+                .ToTable("Favorite");
 
             modelBuilder.Entity<Venue>()
                 .Property(v => v.VenueType)
