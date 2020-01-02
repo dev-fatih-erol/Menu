@@ -29,6 +29,31 @@ namespace Menu.Api.Controllers
             _venueService = venueService;
         }
 
+        // GET venue/filter
+        [HttpGet]
+        [Route("Venue/Filter")]
+        public IActionResult GetByCriteria(string name)
+        {
+            var venues = _venueService.GetByCriteria(name);
+
+            if (venues.Any())
+            {
+                return Ok(new
+                {
+                    Success = true,
+                    StatusCode = (int)HttpStatusCode.OK,
+                    Result = _mapper.Map<List<VenueDto>>(venues)
+                });
+            }
+
+            return NotFound(new
+            {
+                Success = false,
+                StatusCode = (int)HttpStatusCode.NotFound,
+                Message = "Mekan bulunamadı"
+            });
+        }
+
         // GET venue/random
         [HttpGet]
         [Route("Venue/Random")]

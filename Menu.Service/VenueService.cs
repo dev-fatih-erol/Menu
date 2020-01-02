@@ -17,6 +17,13 @@ namespace Menu.Service
             _context = context;
         }
 
+        public List<Venue> GetByCriteria(string name)
+        {
+            return _context.Venues
+                           .WhereIf(name != null, v => v.Name.Contains(name))
+                           .ToList();
+        }
+
         public List<Venue> GetRandom(VenueType? venueType, int take)
         {
             return _context.Venues
