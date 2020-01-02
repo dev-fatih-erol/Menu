@@ -27,12 +27,6 @@ namespace Menu.Core.Models
         public virtual City City { get; set; }
 
 
-        public virtual List<Comment> Comment { get; set; }
-
-
-        public virtual List<Rate> Rate { get; set; }
-
-
         public virtual List<CommentRating> CommentRating { get; set; }
     }
 }

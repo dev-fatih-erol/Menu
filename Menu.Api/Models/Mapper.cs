@@ -28,6 +28,8 @@ namespace Menu.Api.Models
             CreateMap<OptionItem, OptionItemDto>()
                 .ForMember(d => d.Price, o => o.MapFrom(s => string.Format("{0:N2}", s.Price)));
 
+            CreateMap<CommentRating, CommentRatingDto>();
+
             CreateMap<Option, OptionOptionItemDto>()
                 .ForMember(d => d.OptionItems, o => o.MapFrom(s => s.OptionItem));
 
@@ -48,6 +50,8 @@ namespace Menu.Api.Models
                 .ForMember(d => d.Speed, o => o.MapFrom(s => CalculateSpeed(s)))
                 .ForMember(d => d.Waiter, o => o.MapFrom(s => CalculateWaiter(s)))
                 .ForMember(d => d.Flavor, o => o.MapFrom(s => CalculateFlavor(s)));
+
+            CreateMap<User, UserProfileDto>();
 
             CreateMap<Product, ProductDetailDto>()
                 .ForMember(d => d.Price, o => o.MapFrom(s => string.Format("{0:N2}", s.Price)))

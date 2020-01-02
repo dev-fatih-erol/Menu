@@ -25,7 +25,10 @@ namespace Menu.Service
                                Speed = c.Speed,
                                Waiter = c.Waiter,
                                Flavor = c.Flavor,
-                               User = c.User
+                               CreatedDate = c.CreatedDate,
+                               UserId = c.UserId,
+                               User = c.User,
+                               VenueId = c.VenueId
                            }).ToList();
         }
 
