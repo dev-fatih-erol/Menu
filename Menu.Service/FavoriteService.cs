@@ -13,6 +13,14 @@ namespace Menu.Service
             _context = context;
         }
 
+        public Favorite GetByUserIdAndVenueId(int userId, int venueId)
+        {
+            return _context.Favorites
+                           .Where(f => f.UserId == userId &&
+                                       f.VenueId == venueId)
+                           .FirstOrDefault();
+        }
+
         public Favorite GetById(int id)
         {
             return _context.Favorites

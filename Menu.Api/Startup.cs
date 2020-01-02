@@ -75,6 +75,8 @@ namespace Menu.Api
 
             services.AddScoped<ICommentRatingService, CommentRatingService>();
 
+            services.AddScoped<IFavoriteService, FavoriteService>();
+
             services.AddSingleton(Configuration);
 
             services.AddDbContext<MenuContext>(o => o.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
