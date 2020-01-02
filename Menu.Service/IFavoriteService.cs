@@ -8,6 +8,8 @@ namespace Menu.Service
 
         Favorite GetById(int id);
 
+        void Delete(Favorite favorite);
+
         void Create(Favorite favorite);
 
         void SaveChanges();

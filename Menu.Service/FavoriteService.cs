@@ -28,6 +28,11 @@ namespace Menu.Service
                            .FirstOrDefault();
         }
 
+        public void Delete(Favorite favorite)
+        {
+            _context.Favorites.Remove(favorite);
+        }
+
         public void Create(Favorite favorite)
         {
             _context.Favorites.Add(favorite);

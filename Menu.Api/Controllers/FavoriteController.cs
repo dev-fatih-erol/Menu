@@ -32,6 +32,40 @@ namespace Menu.Api.Controllers
             _venueService = venueService;
         }
 
+        // POST user/favorite/delete
+        [HttpPost]
+        [Route("User/Favorite/Delete")]
+        public IActionResult Delete([FromForm]int venueId)
+        {
+            var venue = _venueService.GetById(venueId);
+
+            if (venue != null)
+            {
+                var favorite = _favoriteService.GetByUserIdAndVenueId(1, venue.Id);
+
+                if (favorite != null)
+                {
+                    _favoriteService.Delete(favorite);
+
+                    _favoriteService.SaveChanges();
+                }
+
+                return Ok(new
+                {
+                    Success = true,
+                    StatusCode = (int)HttpStatusCode.OK,
+                    Result = true
+                });
+            }
+
+            return NotFound(new
+            {
+                Success = false,
+                StatusCode = (int)HttpStatusCode.NotFound,
+                Message = "Mekan bulunamadı"
+            });
+        }
+
         // POST user/favorite/create
         [HttpPost]
         [Route("User/Favorite/Create")]
