@@ -29,7 +29,9 @@ namespace Menu.Service
                                UserId = c.UserId,
                                User = c.User,
                                VenueId = c.VenueId
-                           }).ToList();
+                           })
+                           .OrderByDescending(c => c.CreatedDate)
+                           .ToList();
         }
 
         public void Create(CommentRating commentRating)
