@@ -41,6 +41,7 @@ namespace Menu.Service
                                Latitude = v.Latitude,
                                Longitude = v.Longitude,
                                VenueType = v.VenueType,
+                               CreatedDate = v.CreatedDate,
                                CommentRating = v.CommentRating
                            }).ToList();
         }
@@ -60,6 +61,7 @@ namespace Menu.Service
                                Latitude = v.Latitude,
                                Longitude = v.Longitude,
                                VenueType = v.VenueType,
+                               CreatedDate = v.CreatedDate,
                                CommentRating = v.CommentRating
                            }).FirstOrDefault();
         }
