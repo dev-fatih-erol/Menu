@@ -142,9 +142,9 @@ namespace Menu.Api.Controllers
                 {
                     _favoriteService.Create(new Favorite
                     {
+                        CreatedDate = DateTime.Now,
                         UserId = User.Identity.GetId(),
-                        VenueId = venue.Id,
-                        CreatedDate = DateTime.Now
+                        VenueId = venue.Id
                     });
 
                     _favoriteService.SaveChanges();
