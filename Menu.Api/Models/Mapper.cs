@@ -30,11 +30,19 @@ namespace Menu.Api.Models
 
             CreateMap<CommentRating, CommentRatingDto>();
 
+            CreateMap<Favorite, FavoriteDto>();
+
             CreateMap<Option, OptionOptionItemDto>()
                 .ForMember(d => d.OptionItems, o => o.MapFrom(s => s.OptionItem));
 
             CreateMap<Category, CategoryProductDto>()
                 .ForMember(d => d.Products, o => o.MapFrom(s => s.Product));
+
+            CreateMap<Venue, FavoriteVenueDto>()
+                .ForMember(d => d.OpeningTime, o => o.MapFrom(s => new TimeSpan(s.OpeningTime)))
+                .ForMember(d => d.ClosingTime, o => o.MapFrom(s => new TimeSpan(s.ClosingTime)))
+                .ForMember(d => d.Rating, o => o.MapFrom(s => CalculateRating(s)))
+                .ForMember(d => d.CommentCount, o => o.MapFrom(s => s.CommentRating.Count()));
 
             CreateMap<Venue, RandomVenueDto>()
                 .ForMember(d => d.OpeningTime, o => o.MapFrom(s => new TimeSpan(s.OpeningTime)))

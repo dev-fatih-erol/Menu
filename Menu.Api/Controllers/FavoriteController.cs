@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using AutoMapper;
 using Menu.Api.Extensions;
+using Menu.Api.Models;
 using Menu.Core.Models;
 using Menu.Service;
 using Microsoft.AspNetCore.Authorization;
@@ -32,6 +35,32 @@ namespace Menu.Api.Controllers
             _favoriteService = favoriteService;
 
             _venueService = venueService;
+        }
+
+        // GET user/favorite/list
+        [HttpGet]
+        [Authorize]
+        [Route("User/Favorite/List")]
+        public IActionResult GetByUserId()
+        {
+            var venues = _favoriteService.GetByUserId(User.Identity.GetId());
+
+            if (venues.Any())
+            {
+                return Ok(new
+                {
+                    Success = true,
+                    StatusCode = (int)HttpStatusCode.OK,
+                    Result = _mapper.Map<List<FavoriteDto>>(venues)
+                });
+            }
+
+            return NotFound(new
+            {
+                Success = false,
+                StatusCode = (int)HttpStatusCode.NotFound,
+                Message = "Mekan bulunamadı"
+            });
         }
 
         // GET user/favorite/venue/5/status
