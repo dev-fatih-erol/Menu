@@ -43,15 +43,15 @@ namespace Menu.Api.Controllers
         [Route("User/Favorite/List")]
         public IActionResult GetByUserId()
         {
-            var venues = _favoriteService.GetByUserId(User.Identity.GetId());
+            var favorites = _favoriteService.GetByUserId(User.Identity.GetId());
 
-            if (venues.Any())
+            if (favorites.Any())
             {
                 return Ok(new
                 {
                     Success = true,
                     StatusCode = (int)HttpStatusCode.OK,
-                    Result = _mapper.Map<List<FavoriteDto>>(venues)
+                    Result = _mapper.Map<List<FavoriteDto>>(favorites)
                 });
             }
 

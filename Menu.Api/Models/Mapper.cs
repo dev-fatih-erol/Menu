@@ -15,6 +15,8 @@ namespace Menu.Api.Models
                 .ForMember(d => d.OpeningTime, o => o.MapFrom(s => new TimeSpan(s.OpeningTime)))
                 .ForMember(d => d.ClosingTime, o => o.MapFrom(s => new TimeSpan(s.ClosingTime)));
 
+            CreateMap<User, UserDto>();
+
             CreateMap<Category, CategoryDto>();
 
             CreateMap<Product, ProductDto>()

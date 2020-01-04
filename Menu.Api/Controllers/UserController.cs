@@ -39,6 +39,32 @@ namespace Menu.Api.Controllers
             _userService = userService;
         }
 
+        // GET user/me
+        [HttpGet]
+        [Authorize]
+        [Route("User/Me")]
+        public IActionResult GetMe()
+        {
+            var user = _userService.GetById(User.Identity.GetId());
+
+            if (user != null)
+            {
+                return Ok(new
+                {
+                    Success = true,
+                    StatusCode = (int)HttpStatusCode.OK,
+                    Result = _mapper.Map<UserDto>(user)
+                });
+            }
+
+            return NotFound(new
+            {
+                Success = false,
+                StatusCode = (int)HttpStatusCode.NotFound,
+                Message = "Kullanıcı bulunamadı"
+            });
+        }
+
         [HttpPost]
         [Route("Auth")]
         [AllowAnonymous]
