@@ -36,21 +36,11 @@ namespace Menu.Api.Controllers
         {
             var venues = _venueService.GetByCriteria(name);
 
-            if (venues.Any())
+            return Ok(new
             {
-                return Ok(new
-                {
-                    Success = true,
-                    StatusCode = (int)HttpStatusCode.OK,
-                    Result = _mapper.Map<List<VenueDto>>(venues)
-                });
-            }
-
-            return NotFound(new
-            {
-                Success = false,
-                StatusCode = (int)HttpStatusCode.NotFound,
-                Message = "Mekan bulunamadı"
+                Success = true,
+                StatusCode = (int)HttpStatusCode.OK,
+                Result = _mapper.Map<List<VenueDto>>(venues)
             });
         }
 
