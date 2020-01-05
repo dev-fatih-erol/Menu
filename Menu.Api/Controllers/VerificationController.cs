@@ -75,7 +75,7 @@ namespace Menu.Api.Controllers
                 });
             }
 
-            return NotFound(new
+            return BadRequest(new
             {
                 Success = false,
                 StatusCode = (int)HttpStatusCode.BadRequest,
