@@ -19,8 +19,6 @@ namespace Menu.Core.Models
 
         public DateTime CreatedDate { get; set; }
 
-        public bool IsVerified { get; set; }
-
 
         public int CityId { get; set; }
 
