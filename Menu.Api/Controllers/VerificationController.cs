@@ -71,7 +71,7 @@ namespace Menu.Api.Controllers
                 {
                     Success = true,
                     StatusCode = (int)HttpStatusCode.OK,
-                    Result = _protector.Protect($"{dto.PhoneNumber},{code}", TimeSpan.FromMinutes(2))
+                    Result = _protector.Protect($"{dto.PhoneNumber},{code}", TimeSpan.FromMinutes(3))
                 });
             }
 
