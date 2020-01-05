@@ -39,6 +39,31 @@ namespace Menu.Api.Controllers
             _userService = userService;
         }
 
+        // POST user/phonenumber/check
+        [HttpPost]
+        [Route("User/PhoneNumber/Check")]
+        public IActionResult CheckPhoneNumber(CheckPhoneNumberDto dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new
+                {
+                    Success = false,
+                    StatusCode = (int)HttpStatusCode.BadRequest,
+                    Errors = ModelState.GetErrors()
+                });
+            }
+
+            var user = _userService.GetByPhoneNumber(dto.PhoneNumber);
+
+            return Ok(new
+            {
+                Success = true,
+                StatusCode = (int)HttpStatusCode.OK,
+                Result = user != null
+            });
+        }
+
         // GET user/me
         [HttpGet]
         [Authorize]
