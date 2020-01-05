@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using Menu.Api.Services;
 using Menu.Data;
 using Menu.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -76,6 +77,8 @@ namespace Menu.Api
             services.AddScoped<ICommentRatingService, CommentRatingService>();
 
             services.AddScoped<IFavoriteService, FavoriteService>();
+
+            services.AddTransient<ISmsSender, SmsSender>();
 
             services.AddSingleton(Configuration);
 
