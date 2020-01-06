@@ -36,11 +36,21 @@ namespace Menu.Api.Controllers
         {
             var venues = _venueService.GetByCriteria(name);
 
-            return Ok(new
+            if (venues.Any())
             {
-                Success = true,
-                StatusCode = (int)HttpStatusCode.OK,
-                Result = _mapper.Map<List<VenueDto>>(venues)
+                return Ok(new
+                {
+                    Success = true,
+                    StatusCode = (int)HttpStatusCode.OK,
+                    Result = _mapper.Map<List<VenueDto>>(venues)
+                });
+            }
+
+            return NotFound(new
+            {
+                Success = false,
+                StatusCode = (int)HttpStatusCode.NotFound,
+                Message = "Mekan bulunamadı"
             });
         }
 
@@ -51,21 +61,11 @@ namespace Menu.Api.Controllers
         {
             var venues = _venueService.GetRandom(venueType, limit);
 
-            if (venues.Any())
+            return Ok(new
             {
-                return Ok(new
-                {
-                    Success = true,
-                    StatusCode = (int)HttpStatusCode.OK,
-                    Result = _mapper.Map<List<RandomVenueDto>>(venues)
-                });
-            }
-
-            return NotFound(new
-            {
-                Success = false,
-                StatusCode = (int)HttpStatusCode.NotFound,
-                Message = "Mekan bulunamadı"
+                Success = true,
+                StatusCode = (int)HttpStatusCode.OK,
+                Result = _mapper.Map<List<RandomVenueDto>>(venues)
             });
         }
 
