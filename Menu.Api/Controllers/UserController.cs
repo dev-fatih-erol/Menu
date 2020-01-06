@@ -60,45 +60,6 @@ namespace Menu.Api.Controllers
             _userService = userService;
         }
 
-        // POST user/phonenumber/check
-        [HttpPost]
-        [Route("User/PhoneNumber/Check")]
-        public async Task<IActionResult> CheckPhoneNumber(CheckPhoneNumberDto dto)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(new
-                {
-                    Success = false,
-                    StatusCode = (int)HttpStatusCode.BadRequest,
-                    Errors = ModelState.GetErrors()
-                });
-            }
-
-            var user = _userService.GetByPhoneNumber(dto.PhoneNumber);
-
-            if (user == null)
-            {
-                var code = RandomHelper.Generate(1000, 9999);
-
-                await _smsSender.Send(dto.PhoneNumber, $"Bimenü doğrulama kodunuz: {code}");
-
-                return Ok(new
-                {
-                    Success = true,
-                    StatusCode = (int)HttpStatusCode.OK,
-                    Result = _protector.Protect($"{dto.PhoneNumber},{code}", TimeSpan.FromMinutes(3))
-                });
-            }
-
-            return BadRequest(new
-            {
-                Success = false,
-                StatusCode = (int)HttpStatusCode.BadRequest,
-                Message = "Kullanıcı mevcut"
-            });
-        }
-
         // GET user/me
         [HttpGet]
         [Authorize]
