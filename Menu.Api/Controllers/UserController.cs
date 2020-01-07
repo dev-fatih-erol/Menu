@@ -3,12 +3,9 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 using AutoMapper;
 using Menu.Api.Extensions;
-using Menu.Api.Helpers;
 using Menu.Api.Models;
-using Menu.Api.Services;
 using Menu.Core.Models;
 using Menu.Service;
 using Microsoft.AspNetCore.Authorization;
@@ -30,8 +27,6 @@ namespace Menu.Api.Controllers
 
         private readonly ITimeLimitedDataProtector _protector;
 
-        private readonly ISmsSender _smsSender;
-
         private readonly ICityService _cityService;
 
         private readonly IUserService _userService;
@@ -40,7 +35,6 @@ namespace Menu.Api.Controllers
             IConfiguration configuration,
             IMapper mapper,
             IDataProtectionProvider provider,
-            ISmsSender smsSender,
             ICityService cityService,
             IUserService userService)
         {
@@ -53,11 +47,89 @@ namespace Menu.Api.Controllers
             _protector = provider.CreateProtector(configuration["Keys:VerificationKey"])
                                  .ToTimeLimitedDataProtector();
 
-            _smsSender = smsSender;
-
             _cityService = cityService;
 
             _userService = userService;
+        }
+
+        // POST user/changepassword
+        [HttpPost]
+        [Authorize]
+        [Route("User/ChangePassword")]
+        public IActionResult ChangePassword(ChangePasswordDto dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new
+                {
+                    Success = false,
+                    StatusCode = (int)HttpStatusCode.BadRequest,
+                    Errors = ModelState.GetErrors()
+                });
+            }
+
+            var user = _userService.GetByIdAndPassword(User.Identity.GetId(), dto.OldPassword.ToMD5());
+
+            if (user != null)
+            {
+                user.Password = dto.NewPassword.ToMD5();
+
+                _userService.SaveChanges();
+
+                return Ok(new
+                {
+                    Success = true,
+                    StatusCode = (int)HttpStatusCode.OK,
+                    Result = user != null
+                });
+            }
+
+            return NotFound(new
+            {
+                Success = false,
+                StatusCode = (int)HttpStatusCode.NotFound,
+                Message = "Kullanıcı bulunamadı"
+            });
+        }
+
+        // POST user/createpassword
+        [HttpPost]
+        [Authorize]
+        [Route("User/CreatePassword")]
+        public IActionResult CreatePassword(CreatePasswordDto dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new
+                {
+                    Success = false,
+                    StatusCode = (int)HttpStatusCode.BadRequest,
+                    Errors = ModelState.GetErrors()
+                });
+            }
+
+            var user = _userService.GetById(User.Identity.GetId());
+
+            if (user != null)
+            {
+                user.Password = dto.Password.ToMD5();
+
+                _userService.SaveChanges();
+
+                return Ok(new
+                {
+                    Success = true,
+                    StatusCode = (int)HttpStatusCode.OK,
+                    Result = user != null
+                });
+            }
+
+            return NotFound(new
+            {
+                Success = false,
+                StatusCode = (int)HttpStatusCode.NotFound,
+                Message = "Kullanıcı bulunamadı"
+            });
         }
 
         // GET user/me
@@ -153,9 +225,9 @@ namespace Menu.Api.Controllers
                 });
             }
 
-            var token = _protector.Unprotect(dto.Token);
+            var decryptedToken = _protector.Unprotect(dto.Token);
 
-            if (!token.ValidatePhoneNumber(dto.PhoneNumber, dto.Code))
+            if (!decryptedToken.ValidatePhoneNumber(dto.PhoneNumber, dto.Code))
             {
                 return BadRequest(new
                 {

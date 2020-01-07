@@ -29,6 +29,7 @@ namespace Menu.Api.Models
         [Required(ErrorMessage = "Lütfen sms kodunuzu girin")]
         public string Code { get; set; }
 
+        [Required(ErrorMessage = "Lütfen güvenlik anahtarını girin")]
         public string Token { get; set; }
     }
 }

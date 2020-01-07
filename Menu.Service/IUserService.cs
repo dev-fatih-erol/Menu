@@ -4,6 +4,8 @@ namespace Menu.Service
 {
     public interface IUserService
     {
+        User GetByIdAndPassword(int id, string password);
+
         User GetByPhoneNumberAndPassword(string phoneNumber, string password);
 
         User GetByPhoneNumber(string phoneNumber);
