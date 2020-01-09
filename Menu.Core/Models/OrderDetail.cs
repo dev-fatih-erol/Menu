@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Menu.Core.Models
+﻿namespace Menu.Core.Models
 {
     public class OrderDetail
     {
