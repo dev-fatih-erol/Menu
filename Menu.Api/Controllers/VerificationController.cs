@@ -68,9 +68,23 @@ namespace Menu.Api.Controllers
                 });
             }
 
-            var decryptedToken = _protector.Unprotect(dto.Token);
+            string decryptedToken;
 
-            if (!decryptedToken.ValidatePhoneNumber(dto.PhoneNumber, dto.Code))
+            try
+            {
+                decryptedToken = _protector.Unprotect(dto.Token);
+            }
+            catch
+            {
+                return BadRequest(new
+                {
+                    Success = false,
+                    StatusCode = (int)HttpStatusCode.BadRequest,
+                    Message = "Güvenlik anahtarı doğrulanamadı"
+                });
+            }
+
+            if (!decryptedToken.VerifyPhoneNumber(dto.PhoneNumber, dto.Code))
             {
                 return BadRequest(new
                 {
@@ -156,10 +170,59 @@ namespace Menu.Api.Controllers
             });
         }
 
+        // POST verification/code/verify
+        [HttpPost]
+        [Route("Verification/Code/Verify")]
+        public IActionResult VerifyCode(VerifyCodeDto dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new
+                {
+                    Success = false,
+                    StatusCode = (int)HttpStatusCode.BadRequest,
+                    Errors = ModelState.GetErrors()
+                });
+            }
+
+            string decryptedToken;
+
+            try
+            {
+                decryptedToken = _protector.Unprotect(dto.Token);
+            }
+            catch
+            {
+                return BadRequest(new
+                {
+                    Success = false,
+                    StatusCode = (int)HttpStatusCode.BadRequest,
+                    Message = "Güvenlik anahtarı doğrulanamadı"
+                });
+            }
+
+            if (!decryptedToken.VerifyPhoneNumber(dto.PhoneNumber, dto.Code))
+            {
+                return BadRequest(new
+                {
+                    Success = false,
+                    StatusCode = (int)HttpStatusCode.BadRequest,
+                    Message = "Kimlik doğrulanamadı"
+                });
+            }
+
+            return Ok(new
+            {
+                Success = true,
+                StatusCode = (int)HttpStatusCode.OK,
+                Result = _protector.Protect($"{dto.PhoneNumber},{dto.Code}", TimeSpan.FromDays(1))
+            });
+        }
+
         // POST verification/code/send
         [HttpPost]
         [Route("Verification/Code/Send")]
-        public async Task<IActionResult> SendCode(SendVerificationCodeDto dto)
+        public async Task<IActionResult> SendCode(SendCodeDto dto)
         {
             if (!ModelState.IsValid)
             {

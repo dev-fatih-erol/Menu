@@ -132,11 +132,11 @@ namespace Menu.Api.Controllers
             });
         }
 
-        // GET user/me
+        // GET me
         [HttpGet]
         [Authorize]
-        [Route("User/Me")]
-        public IActionResult GetMe()
+        [Route("Me")]
+        public IActionResult GetById()
         {
             var user = _userService.GetById(User.Identity.GetId());
 
@@ -225,9 +225,23 @@ namespace Menu.Api.Controllers
                 });
             }
 
-            var decryptedToken = _protector.Unprotect(dto.Token);
+            string decryptedToken;
 
-            if (!decryptedToken.ValidatePhoneNumber(dto.PhoneNumber, dto.Code))
+            try
+            {
+                decryptedToken = _protector.Unprotect(dto.Token);
+            }
+            catch
+            {
+                return BadRequest(new
+                {
+                    Success = false,
+                    StatusCode = (int)HttpStatusCode.BadRequest,
+                    Message = "Güvenlik anahtarı doğrulanamadı"
+                });
+            }
+
+            if (!decryptedToken.VerifyPhoneNumber(dto.PhoneNumber, dto.Code))
             {
                 return BadRequest(new
                 {

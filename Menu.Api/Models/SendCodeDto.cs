@@ -2,7 +2,7 @@
 
 namespace Menu.Api.Models
 {
-    public class SendVerificationCodeDto
+    public class SendCodeDto
     {
         [Required(ErrorMessage = "Lütfen telefon numaranızı girin")]
         [RegularExpression(@"(^\+?[0-9]{10})$", ErrorMessage = "Lütfen geçerli bir telefon numarası girin")]
