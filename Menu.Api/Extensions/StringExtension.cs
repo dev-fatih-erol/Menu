@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
 
 namespace Menu.Api.Extensions
@@ -9,12 +7,10 @@ namespace Menu.Api.Extensions
     {
         public static string FirstCharToUpper(this string source)
         {
-            return source switch
-            {
-                null => throw new ArgumentNullException(nameof(source)),
-                "" => throw new ArgumentException(nameof(source)),
-                _ => source.First().ToString().ToUpper() + source.Substring(1),
-            };
+            if (string.IsNullOrEmpty(source))
+                return string.Empty;
+
+            return char.ToUpper(source[0]) + source.Substring(1).ToLower();
         }
 
         public static string ToMD5(this string source)
