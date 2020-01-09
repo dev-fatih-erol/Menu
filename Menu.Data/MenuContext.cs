@@ -30,6 +30,10 @@ namespace Menu.Data
 
         public DbSet<Favorite> Favorites { get; set; }
 
+        public DbSet<Order> Orders { get; set; }
+
+        public DbSet<OrderDetail> OrderDetails { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<City>()
@@ -58,6 +62,12 @@ namespace Menu.Data
 
             modelBuilder.Entity<Favorite>()
                 .ToTable("Favorite");
+
+            modelBuilder.Entity<Order>()
+                .ToTable("Order");
+
+            modelBuilder.Entity<OrderDetail>()
+                .ToTable("OrderDetail");
 
             modelBuilder.Entity<Venue>()
                 .Property(v => v.VenueType)

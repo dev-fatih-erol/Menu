@@ -78,6 +78,10 @@ namespace Menu.Api
 
             services.AddScoped<IFavoriteService, FavoriteService>();
 
+            services.AddScoped<IOrderService, OrderService>();
+
+            services.AddScoped<IOrderDetailService, OrderDetailService>();
+
             services.AddTransient<ISmsSender, SmsSender>();
 
             services.AddSingleton(Configuration);
