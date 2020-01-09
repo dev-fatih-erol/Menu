@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
 using Menu.Api.Extensions;
@@ -40,7 +41,7 @@ namespace Menu.Api.Controllers
         [Route("Order")]
         public IActionResult Create()
         {
-            int[] ids = new int[] { 99, 98, 92, 97, 95 };
+            int[] ids = new int[] { 9119, 9811, 92111, 97111, 95111 };
 
             var products = _productService.GetByIds(ids);
 
@@ -74,7 +75,12 @@ namespace Menu.Api.Controllers
                 }
             }
 
-            return Ok();
+            return NotFound(new
+            {
+                Success = false,
+                StatusCode = (int)HttpStatusCode.NotFound,
+                Message = "Ürün bulunamadı"
+            });
         }
     }
 }
