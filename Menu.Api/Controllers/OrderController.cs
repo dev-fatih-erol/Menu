@@ -20,11 +20,14 @@ namespace Menu.Api.Controllers
 
         private readonly IOrderService _orderService;
 
+        private readonly IVenueService _venueService;
+
         private readonly IProductService _productService;
 
         public OrderController(ILogger<OrderController> logger,
             IMapper mapper,
             IOrderService orderService,
+            IVenueService venueService,
             IProductService productService)
         {
             _logger = logger;
@@ -32,6 +35,8 @@ namespace Menu.Api.Controllers
             _mapper = mapper;
 
             _orderService = orderService;
+
+            _venueService = venueService;
 
             _productService = productService;
         }
@@ -41,37 +46,15 @@ namespace Menu.Api.Controllers
         [Route("Order")]
         public IActionResult Create()
         {
-            int[] ids = new int[] { 9119, 9811, 92111, 97111, 95111 };
+            var venue = _venueService.GetById(1);
 
-            var products = _productService.GetByIds(ids);
-
-            if (products.Any())
+            if (venue != null)
             {
-                var newOrder = new Order
+                var product = _productService.GetById(1, 1);
+
+                if (product != null)
                 {
-                    Code = "code1",
-                    Description = "Descc",
-                    CreatedDate = DateTime.Now,
-                    UserId = User.Identity.GetId(),
-                    WaiterId = 1,
-                    TableId = 1,
-                    VenueId = 1,
-                    OrderStatusId = 1
-                };
 
-                _orderService.Create(newOrder);
-
-                _orderService.SaveChanges();
-
-                foreach (var product in products)
-                {
-                    var newOrderDetail = new OrderDetail
-                    {
-                        Name = product.Name,
-                        Photo = product.Photo,
-                        Quantity = 1,
-                        Price = product.Price
-                    };
                 }
             }
 

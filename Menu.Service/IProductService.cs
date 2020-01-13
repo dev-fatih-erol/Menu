@@ -5,11 +5,11 @@ namespace Menu.Service
 {
     public interface IProductService
     {
-        List<Product> GetByIds(int[] ids);
-
         Product GetDetailById(int id);
 
         List<Product> GetByCategoryId(int categoryId);
+
+        Product GetById(int id, int venueId);
 
         Product GetById(int id);
 
