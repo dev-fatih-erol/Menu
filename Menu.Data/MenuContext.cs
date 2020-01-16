@@ -85,6 +85,12 @@ namespace Menu.Data
                 .HasConversion(o => o.ToString(),
                                o => (OptionType)Enum.Parse(typeof(OptionType),
                                o));
+
+            modelBuilder.Entity<Order>()
+                .Property(o => o.OrderStatus)
+                .HasConversion(o => o.ToString(),
+                               o => (OrderStatus)Enum.Parse(typeof(OrderStatus),
+                               o));
         }
     }
 }

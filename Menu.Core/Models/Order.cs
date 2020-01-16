@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Menu.Core.Enums;
 
 namespace Menu.Core.Models
 {
@@ -13,7 +14,7 @@ namespace Menu.Core.Models
 
         public int WaiterId { get; set; }
 
-        public int OrderStatusId { get; set; }
+        public OrderStatus OrderStatus { get; set; }
 
         public DateTime CreatedDate { get; set; }
 

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Menu.Api.Extensions;
 using Menu.Api.Models;
+using Menu.Core.Enums;
 using Menu.Core.Models;
 using Menu.Service;
 using Microsoft.AspNetCore.Mvc;
@@ -81,7 +82,7 @@ namespace Menu.Api.Controllers
                             WaiterId = dto.WaiterId,
                             TableId = dto.TableId,
                             VenueId = dto.VenueId,
-                            OrderStatusId = 1
+                            OrderStatus = OrderStatus.Pending
                         };
 
                         foreach (var orderDetail in dto.OrderDetail)
