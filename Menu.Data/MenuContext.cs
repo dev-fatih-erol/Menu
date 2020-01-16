@@ -18,6 +18,8 @@ namespace Menu.Data
 
         public DbSet<Table> Tables { get; set; }
 
+        public DbSet<Waiter> Waiters { get; set; }
+
         public DbSet<User> Users { get; set; }
 
         public DbSet<Category> Categories { get; set; }
@@ -46,6 +48,9 @@ namespace Menu.Data
 
             modelBuilder.Entity<Table>()
                 .ToTable("Table");
+
+            modelBuilder.Entity<Waiter>()
+                .ToTable("Waiter");
 
             modelBuilder.Entity<User>()
                 .ToTable("User");

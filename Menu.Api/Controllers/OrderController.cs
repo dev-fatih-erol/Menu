@@ -28,6 +28,8 @@ namespace Menu.Api.Controllers
 
         private readonly ITableService _tableService;
 
+        private readonly IWaiterService _waiterService;
+
         private readonly IProductService _productService;
 
         private readonly IOptionItemService _optionItemService;
@@ -38,6 +40,7 @@ namespace Menu.Api.Controllers
             IOrderDetailService orderDetailService,
             IVenueService venueService,
             ITableService tableService,
+            IWaiterService waiterService,
             IProductService productService,
             IOptionItemService optionItemService)
         {
@@ -52,6 +55,8 @@ namespace Menu.Api.Controllers
             _venueService = venueService;
 
             _tableService = tableService;
+
+            _waiterService = waiterService;
 
             _productService = productService;
 
@@ -73,53 +78,58 @@ namespace Menu.Api.Controllers
 
                     if (table != null)
                     {
-                        var newOrder = new Order
-                        {
-                            Code = Guid.NewGuid().ToString(),
-                            Description = dto.Description,
-                            CreatedDate = DateTime.Now,
-                            UserId = 1,
-                            WaiterId = dto.WaiterId,
-                            TableId = dto.TableId,
-                            VenueId = dto.VenueId,
-                            OrderStatus = OrderStatus.Pending
-                        };
+                        var waiter = _waiterService.GetById(dto.WaiterId);
 
-                        foreach (var orderDetail in dto.OrderDetail)
+                        if (waiter != null)
                         {
-                            var product = _productService.GetById(orderDetail.ProductId);
-
-                            if (product != null)
+                            var newOrder = new Order
                             {
-                                string optionItemText = null;
+                                Code = Guid.NewGuid().ToString(),
+                                Description = dto.Description,
+                                CreatedDate = DateTime.Now,
+                                UserId = 1,
+                                WaiterId = dto.WaiterId,
+                                TableId = dto.TableId,
+                                VenueId = dto.VenueId,
+                                OrderStatus = OrderStatus.Pending
+                            };
 
-                                foreach (var item in orderDetail.OptionItems)
+                            foreach (var orderDetail in dto.OrderDetail)
+                            {
+                                var product = _productService.GetById(orderDetail.ProductId);
+
+                                if (product != null)
                                 {
-                                    var optionItem = _optionItemService.GetById(item);
+                                    string optionItemText = null;
 
-                                    if (optionItem != null)
+                                    foreach (var item in orderDetail.OptionItems)
                                     {
-                                        optionItemText = optionItem.Name + ',';
+                                        var optionItem = _optionItemService.GetById(item);
+
+                                        if (optionItem != null)
+                                        {
+                                            optionItemText = optionItem.Name + ',';
+                                        }
                                     }
+
+                                    var newOrderDetail = new OrderDetail
+                                    {
+                                        Name = product.Name,
+                                        Photo = product.Photo,
+                                        OptionItem = optionItemText.TrimEnd(','),
+                                        Quantity = orderDetail.Quantity,
+                                        Price = product.Price,
+                                        Order = newOrder
+                                    };
+
+                                    _orderDetailService.Create(newOrderDetail);
                                 }
-
-                                var newOrderDetail = new OrderDetail
-                                {
-                                    Name = product.Name,
-                                    Photo = product.Photo,
-                                    OptionItem = optionItemText.TrimEnd(','),
-                                    Quantity = orderDetail.Quantity,
-                                    Price = product.Price,
-                                    Order = newOrder
-                                };
-
-                                _orderDetailService.Create(newOrderDetail);
                             }
+
+                            _orderService.Create(newOrder);
+
+                            _orderService.SaveChanges();
                         }
-
-                        _orderService.Create(newOrder);
-
-                        _orderService.SaveChanges();
                     }
                 }
             }

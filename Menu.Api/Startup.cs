@@ -66,6 +66,8 @@ namespace Menu.Api
 
             services.AddScoped<ITableService, TableService>();
 
+            services.AddScoped<IWaiterService, WaiterService>();
+
             services.AddScoped<IUserService, UserService>();
 
             services.AddScoped<ICategoryService, CategoryService>();

@@ -30,6 +30,9 @@ namespace Menu.Core.Models
         public virtual List<Table> Table { get; set; }
 
 
+        public virtual List<Waiter> Waiter { get; set; }
+
+
         public virtual List<Category> Category { get; set; }
 
 
