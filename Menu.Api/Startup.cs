@@ -64,6 +64,8 @@ namespace Menu.Api
 
             services.AddScoped<IVenueService, VenueService>();
 
+            services.AddScoped<ITableService, TableService>();
+
             services.AddScoped<IUserService, UserService>();
 
             services.AddScoped<ICategoryService, CategoryService>();
@@ -74,15 +76,13 @@ namespace Menu.Api
 
             services.AddScoped<IOptionItemService, OptionItemService>();
 
-            services.AddScoped<ICommentRatingService, CommentRatingService>();
-
-            services.AddScoped<IFavoriteService, FavoriteService>();
-
             services.AddScoped<IOrderService, OrderService>();
 
             services.AddScoped<IOrderDetailService, OrderDetailService>();
 
-            services.AddScoped<ITableService, TableService>();
+            services.AddScoped<ICommentRatingService, CommentRatingService>();
+
+            services.AddScoped<IFavoriteService, FavoriteService>();
 
             services.AddTransient<ISmsSender, SmsSender>();
 

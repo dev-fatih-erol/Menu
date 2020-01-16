@@ -27,6 +27,9 @@ namespace Menu.Core.Models
         public DateTime CreatedDate { get; set; }
 
 
+        public virtual List<Table> Table { get; set; }
+
+
         public virtual List<Category> Category { get; set; }
 
 
@@ -34,8 +37,5 @@ namespace Menu.Core.Models
 
 
         public virtual List<Favorite> Favorite { get; set; }
-
-
-        public virtual List<Table> Table { get; set; }
     }
 }

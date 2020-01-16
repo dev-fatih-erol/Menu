@@ -23,14 +23,14 @@ namespace Menu.Core.Models
         public virtual Venue Venue { get; set; }
 
 
-        public int UserId { get; set; }
-
-        public virtual User User { get; set; }
-
-
         public int TableId { get; set; }
 
         public virtual Table Table { get; set; }
+
+
+        public int UserId { get; set; }
+
+        public virtual User User { get; set; }
 
 
         public virtual List<OrderDetail> OrderDetail { get; set; }

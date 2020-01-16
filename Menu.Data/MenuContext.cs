@@ -16,6 +16,8 @@ namespace Menu.Data
 
         public DbSet<Venue> Venues { get; set; }
 
+        public DbSet<Table> Tables { get; set; }
+
         public DbSet<User> Users { get; set; }
 
         public DbSet<Category> Categories { get; set; }
@@ -26,15 +28,13 @@ namespace Menu.Data
 
         public DbSet<OptionItem> OptionItems { get; set; }
 
-        public DbSet<CommentRating> CommentRatings { get; set; }
-
-        public DbSet<Favorite> Favorites { get; set; }
-
         public DbSet<Order> Orders { get; set; }
 
         public DbSet<OrderDetail> OrderDetails { get; set; }
 
-        public DbSet<Table> Tables { get; set; }
+        public DbSet<CommentRating> CommentRatings { get; set; }
+
+        public DbSet<Favorite> Favorites { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -43,6 +43,9 @@ namespace Menu.Data
 
             modelBuilder.Entity<Venue>()
                 .ToTable("Venue");
+
+            modelBuilder.Entity<Table>()
+                .ToTable("Table");
 
             modelBuilder.Entity<User>()
                 .ToTable("User");
@@ -59,20 +62,17 @@ namespace Menu.Data
             modelBuilder.Entity<OptionItem>()
                 .ToTable("OptionItem");
 
-            modelBuilder.Entity<CommentRating>()
-                .ToTable("CommentRating");
-
-            modelBuilder.Entity<Favorite>()
-                .ToTable("Favorite");
-
             modelBuilder.Entity<Order>()
                 .ToTable("Order");
 
             modelBuilder.Entity<OrderDetail>()
                 .ToTable("OrderDetail");
 
-            modelBuilder.Entity<Table>()
-                .ToTable("Table");
+            modelBuilder.Entity<CommentRating>()
+                .ToTable("CommentRating");
+
+            modelBuilder.Entity<Favorite>()
+                .ToTable("Favorite");
 
             modelBuilder.Entity<Venue>()
                 .Property(v => v.VenueType)
