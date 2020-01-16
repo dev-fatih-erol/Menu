@@ -34,6 +34,8 @@ namespace Menu.Data
 
         public DbSet<OrderDetail> OrderDetails { get; set; }
 
+        public DbSet<Table> Tables { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<City>()
@@ -68,6 +70,9 @@ namespace Menu.Data
 
             modelBuilder.Entity<OrderDetail>()
                 .ToTable("OrderDetail");
+
+            modelBuilder.Entity<Table>()
+                .ToTable("Table");
 
             modelBuilder.Entity<Venue>()
                 .Property(v => v.VenueType)

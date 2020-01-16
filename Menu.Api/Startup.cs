@@ -82,6 +82,8 @@ namespace Menu.Api
 
             services.AddScoped<IOrderDetailService, OrderDetailService>();
 
+            services.AddScoped<ITableService, TableService>();
+
             services.AddTransient<ISmsSender, SmsSender>();
 
             services.AddSingleton(Configuration);

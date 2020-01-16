@@ -9,8 +9,6 @@ namespace Menu.Service
 
         List<Product> GetByCategoryId(int categoryId);
 
-        Product GetById(int id, int venueId);
-
         Product GetById(int id);
 
         void Create(Product product);

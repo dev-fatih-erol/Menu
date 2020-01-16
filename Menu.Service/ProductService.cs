@@ -52,13 +52,6 @@ namespace Menu.Service
                            .ToList();
         }
 
-        public Product GetById(int id, int venueId)
-        {
-            return _context.Products
-                           .Where(p => p.Id == id && p.Category.Venue.Id == venueId)
-                           .FirstOrDefault();
-        }
-
         public Product GetById(int id)
         {
             return _context.Products
