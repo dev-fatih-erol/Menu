@@ -78,6 +78,8 @@ namespace Menu.Api
 
             services.AddScoped<IOptionItemService, OptionItemService>();
 
+            services.AddScoped<IOrderTableService, OrderTableService>();
+
             services.AddScoped<IOrderService, OrderService>();
 
             services.AddScoped<IOrderDetailService, OrderDetailService>();

@@ -16,6 +16,8 @@ namespace Menu.Api.Controllers
 
         private readonly IMapper _mapper;
 
+        private readonly IOrderTableService _orderTableService;
+
         private readonly IOrderService _orderService;
 
         private readonly IOrderDetailService _orderDetailService;
@@ -32,6 +34,7 @@ namespace Menu.Api.Controllers
 
         public OrderController(ILogger<OrderController> logger,
             IMapper mapper,
+            IOrderTableService orderTableService,
             IOrderService orderService,
             IOrderDetailService orderDetailService,
             IVenueService venueService,
@@ -43,6 +46,8 @@ namespace Menu.Api.Controllers
             _logger = logger;
 
             _mapper = mapper;
+
+            _orderTableService = orderTableService;
 
             _orderService = orderService;
 
@@ -64,8 +69,11 @@ namespace Menu.Api.Controllers
         [Route("Order")]
         public IActionResult Create([FromBody] CreateOrderDto dto)
         {
-            if (dto.OrderDetail.Any())
+            var orderTable = _orderTableService.GetByTableIdAndVenueId(1,1);
+
+            if (orderTable != null)
             {
+                return Ok("oksksks");
             }
 
             return NotFound(new
