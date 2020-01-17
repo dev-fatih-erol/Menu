@@ -8,6 +8,20 @@ namespace Menu.Service
     {
         private readonly MenuContext _context;
 
+        public OrderTableService(MenuContext context)
+        {
+            _context = context;
+        }
+
+        public OrderTable GetByTableIdAndVenueId(int tableId, int venueId, bool isClosed)
+        {
+            return _context.OrderTables
+                           .Where(o => o.TableId == tableId &&
+                                       o.VenueId == venueId &&
+                                       o.IsClosed == isClosed)
+                           .FirstOrDefault();
+        }
+
         public OrderTable GetByTableIdAndVenueId(int tableId, int venueId)
         {
             return _context.OrderTables
@@ -22,11 +36,6 @@ namespace Menu.Service
                                Order = o.Order
                            })
                            .FirstOrDefault();
-        }
-
-        public OrderTableService(MenuContext context)
-        {
-            _context = context;
         }
 
         public void Create(OrderTable orderTable)

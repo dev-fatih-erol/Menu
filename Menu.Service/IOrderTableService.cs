@@ -6,6 +6,8 @@ namespace Menu.Service
     {
         OrderTable GetByTableIdAndVenueId(int tableId, int venueId);
 
+        OrderTable GetByTableIdAndVenueId(int tableId, int venueId, bool isClosed);
+
         void Create(OrderTable orderTable);
 
         void SaveChanges();

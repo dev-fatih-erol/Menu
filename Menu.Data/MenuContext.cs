@@ -22,6 +22,8 @@ namespace Menu.Data
 
         public DbSet<Table> Tables { get; set; }
 
+        public DbSet<TableWaiter> TableWaiters { get; set; }
+
         public DbSet<User> Users { get; set; }
 
         public DbSet<Category> Categories { get; set; }
@@ -35,6 +37,8 @@ namespace Menu.Data
         public DbSet<OrderTable> OrderTables { get; set; }
 
         public DbSet<Order> Orders { get; set; }
+
+        public DbSet<OrderWaiter> OrderWaiter { get; set; }
 
         public DbSet<OrderDetail> OrderDetails { get; set; }
 
@@ -63,7 +67,10 @@ namespace Menu.Data
                 .ToTable("Waiter");
 
             modelBuilder.Entity<Table>()
-                .ToTable("Tables");
+                .ToTable("Table");
+
+            modelBuilder.Entity<TableWaiter>()
+                .ToTable("TableWaiter");
 
             modelBuilder.Entity<User>()
                 .ToTable("User");
@@ -85,6 +92,9 @@ namespace Menu.Data
 
             modelBuilder.Entity<Order>()
                 .ToTable("Order");
+
+            modelBuilder.Entity<OrderWaiter>()
+                .ToTable("OrderWaiter");
 
             modelBuilder.Entity<OrderDetail>()
                 .ToTable("OrderDetail");

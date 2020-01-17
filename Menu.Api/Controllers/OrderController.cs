@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using AutoMapper;
+using Menu.Api.Extensions;
 using Menu.Api.Models;
+using Menu.Core.Enums;
+using Menu.Core.Models;
 using Menu.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -69,12 +72,69 @@ namespace Menu.Api.Controllers
         [Route("Order")]
         public IActionResult Create([FromBody] CreateOrderDto dto)
         {
-            var orderTable = _orderTableService.GetByTableIdAndVenueId(1,1);
+            var orderTable = _orderTableService.GetByTableIdAndVenueId(dto.TableId, dto.VenueId, false);
 
-            if (orderTable != null)
+            if (orderTable == null)
             {
-                return Ok("oksksks");
+                var newOrderTable = new OrderTable
+                {
+                    IsClosed = false,
+                    TableId = dto.TableId,
+                    VenueId = dto.VenueId
+                };
+
+                _orderTableService.Create(newOrderTable);
+
+                _orderTableService.SaveChanges();
             }
+
+            orderTable = _orderTableService.GetByTableIdAndVenueId(dto.TableId, dto.VenueId, false);
+
+            var newOrder = new Order
+            {
+                Code = Guid.NewGuid().ToString(),
+                Description = dto.Description,
+                OrderStatus = OrderStatus.Pending,
+                CreatedDate = DateTime.Now,
+                UserId = 1,
+                OrderTableId = orderTable.Id
+            };
+
+            foreach (var orderDetail in dto.OrderDetail)
+            {
+                var product = _productService.GetById(orderDetail.ProductId);
+
+                if (product != null)
+                {
+                    string optionItemText = null;
+
+                    foreach (var item in orderDetail.OptionItems)
+                    {
+                        var optionItem = _optionItemService.GetById(item);
+
+                        if (optionItem != null)
+                        {
+                            optionItemText = optionItem.Name + ',';
+                        }
+                    }
+
+                    var newOrderDetail = new OrderDetail
+                    {
+                        Name = product.Name,
+                        Photo = product.Photo,
+                        OptionItem = optionItemText.TrimEnd(','),
+                        Quantity = orderDetail.Quantity,
+                        Price = product.Price,
+                        Order = newOrder
+                    };
+
+                    _orderDetailService.Create(newOrderDetail);
+                }
+            }
+
+            _orderService.Create(newOrder);
+
+            _orderService.SaveChanges();
 
             return NotFound(new
             {

@@ -18,5 +18,8 @@ namespace Menu.Core.Models
 
 
         public virtual List<OrderTable> OrderTable { get; set; }
+
+
+        public virtual List<TableWaiter> TableWaiter { get; set; }
     }
 }

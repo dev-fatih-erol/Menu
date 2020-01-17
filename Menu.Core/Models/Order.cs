@@ -17,11 +17,6 @@ namespace Menu.Core.Models
         public DateTime CreatedDate { get; set; }
 
 
-        public int WaiterId { get; set; }
-
-        public virtual Waiter Waiter { get; set; }
-
-
         public int UserId { get; set; }
 
         public virtual User User { get; set; }
@@ -30,6 +25,9 @@ namespace Menu.Core.Models
         public int OrderTableId { get; set; }
 
         public virtual OrderTable OrderTable { get; set; }
+
+
+        public virtual List<OrderWaiter> OrderWaiter { get; set; }
 
 
         public virtual List<OrderDetail> OrderDetail { get; set; }

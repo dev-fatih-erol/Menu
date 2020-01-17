@@ -6,8 +6,6 @@ namespace Menu.Api.Models
     {
         public string Description { get; set; }
 
-        public int WaiterId { get; set; }
-
         public int TableId { get; set; }
 
         public int VenueId { get; set; }

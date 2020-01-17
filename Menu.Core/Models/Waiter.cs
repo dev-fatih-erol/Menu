@@ -14,11 +14,6 @@ namespace Menu.Core.Models
         public DateTime CreatedDate { get; set; }
 
 
-        public int VenueId { get; set; }
-
-        public virtual Venue Venue { get; set; }
-
-
-        public virtual List<Order> Order { get; set; }
+        public virtual List<TableWaiter> TableWaiter { get; set; }
     }
 }
