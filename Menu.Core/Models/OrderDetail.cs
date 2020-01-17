@@ -6,11 +6,11 @@
 
         public string Name { get; set; }
 
-        public string Photo { get; set; }
-
         public string OptionItem { get; set; }
 
-        public int Quantity { get; set; }
+        public string Photo { get; set; }
+
+        public byte Quantity { get; set; }
 
         public decimal Price { get; set; }
 

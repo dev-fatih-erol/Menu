@@ -27,13 +27,22 @@ namespace Menu.Core.Models
         public DateTime CreatedDate { get; set; }
 
 
-        public virtual List<Table> Table { get; set; }
+        public virtual List<Cash> Cash { get; set; }
 
 
         public virtual List<Waiter> Waiter { get; set; }
 
 
+        public virtual List<Table> Table { get; set; }
+
+
         public virtual List<Category> Category { get; set; }
+
+
+        public virtual List<OrderTable> OrderTable { get; set; }
+
+
+        public virtual List<VenuePaymentMethod> VenuePaymentMethod { get; set; }
 
 
         public virtual List<CommentRating> CommentRating { get; set; }

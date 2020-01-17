@@ -16,9 +16,11 @@ namespace Menu.Data
 
         public DbSet<Venue> Venues { get; set; }
 
-        public DbSet<Table> Tables { get; set; }
+        public DbSet<Cash> Cashes { get; set; }
 
         public DbSet<Waiter> Waiters { get; set; }
+
+        public DbSet<Table> Tables { get; set; }
 
         public DbSet<User> Users { get; set; }
 
@@ -30,9 +32,17 @@ namespace Menu.Data
 
         public DbSet<OptionItem> OptionItems { get; set; }
 
+        public DbSet<OrderTable> OrderTables { get; set; }
+
         public DbSet<Order> Orders { get; set; }
 
         public DbSet<OrderDetail> OrderDetails { get; set; }
+
+        public DbSet<OrderPayment> OrderPayments { get; set; }
+
+        public DbSet<PaymentMethod> PaymentMethods { get; set; }
+
+        public DbSet<VenuePaymentMethod> VenuePaymentMethods { get; set; }
 
         public DbSet<CommentRating> CommentRatings { get; set; }
 
@@ -46,11 +56,14 @@ namespace Menu.Data
             modelBuilder.Entity<Venue>()
                 .ToTable("Venue");
 
-            modelBuilder.Entity<Table>()
-                .ToTable("Table");
+            modelBuilder.Entity<Cash>()
+                .ToTable("Cash");
 
             modelBuilder.Entity<Waiter>()
                 .ToTable("Waiter");
+
+            modelBuilder.Entity<Table>()
+                .ToTable("Tables");
 
             modelBuilder.Entity<User>()
                 .ToTable("User");
@@ -67,11 +80,23 @@ namespace Menu.Data
             modelBuilder.Entity<OptionItem>()
                 .ToTable("OptionItem");
 
+            modelBuilder.Entity<OrderTable>()
+                .ToTable("OrderTable");
+
             modelBuilder.Entity<Order>()
                 .ToTable("Order");
 
             modelBuilder.Entity<OrderDetail>()
                 .ToTable("OrderDetail");
+
+            modelBuilder.Entity<OrderPayment>()
+                .ToTable("OrderPayment");
+
+            modelBuilder.Entity<PaymentMethod>()
+                .ToTable("PaymentMethod");
+
+            modelBuilder.Entity<VenuePaymentMethod>()
+                .ToTable("VenuePaymentMethod");
 
             modelBuilder.Entity<CommentRating>()
                 .ToTable("CommentRating");
