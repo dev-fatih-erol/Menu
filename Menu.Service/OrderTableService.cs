@@ -22,19 +22,12 @@ namespace Menu.Service
                            .FirstOrDefault();
         }
 
-        public OrderTable GetByTableIdAndVenueId(int tableId, int venueId)
+        public OrderTable GetByTableIdAndVenueId(int tableId, int venueId, int userId, bool isClosed)
         {
             return _context.OrderTables
                            .Where(o => o.TableId == tableId &&
-                                       o.VenueId == venueId)
-                           .Select(o => new OrderTable
-                           {
-                               Id = o.Id,
-                               IsClosed = o.IsClosed,
-                               TableId = o.TableId,
-                               VenueId = o.VenueId,
-                               Order = o.Order
-                           })
+                                       o.VenueId == venueId &&
+                                       o.Order.Any(o => o.UserId == userId))
                            .FirstOrDefault();
         }
 

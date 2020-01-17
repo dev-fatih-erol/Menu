@@ -4,7 +4,7 @@ namespace Menu.Service
 {
     public interface IOrderTableService
     {
-        OrderTable GetByTableIdAndVenueId(int tableId, int venueId);
+        OrderTable GetByTableIdAndVenueId(int tableId, int venueId, int userId, bool isClosed);
 
         OrderTable GetByTableIdAndVenueId(int tableId, int venueId, bool isClosed);
 

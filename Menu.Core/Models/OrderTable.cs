@@ -9,6 +9,8 @@ namespace Menu.Core.Models
 
         public bool IsClosed { get; set; }
 
+        public DateTime CreatedDate { get; set; }
+
 
         public int VenueId { get; set; }
 
