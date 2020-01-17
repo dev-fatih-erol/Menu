@@ -108,6 +108,7 @@ namespace Menu.Api.Controllers
                     var newOrderTable = new OrderTable
                     {
                         IsClosed = false,
+                        CreatedDate = DateTime.Now,
                         TableId = dto.TableId,
                         VenueId = dto.VenueId
                     };
