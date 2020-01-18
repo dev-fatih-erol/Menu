@@ -21,6 +21,12 @@ namespace Menu.Service
                            .Select(o => new Order
                            {
                               Id = o.Id,
+                              Code = o.Code,
+                              Description = o.Description,
+                              OrderStatus = o.OrderStatus,
+                              CreatedDate = o.CreatedDate,
+                              UserId = o.UserId,
+                              OrderTableId = o.OrderTableId,
                               OrderTable = o.OrderTable
                            }).ToList();
         }
