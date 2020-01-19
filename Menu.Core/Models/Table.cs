@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Menu.Core.Enums;
 
 namespace Menu.Core.Models
 {
@@ -8,6 +9,8 @@ namespace Menu.Core.Models
         public int Id { get; set; }
 
         public string Name { get; set; }
+
+        public TableStatus TableStatus { get; set; }
 
         public DateTime CreatedDate { get; set; }
 

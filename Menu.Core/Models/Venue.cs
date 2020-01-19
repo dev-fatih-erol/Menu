@@ -39,10 +39,10 @@ namespace Menu.Core.Models
         public virtual List<Category> Category { get; set; }
 
 
-        public virtual List<OrderTable> OrderTable { get; set; }
-
-
         public virtual List<VenuePaymentMethod> VenuePaymentMethod { get; set; }
+
+
+        public virtual List<OrderTable> OrderTable { get; set; }
 
 
         public virtual List<CommentRating> CommentRating { get; set; }

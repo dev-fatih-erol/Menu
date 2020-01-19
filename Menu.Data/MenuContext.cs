@@ -38,7 +38,7 @@ namespace Menu.Data
 
         public DbSet<Order> Orders { get; set; }
 
-        public DbSet<OrderWaiter> OrderWaiter { get; set; }
+        public DbSet<OrderWaiter> OrderWaiters { get; set; }
 
         public DbSet<OrderDetail> OrderDetails { get; set; }
 

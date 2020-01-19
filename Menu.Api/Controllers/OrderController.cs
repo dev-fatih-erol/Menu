@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using AutoMapper;
-using Menu.Api.Extensions;
 using Menu.Api.Models;
 using Menu.Core.Enums;
 using Menu.Core.Models;
@@ -72,15 +70,15 @@ namespace Menu.Api.Controllers
         [Route("Me/Orders")]
         public IActionResult GetByUserId()
         {
-            var orders = _orderService.GetByUserId(1);
+            var orderTables = _orderTableService.GetByUserId(1);
 
-            if (orders.Any())
+            if (orderTables.Any())
             {
                 return Ok(new
                 {
                     Success = true,
                     StatusCode = (int)HttpStatusCode.OK,
-                    Result = orders
+                    Result = orderTables
                 });
             }
 
@@ -97,75 +95,92 @@ namespace Menu.Api.Controllers
         [Route("Order")]
         public IActionResult Create([FromBody] CreateOrderDto dto)
         {
-            var orderTable1 = _orderTableService.GetByTableIdAndVenueId(dto.TableId, dto.VenueId, 1, false);
+            var orderTable = _orderTableService.GetByUserId(1, false);
 
-            if (orderTable1 != null)
+            if (orderTable != null)
             {
-                var orderTable = _orderTableService.GetByTableIdAndVenueId(dto.TableId, dto.VenueId, false);
-
-                if (orderTable == null)
+                if (!orderTable.TableId.Equals(dto.TableId) || !orderTable.VenueId.Equals(dto.VenueId))
                 {
-                    var newOrderTable = new OrderTable
+                    return NotFound(new
                     {
-                        IsClosed = false,
-                        CreatedDate = DateTime.Now,
-                        TableId = dto.TableId,
-                        VenueId = dto.VenueId
+                        Success = false,
+                        StatusCode = (int)HttpStatusCode.NotFound,
+                        Message = "Başka bir cafeden veya masadan sipariş veremezsiniz"
+                    });
+                }
+
+                var pendingOrder = orderTable.Order.Where(o => o.OrderStatus == OrderStatus.Pending);
+
+                if (pendingOrder.Count() > 5)
+                {
+                    return NotFound(new
+                    {
+                        Success = false,
+                        StatusCode = (int)HttpStatusCode.NotFound,
+                        Message = "Çok sayıda siparişiniz var lütfen diğer siparişlerinizin onaylanmasını bekleyin."
+                    });
+                }
+
+                //orderdan devam
+
+            }
+
+
+            //yeni insert
+
+            var newOrderTable = new OrderTable
+            {
+                IsClosed = false,
+                CreatedDate = DateTime.Now,
+                VenueId = dto.VenueId,
+                TableId = dto.TableId,
+                UserId = 1
+            };
+
+            var newOrder = new Order
+            {
+                Code = Guid.NewGuid().ToString(),
+                Description = dto.Description,
+                OrderStatus = OrderStatus.Pending,
+                CreatedDate = DateTime.Now,
+                OrderTable = newOrderTable
+            };
+
+            foreach (var orderDetail in dto.OrderDetail)
+            {
+                var product = _productService.GetById(orderDetail.ProductId);
+
+                if (product != null)
+                {
+                    string optionItemText = null;
+
+                    foreach (var item in orderDetail.OptionItems)
+                    {
+                        var optionItem = _optionItemService.GetById(item);
+
+                        if (optionItem != null)
+                        {
+                            optionItemText = optionItem.Name + ',';
+                        }
+                    }
+
+                    var newOrderDetail = new OrderDetail
+                    {
+                        Name = product.Name,
+                        Photo = product.Photo,
+                        OptionItem = optionItemText.TrimEnd(','),
+                        Quantity = orderDetail.Quantity,
+                        Price = product.Price,
+                        Order = newOrder
                     };
 
-                    _orderTableService.Create(newOrderTable);
-
-                    _orderTableService.SaveChanges();
+                    _orderDetailService.Create(newOrderDetail);
                 }
-
-                orderTable = _orderTableService.GetByTableIdAndVenueId(dto.TableId, dto.VenueId, false);
-
-                var newOrder = new Order
-                {
-                    Code = Guid.NewGuid().ToString(),
-                    Description = dto.Description,
-                    OrderStatus = OrderStatus.Pending,
-                    CreatedDate = DateTime.Now,
-                    UserId = 1,
-                    OrderTableId = orderTable.Id
-                };
-
-                foreach (var orderDetail in dto.OrderDetail)
-                {
-                    var product = _productService.GetById(orderDetail.ProductId);
-
-                    if (product != null)
-                    {
-                        string optionItemText = null;
-
-                        foreach (var item in orderDetail.OptionItems)
-                        {
-                            var optionItem = _optionItemService.GetById(item);
-
-                            if (optionItem != null)
-                            {
-                                optionItemText = optionItem.Name + ',';
-                            }
-                        }
-
-                        var newOrderDetail = new OrderDetail
-                        {
-                            Name = product.Name,
-                            Photo = product.Photo,
-                            OptionItem = optionItemText.TrimEnd(','),
-                            Quantity = orderDetail.Quantity,
-                            Price = product.Price,
-                            Order = newOrder
-                        };
-
-                        _orderDetailService.Create(newOrderDetail);
-                    }
-                }
-
-                _orderService.Create(newOrder);
-
-                _orderService.SaveChanges();
             }
+
+            _orderTableService.Create(newOrderTable);
+
+            _orderTableService.SaveChanges();
 
             return NotFound(new
             {

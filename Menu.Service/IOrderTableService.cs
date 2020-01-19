@@ -1,12 +1,13 @@
-﻿using Menu.Core.Models;
+﻿using System.Collections.Generic;
+using Menu.Core.Models;
 
 namespace Menu.Service
 {
     public interface IOrderTableService
     {
-        OrderTable GetByTableIdAndVenueId(int tableId, int venueId, int userId, bool isClosed);
+        OrderTable GetByUserId(int userId, bool isClosed);
 
-        OrderTable GetByTableIdAndVenueId(int tableId, int venueId, bool isClosed);
+        List<OrderTable> GetByUserId(int userId);
 
         void Create(OrderTable orderTable);
 

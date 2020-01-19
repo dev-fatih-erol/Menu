@@ -22,6 +22,11 @@ namespace Menu.Core.Models
         public virtual Table Table { get; set; }
 
 
+        public int UserId { get; set; }
+
+        public virtual User User { get; set; }
+
+
         public virtual List<Order> Order { get; set; }
 
 
