@@ -26,9 +26,7 @@ namespace Menu.Service
                                CreatedDate = o.CreatedDate,
                                VenueId = o.VenueId,
                                TableId = o.TableId,
-                               UserId = o.UserId,
-                               Order = o.Order.OrderBy(o => o.CreatedDate)
-                                              .ToList()
+                               UserId = o.UserId
                            })
                            .FirstOrDefault();
         }
