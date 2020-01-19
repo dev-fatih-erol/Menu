@@ -120,6 +120,12 @@ namespace Menu.Data
                                v => (VenueType)Enum.Parse(typeof(VenueType),
                                v));
 
+            modelBuilder.Entity<Table>()
+                .Property(t => t.TableStatus)
+                .HasConversion(t => t.ToString(),
+                               t => (TableStatus)Enum.Parse(typeof(TableStatus),
+                               t));
+
             modelBuilder.Entity<Option>()
                 .Property(o => o.OptionType)
                 .HasConversion(o => o.ToString(),

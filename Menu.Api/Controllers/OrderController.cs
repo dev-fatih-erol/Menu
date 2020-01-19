@@ -70,7 +70,8 @@ namespace Menu.Api.Controllers
         [Route("Me/Orders")]
         public IActionResult GetByUserId()
         {
-            var orderTables = _orderTableService.GetByUserId(1);
+            var orderTables1 = _orderTableService.GetByUserId1(10);
+            var orderTables = _orderTableService.GetByUserId(10);
 
             if (orderTables.Any())
             {
@@ -78,7 +79,7 @@ namespace Menu.Api.Controllers
                 {
                     Success = true,
                     StatusCode = (int)HttpStatusCode.OK,
-                    Result = orderTables
+                    Result = orderTables1
                 });
             }
 

@@ -14,6 +14,31 @@ namespace Menu.Service
             _context = context;
         }
 
+        public OrderTable GetByUserId1(int userId)
+        {
+            return _context.OrderTables
+                           .Where(o => o.UserId == userId)
+                           .Select(o => new OrderTable
+                           {
+                               Id = o.Id,
+                               IsClosed = o.IsClosed,
+                               CreatedDate = o.CreatedDate,
+                               VenueId = o.VenueId,
+                            
+                               TableId = o.TableId,
+                           
+                               UserId = o.UserId,
+                               Order = o.Order.Select(p => new Order
+                               {
+                                   Code = p.Code,
+                                   CreatedDate = p.CreatedDate,
+                                  
+                         
+                               }).ToList(),
+                               OrderPayment = o.OrderPayment
+                           }).FirstOrDefault();
+        }
+
         public OrderTable GetByUserId(int userId, bool isClosed)
         {
             return _context.OrderTables
