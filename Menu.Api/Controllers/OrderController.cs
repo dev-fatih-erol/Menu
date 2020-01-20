@@ -173,7 +173,7 @@ namespace Menu.Api.Controllers
 
         // POST order
         [HttpPost]
-       
+        [Authorize]
         [Route("Order")]
         public IActionResult Create([FromBody] CreateOrderDto dto)
         {
