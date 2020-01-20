@@ -13,6 +13,14 @@ namespace Menu.Service
             _context = context;
         }
 
+        public Table GetById(int id, int venueId)
+        {
+            return _context.Tables
+                           .Where(t => t.Id == id &&
+                                       t.VenueId == venueId)
+                           .FirstOrDefault();
+        }
+
         public Table GetById(int id)
         {
             return _context.Tables

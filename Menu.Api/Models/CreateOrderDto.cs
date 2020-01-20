@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Menu.Api.Models
 {
@@ -10,6 +11,7 @@ namespace Menu.Api.Models
 
         public int VenueId { get; set; }
 
+        [Required(ErrorMessage = "Lütfen adınızı girin")]
         public List<CreateOrderDetailDto> OrderDetail { get; set; }
     }
 }

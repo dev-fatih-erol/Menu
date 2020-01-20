@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using AutoMapper;
 using Menu.Api.Extensions;
+using Menu.Api.Helpers;
 using Menu.Api.Models;
 using Menu.Core.Enums;
 using Menu.Core.Models;
@@ -172,55 +173,133 @@ namespace Menu.Api.Controllers
 
         // POST order
         [HttpPost]
-        [Authorize]
+       
         [Route("Order")]
         public IActionResult Create([FromBody] CreateOrderDto dto)
         {
-            var orderTable = _orderTableService.GetByUserId(User.Identity.GetId(), false);
-
-            if (orderTable != null)
+            if (!ModelState.IsValid)
             {
-                if (!orderTable.TableId.Equals(dto.TableId) || !orderTable.VenueId.Equals(dto.VenueId))
+                return BadRequest(new
                 {
-                    return BadRequest(new
+                    Success = false,
+                    StatusCode = (int)HttpStatusCode.BadRequest,
+                    Errors = ModelState.GetErrors()
+                });
+            }
+
+            var table = _tableService.GetById(dto.TableId, dto.VenueId);
+
+            if (table != null)
+            {
+                var orderTable = _orderTableService.GetByUserId(User.Identity.GetId(), false);
+
+                if (orderTable != null)
+                {
+                    if (!orderTable.TableId.Equals(dto.TableId) || !orderTable.VenueId.Equals(dto.VenueId))
                     {
-                        Success = false,
-                        StatusCode = (int)HttpStatusCode.BadRequest,
-                        Message = "Başka bir mekandan veya masadan sipariş veremezsiniz."
+                        return BadRequest(new
+                        {
+                            Success = false,
+                            StatusCode = (int)HttpStatusCode.BadRequest,
+                            Message = "Başka bir mekandan veya masadan sipariş veremezsiniz."
+                        });
+                    }
+
+                    if (orderTable.OrderPayment != null)
+                    {
+                        return BadRequest(new
+                        {
+                            Success = false,
+                            StatusCode = (int)HttpStatusCode.BadRequest,
+                            Message = "Hesap isteme işleminden sonra sipariş veremezsiniz."
+                        });
+                    }
+
+                    var pendingOrders = orderTable.Order.Where(o => o.OrderStatus == OrderStatus.Pending).ToList();
+
+                    if (pendingOrders.Count() > 5)
+                    {
+                        return BadRequest(new
+                        {
+                            Success = false,
+                            StatusCode = (int)HttpStatusCode.BadRequest,
+                            Message = "Çok sayıda bekleyen siparişiniz var."
+                        });
+                    }
+
+                    //Repeat Order
+
+                    var order = new Order
+                    {
+                        Code = RandomHelper.Generate(1000, 9999).ToString(),
+                        Description = dto.Description ?? null,
+                        OrderStatus = OrderStatus.Pending,
+                        CreatedDate = DateTime.Now,
+                        OrderTableId = orderTable.Id
+                    };
+
+                    foreach (var orderDetail in dto.OrderDetail)
+                    {
+                        var product = _productService.GetById(orderDetail.ProductId);
+
+                        if (product != null)
+                        {
+                            string optionItemText = null;
+
+                            foreach (var item in orderDetail.OptionItems)
+                            {
+                                var optionItem = _optionItemService.GetById(item);
+
+                                if (optionItem != null)
+                                {
+                                    optionItemText = optionItem.Name + ',';
+                                }
+                            }
+
+                            var newOrderDetail = new OrderDetail
+                            {
+                                Name = product.Name,
+                                Photo = product.Photo,
+                                OptionItem = optionItemText.TrimEnd(','),
+                                Quantity = orderDetail.Quantity,
+                                Price = product.Price,
+                                Order = order
+                            };
+
+                            _orderDetailService.Create(newOrderDetail);
+                        }
+                    }
+
+                    _orderService.Create(order);
+
+                    _orderService.SaveChanges();
+
+                    return Ok(new
+                    {
+                        Success = true,
+                        StatusCode = (int)HttpStatusCode.OK,
+                        Result = true
                     });
                 }
 
-                if (orderTable.OrderPayment != null)
+                //New Order
+
+                var newOrderTable = new OrderTable
                 {
-                    return BadRequest(new
-                    {
-                        Success = false,
-                        StatusCode = (int)HttpStatusCode.BadRequest,
-                        Message = "Hesap isteme işleminden sonra sipariş veremezsiniz."
-                    });
-                }
+                    IsClosed = false,
+                    CreatedDate = DateTime.Now,
+                    VenueId = dto.VenueId,
+                    TableId = dto.TableId,
+                    UserId = User.Identity.GetId()
+                };
 
-                var pendingOrders = orderTable.Order.Where(o => o.OrderStatus == OrderStatus.Pending).ToList();
-
-                if (pendingOrders.Count() > 5)
+                var newOrder = new Order
                 {
-                    return BadRequest(new
-                    {
-                        Success = false,
-                        StatusCode = (int)HttpStatusCode.BadRequest,
-                        Message = "Çok sayıda bekleyen siparişiniz var."
-                    });
-                }
-
-                //Repeat Order
-
-                var order = new Order
-                {
-                    Code = Guid.NewGuid().ToString(),
-                    Description = dto.Description,
+                    Code = RandomHelper.Generate(1000, 9999).ToString(),
+                    Description = dto.Description ?? null,
                     OrderStatus = OrderStatus.Pending,
                     CreatedDate = DateTime.Now,
-                    OrderTableId = orderTable.Id
+                    OrderTable = newOrderTable
                 };
 
                 foreach (var orderDetail in dto.OrderDetail)
@@ -248,16 +327,16 @@ namespace Menu.Api.Controllers
                             OptionItem = optionItemText.TrimEnd(','),
                             Quantity = orderDetail.Quantity,
                             Price = product.Price,
-                            Order = order
+                            Order = newOrder
                         };
 
                         _orderDetailService.Create(newOrderDetail);
                     }
                 }
 
-                _orderService.Create(order);
+                _orderTableService.Create(newOrderTable);
 
-                _orderService.SaveChanges();
+                _orderTableService.SaveChanges();
 
                 return Ok(new
                 {
@@ -267,67 +346,11 @@ namespace Menu.Api.Controllers
                 });
             }
 
-            //New Order
-
-            var newOrderTable = new OrderTable
+            return NotFound(new
             {
-                IsClosed = false,
-                CreatedDate = DateTime.Now,
-                VenueId = dto.VenueId,
-                TableId = dto.TableId,
-                UserId = User.Identity.GetId()
-            };
-
-            var newOrder = new Order
-            {
-                Code = Guid.NewGuid().ToString(),
-                Description = dto.Description,
-                OrderStatus = OrderStatus.Pending,
-                CreatedDate = DateTime.Now,
-                OrderTable = newOrderTable
-            };
-
-            foreach (var orderDetail in dto.OrderDetail)
-            {
-                var product = _productService.GetById(orderDetail.ProductId);
-
-                if (product != null)
-                {
-                    string optionItemText = null;
-
-                    foreach (var item in orderDetail.OptionItems)
-                    {
-                        var optionItem = _optionItemService.GetById(item);
-
-                        if (optionItem != null)
-                        {
-                            optionItemText = optionItem.Name + ',';
-                        }
-                    }
-
-                    var newOrderDetail = new OrderDetail
-                    {
-                        Name = product.Name,
-                        Photo = product.Photo,
-                        OptionItem = optionItemText.TrimEnd(','),
-                        Quantity = orderDetail.Quantity,
-                        Price = product.Price,
-                        Order = newOrder
-                    };
-
-                    _orderDetailService.Create(newOrderDetail);
-                }
-            }
-
-            _orderTableService.Create(newOrderTable);
-
-            _orderTableService.SaveChanges();
-
-            return Ok(new
-            {
-                Success = true,
-                StatusCode = (int)HttpStatusCode.OK,
-                Result = true
+                Success = false,
+                StatusCode = (int)HttpStatusCode.NotFound,
+                Message = "Masa bulunamadı"
             });
         }
     }
