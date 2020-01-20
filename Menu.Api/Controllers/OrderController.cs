@@ -2,10 +2,12 @@
 using System.Linq;
 using System.Net;
 using AutoMapper;
+using Menu.Api.Extensions;
 using Menu.Api.Models;
 using Menu.Core.Enums;
 using Menu.Core.Models;
 using Menu.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -77,20 +79,21 @@ namespace Menu.Api.Controllers
 
         // Post me/order/checkout
         [HttpPost]
+        [Authorize]
         [Route("Me/Order/CheckOut")]
         public IActionResult CheckOut(int usedPoint, int tip)
         {
-            var orderTable = _orderTableService.GetByUserId(10, false);
+            var orderTable = _orderTableService.GetByUserId(User.Identity.GetId(), false);
 
             if (orderTable != null)
             {
                 if (orderTable.OrderPayment != null)
                 {
-                    return NotFound(new
+                    return BadRequest(new
                     {
                         Success = false,
-                        StatusCode = (int)HttpStatusCode.NotFound,
-                        Message = "Zaten hesap ödeme isteğiniz var."
+                        StatusCode = (int)HttpStatusCode.BadRequest,
+                        Message = "Mevcut hesap ödeme isteğiniz var. Hesap isteyemezsiniz."
                     });
                 }
 
@@ -98,11 +101,11 @@ namespace Menu.Api.Controllers
 
                 if (pendingOrders.Any())
                 {
-                    return NotFound(new
+                    return BadRequest(new
                     {
                         Success = false,
-                        StatusCode = (int)HttpStatusCode.NotFound,
-                        Message = "Bekleyen bir siparişiniz var"
+                        StatusCode = (int)HttpStatusCode.BadRequest,
+                        Message = "Bekleyen bir siparişiniz var. Hesap isteyemezsiniz."
                     });
                 }
 
@@ -125,18 +128,11 @@ namespace Menu.Api.Controllers
 
                 _orderPaymentService.SaveChanges();
 
-
-                var user = _userService.GetById(10);
-
-                user.Point = (user.Point - usedPoint) + (Convert.ToInt32(totalPrice) * 10);
-
-                _userService.SaveChanges();
-
                 return Ok(new
                 {
                     Success = true,
                     StatusCode = (int)HttpStatusCode.OK,
-                    Result = user
+                    Result = true
                 });
             }
 
@@ -144,12 +140,13 @@ namespace Menu.Api.Controllers
             {
                 Success = false,
                 StatusCode = (int)HttpStatusCode.NotFound,
-                Message = "Ürün bulunamadı"
+                Message = "Sipariş bulunamadı"
             });
         }
 
         // Get me/orders
         [HttpGet]
+        [Authorize]
         [Route("Me/Orders")]
         public IActionResult GetByUserId()
         {
@@ -175,30 +172,31 @@ namespace Menu.Api.Controllers
 
         // POST order
         [HttpPost]
+        [Authorize]
         [Route("Order")]
         public IActionResult Create([FromBody] CreateOrderDto dto)
         {
-            var orderTable = _orderTableService.GetByUserId(9, false);
+            var orderTable = _orderTableService.GetByUserId(User.Identity.GetId(), false);
 
             if (orderTable != null)
             {
                 if (!orderTable.TableId.Equals(dto.TableId) || !orderTable.VenueId.Equals(dto.VenueId))
                 {
-                    return NotFound(new
+                    return BadRequest(new
                     {
                         Success = false,
-                        StatusCode = (int)HttpStatusCode.NotFound,
-                        Message = "Başka bir cafeden veya masadan sipariş veremezsiniz"
+                        StatusCode = (int)HttpStatusCode.BadRequest,
+                        Message = "Başka bir mekandan veya masadan sipariş veremezsiniz."
                     });
                 }
 
                 if (orderTable.OrderPayment != null)
                 {
-                    return NotFound(new
+                    return BadRequest(new
                     {
                         Success = false,
-                        StatusCode = (int)HttpStatusCode.NotFound,
-                        Message = "Hesap istediniz sipariş veremezsiniz"
+                        StatusCode = (int)HttpStatusCode.BadRequest,
+                        Message = "Hesap isteme işleminden sonra sipariş veremezsiniz."
                     });
                 }
 
@@ -206,11 +204,11 @@ namespace Menu.Api.Controllers
 
                 if (pendingOrders.Count() > 5)
                 {
-                    return NotFound(new
+                    return BadRequest(new
                     {
                         Success = false,
-                        StatusCode = (int)HttpStatusCode.NotFound,
-                        Message = "Çok sayıda siparişiniz var lütfen diğer siparişlerinizin onaylanmasını bekleyin."
+                        StatusCode = (int)HttpStatusCode.BadRequest,
+                        Message = "Çok sayıda bekleyen siparişiniz var."
                     });
                 }
 
@@ -261,11 +259,11 @@ namespace Menu.Api.Controllers
 
                 _orderService.SaveChanges();
 
-                return NotFound(new
+                return Ok(new
                 {
-                    Success = false,
-                    StatusCode = (int)HttpStatusCode.NotFound,
-                    Message = "Ürün bulunamadı"
+                    Success = true,
+                    StatusCode = (int)HttpStatusCode.OK,
+                    Result = true
                 });
             }
 
@@ -277,7 +275,7 @@ namespace Menu.Api.Controllers
                 CreatedDate = DateTime.Now,
                 VenueId = dto.VenueId,
                 TableId = dto.TableId,
-                UserId = 9
+                UserId = User.Identity.GetId()
             };
 
             var newOrder = new Order
@@ -325,11 +323,11 @@ namespace Menu.Api.Controllers
 
             _orderTableService.SaveChanges();
 
-            return NotFound(new
+            return Ok(new
             {
-                Success = false,
-                StatusCode = (int)HttpStatusCode.NotFound,
-                Message = "Ürün bulunamadı"
+                Success = true,
+                StatusCode = (int)HttpStatusCode.OK,
+                Result = true
             });
         }
     }
