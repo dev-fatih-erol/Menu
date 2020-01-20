@@ -30,6 +30,6 @@ namespace Menu.Core.Models
         public virtual List<Order> Order { get; set; }
 
 
-        public virtual List<OrderPayment> OrderPayment { get; set; }
+        public virtual OrderPayment OrderPayment { get; set; }
     }
 }

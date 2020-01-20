@@ -17,6 +17,8 @@ namespace Menu.Core.Models
 
         public string Photo { get; set; }
 
+        public int Point { get; set; }
+
         public DateTime CreatedDate { get; set; }
 
 

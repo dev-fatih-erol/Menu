@@ -17,6 +17,6 @@ namespace Menu.Core.Models
         public virtual Venue Venue { get; set; }
 
 
-        public virtual List<OrderPayment> OrderPayment { get; set; }
+        public virtual List<OrderCash> OrderCash { get; set; }
     }
 }

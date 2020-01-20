@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Menu.Core.Models
 {
@@ -15,11 +16,6 @@ namespace Menu.Core.Models
         public DateTime CreatedDate { get; set; }
 
 
-        public int CashId { get; set; }
-
-        public virtual Cash Cash { get; set; }
-
-
         public int VenuePaymentMethodId { get; set; }
 
         public virtual VenuePaymentMethod VenuePaymentMethod { get; set; }
@@ -28,5 +24,8 @@ namespace Menu.Core.Models
         public int OrderTableId { get; set; }
 
         public virtual OrderTable OrderTable { get; set; }
+
+
+        public virtual List<OrderCash> OrderCash { get; set; }
     }
 }

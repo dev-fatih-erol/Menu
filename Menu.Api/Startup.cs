@@ -84,6 +84,8 @@ namespace Menu.Api
 
             services.AddScoped<IOrderDetailService, OrderDetailService>();
 
+            services.AddScoped<IOrderPaymentService, OrderPaymentService>();
+
             services.AddScoped<ICommentRatingService, CommentRatingService>();
 
             services.AddScoped<IFavoriteService, FavoriteService>();

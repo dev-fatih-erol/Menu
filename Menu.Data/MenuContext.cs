@@ -44,6 +44,8 @@ namespace Menu.Data
 
         public DbSet<OrderPayment> OrderPayments { get; set; }
 
+        public DbSet<OrderCash> OrderCashes { get; set; }
+
         public DbSet<PaymentMethod> PaymentMethods { get; set; }
 
         public DbSet<VenuePaymentMethod> VenuePaymentMethods { get; set; }
@@ -101,6 +103,9 @@ namespace Menu.Data
 
             modelBuilder.Entity<OrderPayment>()
                 .ToTable("OrderPayment");
+
+            modelBuilder.Entity<OrderCash>()
+                .ToTable("OrderCash");
 
             modelBuilder.Entity<PaymentMethod>()
                 .ToTable("PaymentMethod");

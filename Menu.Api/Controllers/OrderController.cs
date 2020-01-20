@@ -23,11 +23,15 @@ namespace Menu.Api.Controllers
 
         private readonly IOrderDetailService _orderDetailService;
 
+        private readonly IOrderPaymentService _orderPaymentService;
+
         private readonly IVenueService _venueService;
 
         private readonly ITableService _tableService;
 
         private readonly IWaiterService _waiterService;
+
+        private readonly IUserService _userService;
 
         private readonly IProductService _productService;
 
@@ -38,9 +42,11 @@ namespace Menu.Api.Controllers
             IOrderTableService orderTableService,
             IOrderService orderService,
             IOrderDetailService orderDetailService,
+            IOrderPaymentService orderPaymentService,
             IVenueService venueService,
             ITableService tableService,
             IWaiterService waiterService,
+            IUserService userService,
             IProductService productService,
             IOptionItemService optionItemService)
         {
@@ -54,15 +60,92 @@ namespace Menu.Api.Controllers
 
             _orderDetailService = orderDetailService;
 
+            _orderPaymentService = orderPaymentService;
+
             _venueService = venueService;
 
             _tableService = tableService;
 
             _waiterService = waiterService;
 
+            _userService = userService;
+
             _productService = productService;
 
             _optionItemService = optionItemService;
+        }
+
+        // Post me/order/checkout
+        [HttpPost]
+        [Route("Me/Order/CheckOut")]
+        public IActionResult CheckOut(int usedPoint, int tip)
+        {
+            var orderTable = _orderTableService.GetByUserId(10, false);
+
+            if (orderTable != null)
+            {
+                if (orderTable.OrderPayment != null)
+                {
+                    return NotFound(new
+                    {
+                        Success = false,
+                        StatusCode = (int)HttpStatusCode.NotFound,
+                        Message = "Zaten hesap ödeme isteğiniz var."
+                    });
+                }
+
+                var pendingOrders = orderTable.Order.Where(o => o.OrderStatus == OrderStatus.Pending).ToList();
+
+                if (pendingOrders.Any())
+                {
+                    return NotFound(new
+                    {
+                        Success = false,
+                        StatusCode = (int)HttpStatusCode.NotFound,
+                        Message = "Bekleyen bir siparişiniz var"
+                    });
+                }
+
+                var totalPrice = orderTable.Order.Where(o => o.OrderStatus != OrderStatus.Cancel &&
+                                                             o.OrderStatus != OrderStatus.Denied)
+                                                 .Select(o => o.OrderDetail
+                                                 .Sum(o => o.Price * o.Quantity)).Sum();
+
+                var newOrderPayment = new OrderPayment
+                {
+                    VenuePaymentMethodId = 1,
+                    Tip = tip,
+                    EarnedPoint = Convert.ToInt32(totalPrice) * 10,
+                    UsedPoint = usedPoint,
+                    CreatedDate = DateTime.Now,
+                    OrderTableId = orderTable.Id
+                };
+
+                _orderPaymentService.Create(newOrderPayment);
+
+                _orderPaymentService.SaveChanges();
+
+
+                var user = _userService.GetById(10);
+
+                user.Point = (user.Point - usedPoint) + (Convert.ToInt32(totalPrice) * 10);
+
+                _userService.SaveChanges();
+
+                return Ok(new
+                {
+                    Success = true,
+                    StatusCode = (int)HttpStatusCode.OK,
+                    Result = user
+                });
+            }
+
+            return NotFound(new
+            {
+                Success = false,
+                StatusCode = (int)HttpStatusCode.NotFound,
+                Message = "Ürün bulunamadı"
+            });
         }
 
         // Get me/orders
@@ -70,7 +153,6 @@ namespace Menu.Api.Controllers
         [Route("Me/Orders")]
         public IActionResult GetByUserId()
         {
-            var orderTables1 = _orderTableService.GetByUserId1(10);
             var orderTables = _orderTableService.GetByUserId(10);
 
             if (orderTables.Any())
@@ -79,7 +161,7 @@ namespace Menu.Api.Controllers
                 {
                     Success = true,
                     StatusCode = (int)HttpStatusCode.OK,
-                    Result = orderTables1
+                    Result = orderTables
                 });
             }
 
@@ -96,7 +178,7 @@ namespace Menu.Api.Controllers
         [Route("Order")]
         public IActionResult Create([FromBody] CreateOrderDto dto)
         {
-            var orderTable = _orderTableService.GetByUserId(1, false);
+            var orderTable = _orderTableService.GetByUserId(9, false);
 
             if (orderTable != null)
             {
@@ -110,9 +192,19 @@ namespace Menu.Api.Controllers
                     });
                 }
 
-                var pendingOrder = orderTable.Order.Where(o => o.OrderStatus == OrderStatus.Pending);
+                if (orderTable.OrderPayment != null)
+                {
+                    return NotFound(new
+                    {
+                        Success = false,
+                        StatusCode = (int)HttpStatusCode.NotFound,
+                        Message = "Hesap istediniz sipariş veremezsiniz"
+                    });
+                }
 
-                if (pendingOrder.Count() > 5)
+                var pendingOrders = orderTable.Order.Where(o => o.OrderStatus == OrderStatus.Pending).ToList();
+
+                if (pendingOrders.Count() > 5)
                 {
                     return NotFound(new
                     {
@@ -122,12 +214,62 @@ namespace Menu.Api.Controllers
                     });
                 }
 
-                //orderdan devam
+                //Repeat Order
 
+                var order = new Order
+                {
+                    Code = Guid.NewGuid().ToString(),
+                    Description = dto.Description,
+                    OrderStatus = OrderStatus.Pending,
+                    CreatedDate = DateTime.Now,
+                    OrderTableId = orderTable.Id
+                };
+
+                foreach (var orderDetail in dto.OrderDetail)
+                {
+                    var product = _productService.GetById(orderDetail.ProductId);
+
+                    if (product != null)
+                    {
+                        string optionItemText = null;
+
+                        foreach (var item in orderDetail.OptionItems)
+                        {
+                            var optionItem = _optionItemService.GetById(item);
+
+                            if (optionItem != null)
+                            {
+                                optionItemText = optionItem.Name + ',';
+                            }
+                        }
+
+                        var newOrderDetail = new OrderDetail
+                        {
+                            Name = product.Name,
+                            Photo = product.Photo,
+                            OptionItem = optionItemText.TrimEnd(','),
+                            Quantity = orderDetail.Quantity,
+                            Price = product.Price,
+                            Order = order
+                        };
+
+                        _orderDetailService.Create(newOrderDetail);
+                    }
+                }
+
+                _orderService.Create(order);
+
+                _orderService.SaveChanges();
+
+                return NotFound(new
+                {
+                    Success = false,
+                    StatusCode = (int)HttpStatusCode.NotFound,
+                    Message = "Ürün bulunamadı"
+                });
             }
 
-
-            //yeni insert
+            //New Order
 
             var newOrderTable = new OrderTable
             {
@@ -135,7 +277,7 @@ namespace Menu.Api.Controllers
                 CreatedDate = DateTime.Now,
                 VenueId = dto.VenueId,
                 TableId = dto.TableId,
-                UserId = 1
+                UserId = 9
             };
 
             var newOrder = new Order
