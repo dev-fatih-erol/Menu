@@ -171,10 +171,10 @@ namespace Menu.Api.Controllers
             });
         }
 
-        // POST order
+        // POST me/order
         [HttpPost]
         [Authorize]
-        [Route("Order")]
+        [Route("Me/Order")]
         public IActionResult Create([FromBody] CreateOrderDto dto)
         {
             if (!ModelState.IsValid)
