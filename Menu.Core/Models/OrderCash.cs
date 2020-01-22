@@ -9,13 +9,13 @@ namespace Menu.Core.Models
         public DateTime CreatedDate { get; set; }
 
 
-        public int OrderPaymentId { get; set; }
-
-        public virtual OrderPayment OrderPayment { get; set; }
-
-
         public int CashId { get; set; }
 
         public virtual Cash Cash { get; set; }
+
+
+        public int OrderTableId { get; set; }
+
+        public virtual OrderTable OrderTable { get; set; }
     }
 }

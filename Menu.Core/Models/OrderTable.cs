@@ -31,5 +31,8 @@ namespace Menu.Core.Models
 
 
         public virtual OrderPayment OrderPayment { get; set; }
+
+
+        public virtual OrderCash OrderCash { get; set; }
     }
 }

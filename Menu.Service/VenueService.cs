@@ -17,6 +17,33 @@ namespace Menu.Service
             _context = context;
         }
 
+        public Venue GetPaymentMethodById(int id)
+        {
+            return _context.Venues
+                            .Where(v => v.Id == id)
+                            .Select(v => new Venue
+                            {
+                                Id = v.Id,
+                                Name = v.Name,
+                                Photo = v.Photo,
+                                Address = v.Address,
+                                OpeningTime = v.OpeningTime,
+                                ClosingTime = v.ClosingTime,
+                                Latitude = v.Latitude,
+                                Longitude = v.Longitude,
+                                VenueType = v.VenueType,
+                                CreatedDate = v.CreatedDate,
+                                VenuePaymentMethod = v.VenuePaymentMethod.Select(v => new VenuePaymentMethod
+                                {
+                                    Id = v.Id,
+                                    CreatedDate = v.CreatedDate,
+                                    VenueId = v.VenueId,
+                                    PaymentMethodId = v.PaymentMethodId,
+                                    PaymentMethod = v.PaymentMethod
+                                }).ToList()
+                            }).FirstOrDefault();
+        }
+
         public List<Venue> GetByCriteria(string name)
         {
             return _context.Venues

@@ -24,8 +24,5 @@ namespace Menu.Core.Models
         public int OrderTableId { get; set; }
 
         public virtual OrderTable OrderTable { get; set; }
-
-
-        public virtual List<OrderCash> OrderCash { get; set; }
     }
 }

@@ -6,6 +6,8 @@ namespace Menu.Service
 {
     public interface IVenueService
     {
+        Venue GetPaymentMethodById(int id);
+
         List<Venue> GetByCriteria(string name);
 
         List<Venue> GetRandom(VenueType? venueType, int take);
