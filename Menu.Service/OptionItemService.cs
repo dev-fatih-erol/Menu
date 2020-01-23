@@ -13,6 +13,14 @@ namespace Menu.Service
             _context = context;
         }
 
+        public OptionItem GetById(int id, int optionId)
+        {
+            return _context.OptionItems
+                           .Where(o => o.Id == id &&
+                                       o.OptionId == optionId)
+                           .FirstOrDefault();
+        }
+
         public OptionItem GetById(int id)
         {
             return _context.OptionItems

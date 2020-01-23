@@ -12,7 +12,5 @@ namespace Menu.Api.Models
         public byte Quantity { get; set; }
 
         public List<OrderDetailOptionDto> Options { get; set; }
-
-        public int[] OptionItems { get; set; }
     }
 }

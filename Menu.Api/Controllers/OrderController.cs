@@ -38,6 +38,8 @@ namespace Menu.Api.Controllers
 
         private readonly IProductService _productService;
 
+        private readonly IOptionService _optionService;
+
         private readonly IOptionItemService _optionItemService;
 
         public OrderController(ILogger<OrderController> logger,
@@ -51,6 +53,7 @@ namespace Menu.Api.Controllers
             IWaiterService waiterService,
             IUserService userService,
             IProductService productService,
+            IOptionService optionService,
             IOptionItemService optionItemService)
         {
             _logger = logger;
@@ -74,6 +77,8 @@ namespace Menu.Api.Controllers
             _userService = userService;
 
             _productService = productService;
+
+            _optionService = optionService;
 
             _optionItemService = optionItemService;
         }
@@ -121,7 +126,7 @@ namespace Menu.Api.Controllers
                         }),
                         user.Point,
                         TLPoint = user.Point * 0.001,
-                        totalPrice
+                        TotalPrice = string.Format("{0:N2}", totalPrice)
                     }
                 });
             }
@@ -223,6 +228,148 @@ namespace Menu.Api.Controllers
             });
         }
 
+        // Get me/order/details
+        [HttpGet]
+        [Authorize]
+        [Route("Me/Order/{id:int}/Details")]
+        public IActionResult OrderDetails(int id, bool status = true)
+        {
+            OrderTable orderTable = null;
+
+            if (status)
+            {
+                orderTable = _orderTableService.GetDetailById(id, User.Identity.GetId());
+
+                if (orderTable != null)
+                {
+                    return Ok(new
+                    {
+                        Success = true,
+                        StatusCode = (int)HttpStatusCode.OK,
+                        Result = new
+                        {
+                            orderTable.Id,
+                            orderTable.IsClosed,
+                            orderTable.CreatedDate,
+                            Table = new
+                            {
+                                orderTable.Table.Id,
+                                orderTable.Table.Name
+                            },
+                            Venue = new
+                            {
+                                orderTable.Venue.Id,
+                                orderTable.Venue.Name,
+                                orderTable.Venue.Photo
+                            },
+                            Order = orderTable.Order.Select(o => new
+                            {
+                                o.Id,
+                                o.Code,
+                                o.Description,
+                                o.OrderStatus,
+                                OrderDetail = o.OrderDetail.Select(o => new
+                                {
+                                    o.Id,
+                                    o.Name,
+                                    o.Photo,
+                                    o.Quantity,
+                                    o.Price,
+                                    o.OptionItem,
+                                }).ToList(),
+                                TotalPrice = string.Format("{0:N2}", orderTable.Order.Where(or => or.Id == o.Id &&
+                                                                          or.OrderStatus != OrderStatus.Cancel &&
+                                                                          or.OrderStatus != OrderStatus.Denied)
+                                                             .Select(or => or.OrderDetail
+                                                             .Sum(or => or.Price * or.Quantity)).Sum())
+                            }).ToList(),
+                            OrderPayment = new
+                            {
+                                orderTable.OrderPayment.Tip,
+                                orderTable.OrderPayment.EarnedPoint,
+                                orderTable.OrderPayment.UsedPoint,
+                                orderTable.OrderPayment.CreatedDate,
+                                orderTable.OrderPayment.VenuePaymentMethod.PaymentMethod.Text
+                            },
+                            TotalPrice = string.Format("{0:N2}", orderTable.Order.Where(o => o.OrderStatus != OrderStatus.Cancel &&
+                                                                     o.OrderStatus != OrderStatus.Denied)
+                                                         .Select(o => o.OrderDetail
+                                                         .Sum(o => o.Price * o.Quantity)).Sum())
+                        }
+                    });
+                }
+
+                return NotFound(new
+                {
+                    Success = false,
+                    StatusCode = (int)HttpStatusCode.NotFound,
+                    Message = "Sipariş bulanamadı"
+                });
+            }
+
+            orderTable = _orderTableService.GetDetailById(id, User.Identity.GetId(), false);
+
+            if (orderTable != null)
+            {
+                return Ok(new
+                {
+                    Success = true,
+                    StatusCode = (int)HttpStatusCode.OK,
+                    Result = new
+                    {
+                        orderTable.Id,
+                        orderTable.IsClosed,
+                        orderTable.CreatedDate,
+                        Table = new
+                        {
+                            orderTable.Table.Id,
+                            orderTable.Table.Name
+                        },
+                        Venue = new
+                        {
+                            orderTable.Venue.Id,
+                            orderTable.Venue.Name,
+                            orderTable.Venue.Photo
+                        },
+                        Order = orderTable.Order.Select(o => new
+                        {
+                            o.Id,
+                            o.Code,
+                            o.Description,
+                            o.OrderStatus,
+                            OrderDetail = o.OrderDetail.Select(o => new
+                            {
+                                o.Id,
+                                o.Name,
+                                o.Photo,
+                                o.Quantity,
+                                o.Price,
+                                o.OptionItem,
+                            }).ToList(),
+                            TotalPrice = string.Format("{0:N2}", orderTable.Order.Where(or => or.Id == o.Id &&
+                                                                      or.OrderStatus != OrderStatus.Cancel &&
+                                                                      or.OrderStatus != OrderStatus.Denied &&
+                                                                      o.OrderStatus != OrderStatus.Pending)
+                                                         .Select(or => or.OrderDetail
+                                                         .Sum(or => or.Price * or.Quantity)).Sum())
+                        }).ToList(),
+                        TotalPrice = string.Format("{0:N2}", orderTable.Order.Where(o => o.OrderStatus != OrderStatus.Cancel &&
+                                                                 o.OrderStatus != OrderStatus.Denied &&
+                                                                 o.OrderStatus != OrderStatus.Pending)
+                                                     .Select(o => o.OrderDetail
+                                                     .Sum(o => o.Price * o.Quantity)).Sum())
+                    }
+                });
+            }
+
+            return NotFound(new
+            {
+                Success = false,
+                StatusCode = (int)HttpStatusCode.NotFound,
+                Message = "Sipariş bulanamadı"
+            });
+        }
+
         // Get me/orders
         [HttpGet]
         [Authorize]
@@ -237,7 +384,13 @@ namespace Menu.Api.Controllers
                 {
                     Success = true,
                     StatusCode = (int)HttpStatusCode.OK,
-                    Result = orderTables
+                    Result = orderTables.Select(o => new
+                    {
+                        o.Id,
+                        o.IsClosed,
+                        o.CreatedDate,
+                        o.Venue.Name
+                    }).ToList()
                 });
             }
 
@@ -245,7 +398,7 @@ namespace Menu.Api.Controllers
             {
                 Success = false,
                 StatusCode = (int)HttpStatusCode.NotFound,
-                Message = "Ürün bulunamadı"
+                Message = "Sipariş bulanamadı"
             });
         }
 
@@ -316,7 +469,7 @@ namespace Menu.Api.Controllers
 
                     foreach (var orderDetail in dto.OrderDetail)
                     {
-                        var product = _productService.GetDetailById(orderDetail.ProductId);
+                        var product = _productService.GetById(orderDetail.ProductId);
 
                         if (product == null)
                         {
@@ -328,66 +481,56 @@ namespace Menu.Api.Controllers
                             });
                         }
 
-                        foreach (var option in product.Option)
+                        var openingTime = new TimeSpan(product.OpeningTime);
+
+                        var closingTime = new TimeSpan(product.ClosingTime);
+
+                        var currentTime = DateTime.Now.TimeOfDay;
+
+                        if (!((currentTime >= openingTime) && (currentTime <= closingTime)))
                         {
-                            if (option.OptionType == OptionType.Select)
+                            return BadRequest(new
                             {
-                                if (orderDetail.Options == null ||
-                                            !orderDetail.Options.Any())
-                                {
-                                    return BadRequest(new
-                                    {
-                                        Success = false,
-                                        StatusCode = (int)HttpStatusCode.BadRequest,
-                                        Message = "Seçenek seçimi yapılmamış ürünler mevcut."
-                                    });
-                                }
-
-                                var checkOption = orderDetail.Options.Where(o => o.Id == option.Id).FirstOrDefault();
-
-                                if (checkOption == null)
-                                {
-                                    return BadRequest(new
-                                    {
-                                        Success = false,
-                                        StatusCode = (int)HttpStatusCode.BadRequest,
-                                        Message = "Seçenek seçimi yapılmamış ürünler mevcut."
-                                    });
-                                }
-
-                                if (checkOption.OptionItems.Count() != 1)
-                                {
-                                    return BadRequest(new
-                                    {
-                                        Success = false,
-                                        StatusCode = (int)HttpStatusCode.BadRequest,
-                                        Message = "Tek seçenekli ürünlerde, Birden fazla seçilmiş seçenek mevcut."
-                                    });
-                                }
-                            }
+                                Success = false,
+                                StatusCode = (int)HttpStatusCode.BadRequest,
+                                Message = $"{product.Name} ürünü şuan mevcut değil"
+                            });
                         }
 
                         string optionItemText = null;
 
                         var productPrice = product.Price;
 
-                        foreach (var option in orderDetail.Options)
+                        if (orderDetail.Options != null && orderDetail.Options.Any())
                         {
-                            foreach (var item in option.OptionItems)
+                            foreach (var orderOption in orderDetail.Options)
                             {
-                                var optionItem = _optionItemService.GetById(item.Id);
+                                var option = _optionService.GetById(orderOption.Id);
 
-                                optionItemText += optionItem.Name + ',';
+                                if (option != null)
+                                {
+                                    foreach (var orderOptionItem in orderOption.OptionItems)
+                                    {
+                                        var optionItem = _optionItemService.GetById(orderOptionItem.Id, option.Id);
 
-                                productPrice += optionItem.Price;
+                                        if (optionItem != null)
+                                        {
+                                            optionItemText += optionItem.Name + ',';
+
+                                            productPrice += optionItem.Price;
+                                        }
+                                    }
+                                }
                             }
+
+                            optionItemText = optionItemText.TrimEnd(',');
                         }
 
                         var newOrderDetail = new OrderDetail
                         {
                             Name = product.Name,
                             Photo = product.Photo,
-                            OptionItem = optionItemText.TrimEnd(','),
+                            OptionItem = optionItemText,
                             Quantity = orderDetail.Quantity,
                             Price = productPrice,
                             Order = order
@@ -426,10 +569,9 @@ namespace Menu.Api.Controllers
                     OrderTable = newOrderTable
                 };
 
-
                 foreach (var orderDetail in dto.OrderDetail)
                 {
-                    var product = _productService.GetDetailById(orderDetail.ProductId);
+                    var product = _productService.GetById(orderDetail.ProductId);
 
                     if (product == null)
                     {
@@ -441,66 +583,56 @@ namespace Menu.Api.Controllers
                         });
                     }
 
-                    foreach (var option in product.Option)
+                    var openingTime = new TimeSpan(product.OpeningTime);
+
+                    var closingTime = new TimeSpan(product.ClosingTime);
+
+                    var currentTime = DateTime.Now.TimeOfDay;
+
+                    if (!((currentTime >= openingTime) && (currentTime <= closingTime)))
                     {
-                        if (option.OptionType == OptionType.Select)
+                        return BadRequest(new
                         {
-                            if (orderDetail.Options == null ||
-                                        !orderDetail.Options.Any())
-                            {
-                                return BadRequest(new
-                                {
-                                    Success = false,
-                                    StatusCode = (int)HttpStatusCode.BadRequest,
-                                    Message = "Seçenek seçimi yapılmamış ürünler mevcut."
-                                });
-                            }
-
-                            var checkOption = orderDetail.Options.Where(o => o.Id == option.Id).FirstOrDefault();
-
-                            if (checkOption == null)
-                            {
-                                return BadRequest(new
-                                {
-                                    Success = false,
-                                    StatusCode = (int)HttpStatusCode.BadRequest,
-                                    Message = "Seçenek seçimi yapılmamış ürünler mevcut."
-                                });
-                            }
-
-                            if (checkOption.OptionItems.Count() != 1)
-                            {
-                                return BadRequest(new
-                                {
-                                    Success = false,
-                                    StatusCode = (int)HttpStatusCode.BadRequest,
-                                    Message = "Tek seçenekli ürünlerde, Birden fazla seçilmiş seçenek mevcut."
-                                });
-                            }
-                        }
+                            Success = false,
+                            StatusCode = (int)HttpStatusCode.BadRequest,
+                            Message = $"{product.Name} ürünü şuan mevcut değil"
+                        });
                     }
 
                     string optionItemText = null;
 
                     var productPrice = product.Price;
 
-                    foreach (var option in orderDetail.Options)
+                    if (orderDetail.Options != null && orderDetail.Options.Any())
                     {
-                        foreach (var item in option.OptionItems)
+                        foreach (var orderOption in orderDetail.Options)
                         {
-                            var optionItem = _optionItemService.GetById(item.Id);
+                            var option = _optionService.GetById(orderOption.Id);
 
-                            optionItemText += optionItem.Name + ',';
+                            if (option != null)
+                            {
+                                foreach (var orderOptionItem in orderOption.OptionItems)
+                                {
+                                    var optionItem = _optionItemService.GetById(orderOptionItem.Id, option.Id);
 
-                            productPrice += optionItem.Price;
+                                    if (optionItem != null)
+                                    {
+                                        optionItemText += optionItem.Name + ',';
+
+                                        productPrice += optionItem.Price;
+                                    }
+                                }
+                            }
                         }
+
+                        optionItemText = optionItemText.TrimEnd(',');
                     }
 
                     var newOrderDetail = new OrderDetail
                     {
                         Name = product.Name,
                         Photo = product.Photo,
-                        OptionItem = optionItemText.TrimEnd(','),
+                        OptionItem = optionItemText,
                         Quantity = orderDetail.Quantity,
                         Price = productPrice,
                         Order = newOrder
@@ -525,7 +657,7 @@ namespace Menu.Api.Controllers
             {
                 Success = false,
                 StatusCode = (int)HttpStatusCode.NotFound,
-                Message = "Masa bulunamadı"
+                Message = "Mekan veya masa bulunamadı"
             });
         }
     }

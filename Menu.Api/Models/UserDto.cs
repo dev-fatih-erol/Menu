@@ -9,5 +9,7 @@
         public string Surname { get; set; }
 
         public string Photo { get; set; }
+
+        public int Point { get; set; }
     }
 }
