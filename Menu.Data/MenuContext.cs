@@ -148,6 +148,12 @@ namespace Menu.Data
                                o => (OrderStatus)Enum.Parse(typeof(OrderStatus),
                                o));
 
+            modelBuilder.Entity<OrderCash>()
+                        .Property(o => o.OrderCashStatus)
+                        .HasConversion(o => o.ToString(),
+                                       o => (OrderCashStatus)Enum.Parse(typeof(OrderCashStatus),
+                                       o));
+
             modelBuilder.Entity<SuggestionComplaint>()
                 .Property(s => s.SuggestionComplaintStatus)
                 .HasConversion(s => s.ToString(),

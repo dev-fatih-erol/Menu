@@ -158,6 +158,7 @@ namespace Menu.Api.Controllers
             });
         }
 
+        // POST auth
         [HttpPost]
         [Route("Auth")]
         [AllowAnonymous]
