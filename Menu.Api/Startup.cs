@@ -90,6 +90,8 @@ namespace Menu.Api
 
             services.AddScoped<IFavoriteService, FavoriteService>();
 
+            services.AddScoped<ISuggestionComplaintService, SuggestionComplaintService>();
+
             services.AddTransient<ISmsSender, SmsSender>();
 
             services.AddSingleton(Configuration);

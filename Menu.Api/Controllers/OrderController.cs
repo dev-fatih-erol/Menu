@@ -32,8 +32,6 @@ namespace Menu.Api.Controllers
 
         private readonly ITableService _tableService;
 
-        private readonly IWaiterService _waiterService;
-
         private readonly IUserService _userService;
 
         private readonly IProductService _productService;
@@ -50,7 +48,6 @@ namespace Menu.Api.Controllers
             IOrderPaymentService orderPaymentService,
             IVenueService venueService,
             ITableService tableService,
-            IWaiterService waiterService,
             IUserService userService,
             IProductService productService,
             IOptionService optionService,
@@ -71,8 +68,6 @@ namespace Menu.Api.Controllers
             _venueService = venueService;
 
             _tableService = tableService;
-
-            _waiterService = waiterService;
 
             _userService = userService;
 

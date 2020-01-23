@@ -54,6 +54,8 @@ namespace Menu.Data
 
         public DbSet<Favorite> Favorites { get; set; }
 
+        public DbSet<SuggestionComplaint> SuggestionComplaints { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<City>()
@@ -119,6 +121,9 @@ namespace Menu.Data
             modelBuilder.Entity<Favorite>()
                 .ToTable("Favorite");
 
+            modelBuilder.Entity<SuggestionComplaint>()
+                .ToTable("SuggestionComplaint");
+
             modelBuilder.Entity<Venue>()
                 .Property(v => v.VenueType)
                 .HasConversion(v => v.ToString(),
@@ -142,6 +147,18 @@ namespace Menu.Data
                 .HasConversion(o => o.ToString(),
                                o => (OrderStatus)Enum.Parse(typeof(OrderStatus),
                                o));
+
+            modelBuilder.Entity<SuggestionComplaint>()
+                .Property(s => s.SuggestionComplaintStatus)
+                .HasConversion(s => s.ToString(),
+                               s => (SuggestionComplaintStatus)Enum.Parse(typeof(SuggestionComplaintStatus),
+                               s));
+
+            modelBuilder.Entity<SuggestionComplaint>()
+                .Property(s => s.SubjectType)
+                .HasConversion(s => s.ToString(),
+                               s => (SubjectType)Enum.Parse(typeof(SubjectType),
+                               s));
         }
     }
 }
