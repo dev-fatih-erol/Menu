@@ -45,10 +45,10 @@ namespace Menu.Api.Controllers
         // GET: waiter/5/Tables
         [HttpGet]
         [Authorize(Roles = "Waiter")]
-        [Route("Waiter/{id:int}/Tables")]
-        public IActionResult GetWithTableById(int id)
+        [Route("Waiter/Tables")]
+        public IActionResult GetWithTableById()
         {
-            var waiters = _waiterService.GetWithTableById(id);
+            var waiters = _waiterService.GetWithTableById(User.Identity.GetId());
 
             if (waiters.Any())
             {
