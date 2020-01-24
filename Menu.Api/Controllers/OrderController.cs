@@ -223,7 +223,7 @@ namespace Menu.Api.Controllers
             });
         }
 
-        // Get me/order/details
+        // Get me/order/5/details
         [HttpGet]
         [Authorize]
         [Route("Me/Order/{id:int}/Details")]
@@ -639,6 +639,15 @@ namespace Menu.Api.Controllers
                 _orderTableService.Create(newOrderTable);
 
                 _orderTableService.SaveChanges();
+
+                var changedTableStatus = _tableService.GetById(dto.TableId);
+
+                if (changedTableStatus.TableStatus == TableStatus.Closed)
+                {
+                    changedTableStatus.TableStatus = TableStatus.Open;
+
+                    _tableService.SaveChanges();
+                }
 
                 return Ok(new
                 {

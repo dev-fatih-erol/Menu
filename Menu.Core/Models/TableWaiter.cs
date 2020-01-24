@@ -9,7 +9,7 @@ namespace Menu.Core.Models
         public DateTime CreatedDate { get; set; }
 
 
-        public string TableId { get; set; }
+        public int TableId { get; set; }
 
         public virtual Table Table { get; set; }
 
