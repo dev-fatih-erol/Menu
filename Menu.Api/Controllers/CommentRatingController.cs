@@ -45,7 +45,7 @@ namespace Menu.Api.Controllers
 
         // GET Comment/5
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "User")]
         [Route("Comment/{orderTableId:int}")]
         public IActionResult GetByUserIdAndOrderTableId(int orderTableId)
         {
@@ -79,7 +79,7 @@ namespace Menu.Api.Controllers
 
         // GET Venue/5/Comments
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "User")]
         [Route("Venue/{venueId:int}/Comments")]
         public IActionResult GetByVenueId(int venueId)
         {
@@ -105,7 +105,7 @@ namespace Menu.Api.Controllers
 
         // POST Comment
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "User")]
         [Route("Comment")]
         public IActionResult Create(CreateCommentRatingDto dto)
         {

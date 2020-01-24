@@ -4,6 +4,7 @@ using System.Net;
 using AutoMapper;
 using Menu.Api.Models;
 using Menu.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -30,6 +31,7 @@ namespace Menu.Api.Controllers
 
         // GET city/5
         [HttpGet]
+        [AllowAnonymous]
         [Route("City/{id:int}")]
         public IActionResult GetById(int id)
         {
@@ -55,6 +57,7 @@ namespace Menu.Api.Controllers
 
         // GET cities
         [HttpGet]
+        [AllowAnonymous]
         [Route("Cities")]
         public IActionResult Get()
         {

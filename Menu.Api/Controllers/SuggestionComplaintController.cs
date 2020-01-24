@@ -33,7 +33,7 @@ namespace Menu.Api.Controllers
 
         // POST suggestioncomplaint
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "User")]
         [Route("SuggestionComplaint")]
         public IActionResult Create(CreateSuggestionComplaintDto dto)
         {

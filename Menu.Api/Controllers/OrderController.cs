@@ -80,7 +80,7 @@ namespace Menu.Api.Controllers
 
         // Get me/order/checkout
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "User")]
         [Route("Me/Order/CheckOut")]
         public IActionResult CheckOut()
         {
@@ -136,7 +136,7 @@ namespace Menu.Api.Controllers
 
         // Post me/order/checkout
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "User")]
         [Route("Me/Order/CheckOut")]
         public IActionResult CheckOut(int usedPoint, int tip, int venuePaymentMethodId)
         {
@@ -225,7 +225,7 @@ namespace Menu.Api.Controllers
 
         // Get me/order/5/details
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "User")]
         [Route("Me/Order/{id:int}/Details")]
         public IActionResult OrderDetails(int id, bool status = true)
         {
@@ -367,7 +367,7 @@ namespace Menu.Api.Controllers
 
         // Get me/orders
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "User")]
         [Route("Me/Orders")]
         public IActionResult GetByUserId()
         {
@@ -399,7 +399,7 @@ namespace Menu.Api.Controllers
 
         // POST me/order
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "User")]
         [Route("Me/Order")]
         public IActionResult Create([FromBody] CreateOrderDto dto)
         {

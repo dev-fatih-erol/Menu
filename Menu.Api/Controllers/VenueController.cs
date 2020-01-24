@@ -5,6 +5,7 @@ using AutoMapper;
 using Menu.Api.Models;
 using Menu.Core.Enums;
 using Menu.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -31,6 +32,7 @@ namespace Menu.Api.Controllers
 
         // GET venue/filter
         [HttpGet]
+        [Authorize(Roles = "User")]
         [Route("Venue/Filter")]
         public IActionResult GetByCriteria(string name)
         {
@@ -56,6 +58,7 @@ namespace Menu.Api.Controllers
 
         // GET venue/random
         [HttpGet]
+        [Authorize(Roles = "User")]
         [Route("Venue/Random")]
         public IActionResult GetRandom(VenueType? venueType, int limit = 5)
         {
@@ -81,6 +84,7 @@ namespace Menu.Api.Controllers
 
         // GET venue/5/details
         [HttpGet]
+        [Authorize(Roles = "User")]
         [Route("Venue/{id:int}/details")]
         public IActionResult GetDetailById(int id)
         {
@@ -106,6 +110,7 @@ namespace Menu.Api.Controllers
 
         // GET venue/5
         [HttpGet]
+        [Authorize(Roles = "User")]
         [Route("Venue/{id:int}")]
         public IActionResult GetById(int id)
         {

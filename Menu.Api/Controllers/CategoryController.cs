@@ -4,6 +4,7 @@ using System.Net;
 using AutoMapper;
 using Menu.Api.Models;
 using Menu.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -30,6 +31,7 @@ namespace Menu.Api.Controllers
 
         // GET venue/5/menu
         [HttpGet]
+        [Authorize(Roles = "User")]
         [Route("Venue/{venueId:int}/Menu")]
         public IActionResult GetCategoriesAndProductsByVenueId(int venueId)
         {
@@ -55,6 +57,7 @@ namespace Menu.Api.Controllers
 
         // GET venue/5/categories
         [HttpGet]
+        [Authorize(Roles = "User")]
         [Route("Venue/{venueId:int}/Categories")]
         public IActionResult GetByVenueId(int venueId)
         {
@@ -80,6 +83,7 @@ namespace Menu.Api.Controllers
 
         // GET category/5
         [HttpGet]
+        [Authorize(Roles = "User")]
         [Route("Category/{id:int}")]
         public IActionResult GetById(int id)
         {

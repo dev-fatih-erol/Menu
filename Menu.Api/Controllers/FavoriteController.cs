@@ -39,7 +39,7 @@ namespace Menu.Api.Controllers
 
         // GET user/favorite/list
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "User")]
         [Route("User/Favorite/List")]
         public IActionResult GetByUserId()
         {
@@ -65,7 +65,7 @@ namespace Menu.Api.Controllers
 
         // GET user/favorite/venue/5/status
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "User")]
         [Route("User/Favorite/Venue/{venueId:int}/Status")]
         public IActionResult Status(int venueId)
         {
@@ -93,7 +93,7 @@ namespace Menu.Api.Controllers
 
         // POST user/favorite/delete
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "User")]
         [Route("User/Favorite/Delete")]
         public IActionResult Delete([FromForm]int venueId)
         {
@@ -128,7 +128,7 @@ namespace Menu.Api.Controllers
 
         // POST user/favorite/create
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "User")]
         [Route("User/Favorite/Create")]
         public IActionResult Create([FromForm]int venueId)
         {

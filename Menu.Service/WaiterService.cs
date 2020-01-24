@@ -23,6 +23,8 @@ namespace Menu.Service
                                Id = w.Id,
                                Name = w.Name,
                                Surname = w.Surname,
+                               Username = w.Username,
+                               Password = w.Password,
                                TableWaiter = w.TableWaiter.Select(w => new TableWaiter
                                {
                                    Id = w.Id,
@@ -32,6 +34,15 @@ namespace Menu.Service
                                    Table = w.Table
                                }).ToList()
                            }).ToList();
+        }
+
+        public Waiter GetByUsernameAndPassword(string username, string password)
+        {
+            return _context.Waiters
+                           .Where(w =>
+                                  w.Username == username &&
+                                  w.Password == password)
+                           .FirstOrDefault();
         }
 
         public Waiter GetById(int id)

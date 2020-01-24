@@ -7,6 +7,8 @@ namespace Menu.Service
     {
         List<Waiter> GetWithTableById(int id);
 
+        Waiter GetByUsernameAndPassword(string username, string password);
+
         Waiter GetById(int id);
 
         void Create(Waiter waiter);

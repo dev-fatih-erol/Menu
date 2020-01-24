@@ -54,7 +54,7 @@ namespace Menu.Api.Controllers
 
         // POST user/changepassword
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "User")]
         [Route("User/ChangePassword")]
         public IActionResult ChangePassword(ChangePasswordDto dto)
         {
@@ -94,7 +94,7 @@ namespace Menu.Api.Controllers
 
         // POST user/createpassword
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "User")]
         [Route("User/CreatePassword")]
         public IActionResult CreatePassword(CreatePasswordDto dto)
         {
@@ -134,7 +134,7 @@ namespace Menu.Api.Controllers
 
         // GET me
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "User")]
         [Route("Me")]
         public IActionResult GetById()
         {
@@ -158,11 +158,11 @@ namespace Menu.Api.Controllers
             });
         }
 
-        // POST auth
+        // POST user/auth
         [HttpPost]
-        [Route("Auth")]
+        [Route("User/Auth")]
         [AllowAnonymous]
-        public IActionResult Authenticate(AuthenticateDto dto)
+        public IActionResult Auth(AuthUserDto dto)
         {
             if (!ModelState.IsValid)
             {
@@ -186,7 +186,8 @@ namespace Menu.Api.Controllers
                 {
                     Subject = new ClaimsIdentity(new Claim[]
                     {
-                        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
+                        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                        new Claim(ClaimTypes.Role, "User")
                     }),
                     Expires = DateTime.Now.AddDays(1),
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
@@ -214,6 +215,7 @@ namespace Menu.Api.Controllers
         // POST user
         [HttpPost]
         [Route("User")]
+        [AllowAnonymous]
         public IActionResult Create(CreateUserDto dto)
         {
             if (!ModelState.IsValid)

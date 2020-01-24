@@ -10,6 +10,7 @@ using Menu.Api.Helpers;
 using Menu.Api.Models;
 using Menu.Api.Services;
 using Menu.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -55,6 +56,7 @@ namespace Menu.Api.Controllers
 
         // POST verification/code/check
         [HttpPost]
+        [AllowAnonymous]
         [Route("Verification/Code/Check")]
         public IActionResult CheckCode(CheckCodeDto dto)
         {
@@ -106,7 +108,8 @@ namespace Menu.Api.Controllers
                 {
                     Subject = new ClaimsIdentity(new Claim[]
                     {
-                        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
+                        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                        new Claim(ClaimTypes.Role, "User")
                     }),
                     Expires = DateTime.Now.AddDays(1),
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
@@ -133,6 +136,7 @@ namespace Menu.Api.Controllers
 
         // POST verification/phonenumber/check
         [HttpPost]
+        [AllowAnonymous]
         [Route("Verification/PhoneNumber/Check")]
         public async Task<IActionResult> CheckPhoneNumber(CheckPhoneNumberDto dto)
         {
@@ -172,6 +176,7 @@ namespace Menu.Api.Controllers
 
         // POST verification/code/verify
         [HttpPost]
+        [AllowAnonymous]
         [Route("Verification/Code/Verify")]
         public IActionResult VerifyCode(VerifyCodeDto dto)
         {
@@ -221,6 +226,7 @@ namespace Menu.Api.Controllers
 
         // POST verification/code/send
         [HttpPost]
+        [AllowAnonymous]
         [Route("Verification/Code/Send")]
         public async Task<IActionResult> SendCode(SendCodeDto dto)
         {
