@@ -14,6 +14,14 @@ namespace Menu.Service
             _context = context;
         }
 
+        public CommentRating GetByUserIdAndOrderTableId(int userId, int orderTableId)
+        {
+            return _context.CommentRatings
+                           .Where(c => c.OrderCash.OrderTable.User.Id == userId &&
+                                       c.OrderCash.OrderTable.Id == orderTableId)
+                           .FirstOrDefault();
+        }
+
         public List<CommentRating> GetByVenueId(int venueId)
         {
             return _context.CommentRatings

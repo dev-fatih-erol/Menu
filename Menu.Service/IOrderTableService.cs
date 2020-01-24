@@ -13,6 +13,8 @@ namespace Menu.Service
 
         List<OrderTable> GetByUserId(int userId);
 
+        OrderTable GetById(int id, int userId, bool isClosed);
+
         void Create(OrderTable orderTable);
 
         void SaveChanges();

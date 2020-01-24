@@ -132,6 +132,15 @@ namespace Menu.Service
                            }).ToList();
         }
 
+        public OrderTable GetById(int id, int userId, bool isClosed)
+        {
+            return _context.OrderTables
+                           .Where(o => o.Id == id &&
+                                       o.UserId == userId &&
+                                       o.IsClosed == isClosed)
+                           .FirstOrDefault();
+        }
+
         public void Create(OrderTable orderTable)
         {
             _context.OrderTables.Add(orderTable);

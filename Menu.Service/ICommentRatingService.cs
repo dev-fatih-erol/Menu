@@ -5,6 +5,8 @@ namespace Menu.Service
 {
     public interface ICommentRatingService
     {
+        CommentRating GetByUserIdAndOrderTableId(int userId, int orderTableId);
+
         List<CommentRating> GetByVenueId(int venueId);
 
         void Create(CommentRating commentRating);
