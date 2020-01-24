@@ -43,8 +43,43 @@ namespace Menu.Api.Controllers
             _orderCashService = orderCashService;
         }
 
+        // GET Comment/5
+        [HttpGet]
+        [Authorize]
+        [Route("Comment/{orderTableId:int}")]
+        public IActionResult GetByUserIdAndOrderTableId(int orderTableId)
+        {
+            var commentRating = _commentRatingService.GetByUserIdAndOrderTableId(User.Identity.GetId(), orderTableId);
+
+            if (commentRating != null)
+            {
+                return Ok(new
+                {
+                    Success = true,
+                    StatusCode = (int)HttpStatusCode.OK,
+                    Result = new
+                    {
+                        commentRating.Id,
+                        commentRating.Text,
+                        commentRating.Speed,
+                        commentRating.Waiter,
+                        commentRating.Flavor,
+                        commentRating.CreatedDate
+                    }
+                });
+            }
+
+            return NotFound(new
+            {
+                Success = false,
+                StatusCode = (int)HttpStatusCode.NotFound,
+                Message = "Yorum bulunamadı"
+            });
+        }
+
         // GET Venue/5/Comments
         [HttpGet]
+        [Authorize]
         [Route("Venue/{venueId:int}/Comments")]
         public IActionResult GetByVenueId(int venueId)
         {
