@@ -88,6 +88,27 @@ namespace Menu.Api.Controllers
             _orderWaiterService = orderWaiterService;
         }
 
+        //// Get waiter/order/checkout
+        //[HttpGet]
+        //[Authorize(Roles = "Waiter")]
+        //[Route("Waiter/Order/CheckOut")]
+        //public IActionResult WaiterCheckOut()
+        //{
+        //    var orderTable = _orderTableService.GetByUserId(User.Identity.GetId(), false);
+
+        //    if (orderTable != null)
+        //    {
+  
+        //    }
+
+        //    return NotFound(new
+        //    {
+        //        Success = false,
+        //        StatusCode = (int)HttpStatusCode.NotFound,
+        //        Message = "Sipariş bulunamadı"
+        //    });
+        //}
+
         // POST Waiter/Order/5/ChangeStatus/1
         [HttpPost]
         [Authorize(Roles = "Waiter")]
@@ -275,7 +296,7 @@ namespace Menu.Api.Controllers
         [HttpGet]
         [Authorize(Roles = "User")]
         [Route("Me/Order/CheckOut")]
-        public IActionResult CheckOut()
+        public IActionResult UserCheckOut()
         {
             var orderTable = _orderTableService.GetByUserId(User.Identity.GetId(), false);
 

@@ -31,7 +31,7 @@ namespace Menu.Api.Controllers
 
         // GET product/5/details
         [HttpGet]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User, Waiter")]
         [Route("Product/{id:int}/Details")]
         public IActionResult GetDetailById(int id)
         {
