@@ -42,6 +42,8 @@ namespace Menu.Api.Controllers
 
         private readonly ITableWaiterService _tableWaiterService;
 
+        private readonly IOrderWaiterService _orderWaiterService;
+
         public OrderController(ILogger<OrderController> logger,
             IMapper mapper,
             IOrderTableService orderTableService,
@@ -54,7 +56,8 @@ namespace Menu.Api.Controllers
             IProductService productService,
             IOptionService optionService,
             IOptionItemService optionItemService,
-            ITableWaiterService tableWaiterService)
+            ITableWaiterService tableWaiterService,
+            IOrderWaiterService orderWaiterService)
         {
             _logger = logger;
 
@@ -81,6 +84,49 @@ namespace Menu.Api.Controllers
             _optionItemService = optionItemService;
 
             _tableWaiterService = tableWaiterService;
+
+            _orderWaiterService = orderWaiterService;
+        }
+
+        // POST Waiter/Order/5/ChangeStatus/1
+        [HttpPost]
+        [Authorize(Roles = "Waiter")]
+        [Route("Waiter/Order/{id:int}/ChangeStatus/{orderStatus:range(1,2)}")]
+        public IActionResult ChangeOrderStatus(int id, OrderStatus orderStatus)
+        {
+            var order = _orderService.GetById(id, OrderStatus.Pending);
+
+            if (order != null)
+            {
+                order.OrderStatus = orderStatus;
+
+                _orderService.SaveChanges();
+
+                var newOrderWaiter = new OrderWaiter
+                {
+                    OrderId = order.Id,
+                    WaiterId = User.Identity.GetId(),
+                    CreatedDate = DateTime.Now
+                };
+
+                _orderWaiterService.Create(newOrderWaiter);
+
+                _orderWaiterService.SaveChanges();
+
+                return Ok(new
+                {
+                    Success = true,
+                    StatusCode = (int)HttpStatusCode.OK,
+                    Result = true
+                });
+            }
+
+            return NotFound(new
+            {
+                Success = false,
+                StatusCode = (int)HttpStatusCode.NotFound,
+                Message = "Sipariş Bulunamadı"
+            });
         }
 
         // Get Waiter/Table/5/Order
