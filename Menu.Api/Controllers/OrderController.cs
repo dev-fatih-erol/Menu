@@ -40,6 +40,8 @@ namespace Menu.Api.Controllers
 
         private readonly IOptionItemService _optionItemService;
 
+        private readonly ITableWaiterService _tableWaiterService;
+
         public OrderController(ILogger<OrderController> logger,
             IMapper mapper,
             IOrderTableService orderTableService,
@@ -51,7 +53,8 @@ namespace Menu.Api.Controllers
             IUserService userService,
             IProductService productService,
             IOptionService optionService,
-            IOptionItemService optionItemService)
+            IOptionItemService optionItemService,
+            ITableWaiterService tableWaiterService)
         {
             _logger = logger;
 
@@ -76,6 +79,150 @@ namespace Menu.Api.Controllers
             _optionService = optionService;
 
             _optionItemService = optionItemService;
+
+            _tableWaiterService = tableWaiterService;
+        }
+
+        // Get Waiter/Table/5/Order
+        [HttpGet]
+        [Authorize(Roles = "Waiter")]
+        [Route("Waiter/Table/{tableId:int}/Order/Pending")]
+        public IActionResult GetPendingByTableId(int tableId)
+        {
+            var tableWaiter = _tableWaiterService.GetByTableIdAndWaiterId(tableId, User.Identity.GetId());
+
+            if (tableWaiter == null)
+            {
+                return NotFound(new
+                {
+                    Success = false,
+                    StatusCode = (int)HttpStatusCode.NotFound,
+                    Message = "Garson veya masa bulunamadı"
+                });
+            }
+
+            var orderTables = _orderTableService.GetByTableId(tableId, false)
+                                           .Where(o => o.Order.Any(o => o.OrderStatus == OrderStatus.Pending)).ToList();
+
+            if (!orderTables.Any())
+            {
+                return NotFound(new
+                {
+                    Success = false,
+                    StatusCode = (int)HttpStatusCode.NotFound,
+                    Message = "Sipariş bulunamadı"
+                });
+            }
+
+            return Ok(new
+            {
+                Success = true,
+                StatusCode = (int)HttpStatusCode.OK,
+                Result = orderTables.Select(orderTable => new
+                {
+                    orderTable.Id,
+                    orderTable.IsClosed,
+                    orderTable.CreatedDate,
+                    orderTable.User.Name,
+                    orderTable.User.Surname,
+                    Orders = orderTable.Order.Where(o => o.OrderStatus == OrderStatus.Pending).Select(o => new
+                    {
+                        o.Id,
+                        o.Code,
+                        o.Description,
+                        o.OrderStatus,
+                        OrderDetail = o.OrderDetail.Select(o => new
+                        {
+                            o.Id,
+                            o.Name,
+                            o.Photo,
+                            o.Quantity,
+                            o.Price,
+                            o.OptionItem,
+                        }).ToList(),
+                        TotalPrice = string.Format("{0:N2}", orderTable.Order.Where(or => or.Id == o.Id &&
+                                                                  or.OrderStatus == OrderStatus.Pending)
+                                                     .Select(or => or.OrderDetail
+                                                     .Sum(or => or.Price * or.Quantity)).Sum())
+                    }).ToList(),
+                    TotalPrice = string.Format("{0:N2}", orderTable.Order.Where(o => o.OrderStatus == OrderStatus.Pending)
+                                                     .Select(o => o.OrderDetail
+                                                     .Sum(o => o.Price * o.Quantity)).Sum())
+                })
+            });
+        }
+
+        // Get Waiter/Table/5/Order
+        [HttpGet]
+        [Authorize(Roles = "Waiter")]
+        [Route("Waiter/Table/{tableId:int}/Order")]
+        public IActionResult GetByTableId(int tableId)
+        {
+            var tableWaiter = _tableWaiterService.GetByTableIdAndWaiterId(tableId, User.Identity.GetId());
+
+            if (tableWaiter == null)
+            {
+                return NotFound(new
+                {
+                    Success = false,
+                    StatusCode = (int)HttpStatusCode.NotFound,
+                    Message = "Garson veya masa bulunamadı"
+                });
+            }
+
+            var orderTables = _orderTableService.GetByTableId(tableId, false)
+                                           .Where(o => o.Order.Any(o => o.OrderStatus != OrderStatus.Pending)).ToList();
+
+            if (!orderTables.Any())
+            {
+                return NotFound(new
+                {
+                    Success = false,
+                    StatusCode = (int)HttpStatusCode.NotFound,
+                    Message = "Sipariş bulunamadı"
+                });
+            }
+
+            return Ok(new
+            {
+                Success = true,
+                StatusCode = (int)HttpStatusCode.OK,
+                Result = orderTables.Select(orderTable => new
+                {
+                    orderTable.Id,
+                    orderTable.IsClosed,
+                    orderTable.CreatedDate,
+                    orderTable.User.Name,
+                    orderTable.User.Surname,
+                    Orders = orderTable.Order.Where(o => o.OrderStatus != OrderStatus.Pending).Select(o => new
+                    {
+                        o.Id,
+                        o.Code,
+                        o.Description,
+                        o.OrderStatus,
+                        o.OrderWaiter.Waiter.Name,
+                        o.OrderWaiter.Waiter.Surname,
+                        OrderDetail = o.OrderDetail.Select(o => new
+                        {
+                            o.Id,
+                            o.Name,
+                            o.Photo,
+                            o.Quantity,
+                            o.Price,
+                            o.OptionItem,
+                        }).ToList(),
+                        TotalPrice = string.Format("{0:N2}", orderTable.Order.Where(or => or.Id == o.Id &&
+                                                                  or.OrderStatus != OrderStatus.Cancel &&
+                                                                  or.OrderStatus != OrderStatus.Denied)
+                                                     .Select(or => or.OrderDetail
+                                                     .Sum(or => or.Price * or.Quantity)).Sum())
+                    }).ToList(),
+                    TotalPrice = string.Format("{0:N2}", orderTable.Order.Where(o => o.OrderStatus != OrderStatus.Cancel &&
+                                                             o.OrderStatus != OrderStatus.Denied)
+                                                     .Select(o => o.OrderDetail
+                                                     .Sum(o => o.Price * o.Quantity)).Sum())
+                })
+            });
         }
 
         // Get me/order/checkout

@@ -132,6 +132,75 @@ namespace Menu.Service
                            }).ToList();
         }
 
+        public List<OrderTable> GetPendingByTableId(int tableId, bool isClosed)
+        {
+            return _context.OrderTables
+                           .Where(o => o.TableId == tableId &&
+                                       o.IsClosed == isClosed)
+                           .Select(o => new OrderTable
+                           {
+                               Id = o.Id,
+                               IsClosed = o.IsClosed,
+                               CreatedDate = o.CreatedDate,
+                               VenueId = o.VenueId,
+                               TableId = o.TableId,
+                               UserId = o.UserId,
+                               User = o.User,
+                               Order = o.Order.Select(o => new Order
+                               {
+                                   Id = o.Id,
+                                   Code = o.Code,
+                                   Description = o.Description,
+                                   OrderStatus = o.OrderStatus,
+                                   CreatedDate = o.CreatedDate,
+                                   OrderTableId = o.OrderTableId,
+                                   OrderDetail = o.OrderDetail
+                               }).ToList()
+                           }).ToList();
+        }
+
+        public List<OrderTable> GetByTableId(int tableId, bool isClosed)
+        {
+            return _context.OrderTables
+                           .Where(o => o.TableId == tableId &&
+                                       o.IsClosed == isClosed)
+                           .Select(o => new OrderTable
+                           {
+                               Id = o.Id,
+                               IsClosed = o.IsClosed,
+                               CreatedDate = o.CreatedDate,
+                               VenueId = o.VenueId,
+                               TableId = o.TableId,
+                               UserId = o.UserId,
+                               User = o.User,
+                               Order = o.Order.Select(o => new Order
+                               {
+                                   Id = o.Id,
+                                   Code = o.Code,
+                                   Description = o.Description,
+                                   OrderStatus = o.OrderStatus,
+                                   CreatedDate = o.CreatedDate,
+                                   OrderTableId = o.OrderTableId,
+                                   OrderDetail = o.OrderDetail,
+                                   OrderWaiter = new OrderWaiter
+                                   {
+                                       Id = o.OrderWaiter.Id,
+                                       OrderId = o.OrderWaiter.OrderId,
+                                       WaiterId = o.OrderWaiter.WaiterId,
+                                       Waiter = new Waiter
+                                       {
+                                           Id = o.OrderWaiter.Waiter.Id,
+                                           Name = o.OrderWaiter.Waiter.Name,
+                                           Surname = o.OrderWaiter.Waiter.Surname,
+                                           Username = o.OrderWaiter.Waiter.Username,
+                                           Password = o.OrderWaiter.Waiter.Password,
+                                           CreatedDate = o.OrderWaiter.Waiter.CreatedDate
+                                       }
+                                   }
+                               }).ToList()
+                           }).ToList();
+        }
+
         public OrderTable GetById(int id, int userId, bool isClosed)
         {
             return _context.OrderTables

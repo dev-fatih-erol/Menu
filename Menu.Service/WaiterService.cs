@@ -14,6 +14,7 @@ namespace Menu.Service
             _context = context;
         }
 
+        // Garsonun sorumlu olduğu masaları getirir
         public List<Waiter> GetWithTableById(int id)
         {
             return _context.Waiters

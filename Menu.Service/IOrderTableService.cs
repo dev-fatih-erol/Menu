@@ -11,6 +11,10 @@ namespace Menu.Service
 
         OrderTable GetByUserId(int userId, bool isClosed);
 
+        List<OrderTable> GetPendingByTableId(int tableId, bool isClosed);
+
+        List<OrderTable> GetByTableId(int tableId, bool isClosed);
+
         List<OrderTable> GetByUserId(int userId);
 
         OrderTable GetById(int id, int userId, bool isClosed);

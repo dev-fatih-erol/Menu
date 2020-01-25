@@ -22,7 +22,7 @@ namespace Menu.Core.Models
         public virtual OrderTable OrderTable { get; set; }
 
 
-        public virtual List<OrderWaiter> OrderWaiter { get; set; }
+        public virtual OrderWaiter OrderWaiter { get; set; }
 
 
         public virtual List<OrderDetail> OrderDetail { get; set; }
