@@ -88,26 +88,47 @@ namespace Menu.Api.Controllers
             _orderWaiterService = orderWaiterService;
         }
 
-        //// Get waiter/order/checkout
-        //[HttpGet]
-        //[Authorize(Roles = "Waiter")]
-        //[Route("Waiter/Order/CheckOut")]
-        //public IActionResult WaiterCheckOut()
-        //{
-        //    var orderTable = _orderTableService.GetByUserId(User.Identity.GetId(), false);
+        // Get waiter/table/5/order/checkout
+        [HttpGet]
+        [Authorize(Roles = "Waiter")]
+        [Route("Waiter/Table/{tableId:int}/Order/CheckOut")]
+        public IActionResult WaiterCheckOut(int tableId)
+        {
+            var orderPayments = _orderPaymentService.GetByIsClosedAndTableId(tableId, false);
 
-        //    if (orderTable != null)
-        //    {
-  
-        //    }
+            if (orderPayments.Any())
+            {
+                return Ok(new
+                {
+                    Success = true,
+                    StatusCode = (int)HttpStatusCode.OK,
+                    Result = orderPayments.Select(orderPayment => new {
+                        orderPayment.Id,
+                        orderPayment.Tip,
+                        TLPoint = orderPayment.EarnedPoint * 0.001,
+                        orderPayment.CreatedDate,
+                        orderPayment.OrderTable.User.Name,
+                        orderPayment.OrderTable.User.Surname,
+                        orderPayment.VenuePaymentMethod.PaymentMethod.Text,
+                        OrderTotalPrice = string.Format("{0:N2}", orderPayment.OrderTable.Order.Where(o => o.OrderStatus != OrderStatus.Cancel &&
+                                                                                                      o.OrderStatus != OrderStatus.Denied)
+                                                     .Select(or => or.OrderDetail
+                                                     .Sum(or => or.Price * or.Quantity)).Sum()),
+                        TotalPrice = string.Format("{0:N2}", Convert.ToInt32(orderPayment.OrderTable.Order.Where(o => o.OrderStatus != OrderStatus.Cancel &&
+                                                                                                      o.OrderStatus != OrderStatus.Denied)
+                                                     .Select(or => or.OrderDetail
+                                                     .Sum(or => or.Price * or.Quantity)).Sum() + orderPayment.Tip) - (orderPayment.EarnedPoint * 0.001))
+                    })
+                });
+            }
 
-        //    return NotFound(new
-        //    {
-        //        Success = false,
-        //        StatusCode = (int)HttpStatusCode.NotFound,
-        //        Message = "Sipariş bulunamadı"
-        //    });
-        //}
+            return NotFound(new
+            {
+                Success = false,
+                StatusCode = (int)HttpStatusCode.NotFound,
+                Message = "Hesap isteği bulunamadı"
+            });
+        }
 
         // POST Waiter/Order/5/ChangeStatus/1
         [HttpPost]
