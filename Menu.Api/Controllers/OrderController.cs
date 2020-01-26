@@ -412,7 +412,7 @@ namespace Menu.Api.Controllers
                     {
                         Success = false,
                         StatusCode = (int)HttpStatusCode.BadRequest,
-                        Message = "asdasdasd"
+                        Message = "Seçmiş olduğunuz ödeme tipi bu mekana ait değil"
                     });
                 }
 
