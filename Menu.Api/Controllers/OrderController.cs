@@ -734,7 +734,7 @@ namespace Menu.Api.Controllers
                             {
                                 Success = false,
                                 StatusCode = (int)HttpStatusCode.NotFound,
-                                Message = "Ürün bulunamadı"
+                                Message = $"{product.Name} başka bir mekana ait bir ürün"
                             });
                         }
 
@@ -836,7 +836,7 @@ namespace Menu.Api.Controllers
                         {
                             Success = false,
                             StatusCode = (int)HttpStatusCode.NotFound,
-                            Message = "Ürün bulunamadı"
+                            Message = $"{product.Name} başka bir mekana ait bir ürün"
                         });
                     }
 
