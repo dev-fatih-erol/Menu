@@ -14,6 +14,14 @@ namespace Menu.Service
             _context = context;
         }
 
+        public Product GetByIdAndVenueId(int id, int venueId)
+        {
+            return _context.Products
+                           .Where(p => p.Id == id &&
+                                       p.Category.Venue.Id == venueId)
+                           .FirstOrDefault();
+        }
+
         public Product GetDetailById(int id)
         {
             return _context.Products

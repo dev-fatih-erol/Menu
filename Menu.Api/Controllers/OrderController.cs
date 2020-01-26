@@ -44,6 +44,8 @@ namespace Menu.Api.Controllers
 
         private readonly IOrderWaiterService _orderWaiterService;
 
+        private readonly IVenuePaymentMethodService _venuePaymentMethodService;
+
         public OrderController(ILogger<OrderController> logger,
             IMapper mapper,
             IOrderTableService orderTableService,
@@ -57,7 +59,8 @@ namespace Menu.Api.Controllers
             IOptionService optionService,
             IOptionItemService optionItemService,
             ITableWaiterService tableWaiterService,
-            IOrderWaiterService orderWaiterService)
+            IOrderWaiterService orderWaiterService,
+            IVenuePaymentMethodService venuePaymentMethodService)
         {
             _logger = logger;
 
@@ -86,6 +89,8 @@ namespace Menu.Api.Controllers
             _tableWaiterService = tableWaiterService;
 
             _orderWaiterService = orderWaiterService;
+
+            _venuePaymentMethodService = venuePaymentMethodService;
         }
 
         // Get waiter/table/5/order/checkout
@@ -373,8 +378,18 @@ namespace Menu.Api.Controllers
         [HttpPost]
         [Authorize(Roles = "User")]
         [Route("Me/Order/CheckOut")]
-        public IActionResult CheckOut(int usedPoint, int tip, int venuePaymentMethodId)
+        public IActionResult CheckOut(CreateCheckOutDto dto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new
+                {
+                    Success = false,
+                    StatusCode = (int)HttpStatusCode.BadRequest,
+                    Errors = ModelState.GetErrors()
+                });
+            }
+
             var orderTable = _orderTableService.GetByUserId(User.Identity.GetId(), false);
 
             if (orderTable != null)
@@ -386,6 +401,18 @@ namespace Menu.Api.Controllers
                         Success = false,
                         StatusCode = (int)HttpStatusCode.BadRequest,
                         Message = "Mevcut hesap ödeme isteğiniz var. Hesap isteyemezsiniz."
+                    });
+                }
+
+                var venuePaymentMethod = _venuePaymentMethodService.GetById(dto.VenuePaymentMethodId);
+
+                if (venuePaymentMethod != null)
+                {
+                    return BadRequest(new
+                    {
+                        Success = false,
+                        StatusCode = (int)HttpStatusCode.BadRequest,
+                        Message = "asdasdasd"
                     });
                 }
 
@@ -403,7 +430,7 @@ namespace Menu.Api.Controllers
 
                 var point = _userService.GetById(User.Identity.GetId()).Point;
 
-                if (point < usedPoint)
+                if (point < dto.UsedPoint)
                 {
                     return BadRequest(new
                     {
@@ -418,7 +445,7 @@ namespace Menu.Api.Controllers
                                  .Select(o => o.OrderDetail
                                  .Sum(o => o.Price * o.Quantity)).Sum();
 
-                if (Convert.ToInt32(totalPrice) < usedPoint * 0.001)
+                if (Convert.ToInt32(totalPrice) < dto.UsedPoint * 0.001)
                 {
                     return BadRequest(new
                     {
@@ -430,10 +457,10 @@ namespace Menu.Api.Controllers
 
                 var newOrderPayment = new OrderPayment
                 {
-                    VenuePaymentMethodId = venuePaymentMethodId,
-                    Tip = tip,
+                    VenuePaymentMethodId = dto.VenuePaymentMethodId,
+                    Tip = dto.Tip,
                     EarnedPoint = Convert.ToInt32(totalPrice) * 10,
-                    UsedPoint = usedPoint,
+                    UsedPoint = dto.UsedPoint,
                     CreatedDate = DateTime.Now,
                     OrderTableId = orderTable.Id
                 };
@@ -699,7 +726,7 @@ namespace Menu.Api.Controllers
 
                     foreach (var orderDetail in dto.OrderDetail)
                     {
-                        var product = _productService.GetById(orderDetail.ProductId);
+                        var product = _productService.GetByIdAndVenueId(orderDetail.ProductId, dto.VenueId);
 
                         if (product == null)
                         {
@@ -801,7 +828,7 @@ namespace Menu.Api.Controllers
 
                 foreach (var orderDetail in dto.OrderDetail)
                 {
-                    var product = _productService.GetById(orderDetail.ProductId);
+                    var product = _productService.GetByIdAndVenueId(orderDetail.ProductId, dto.VenueId);
 
                     if (product == null)
                     {
