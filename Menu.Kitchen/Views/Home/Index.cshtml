@@ -1,0 +1,26 @@
+﻿@model IndexViewModel
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Oturum Aç</title>
+</head>
+<body>
+    <form asp-action="Index" asp-controller="Home" method="post">
+        <div asp-validation-summary="ModelOnly"></div>
+        <div>
+            <label asp-for="Username">Kullanıcı Adı</label>
+            <input asp-for="Username" type="text" autocomplete="off" />
+            <span asp-validation-for="Username"></span>
+        </div>
+        <div>
+            <label asp-for="Password">Şifre</label>
+            <input asp-for="Password" type="password" autocomplete="off" />
+            <span asp-validation-for="Password"></span>
+        </div>
+        <div>
+            <input type="submit" value="Giriş Yap" />
+        </div>
+    </form>
+</body>
+</html>

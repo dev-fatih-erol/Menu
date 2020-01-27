@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Menu.Api.Models
+namespace Menu.Kitchen.Models.HomeViewModels
 {
-    public class AuthWaiterDto
+    public class IndexViewModel
     {
         [Required(ErrorMessage = "Lütfen kullanıcı adınızı girin")]
         [RegularExpression("^(?=.{8,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$", ErrorMessage = "Lütfen geçerli bir kullanıcı adı girin")]
