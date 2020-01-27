@@ -428,6 +428,19 @@ namespace Menu.Api.Controllers
                     });
                 }
 
+                var closedOrders = orderTable.Order.Where(o => o.OrderStatus == OrderStatus.Closed).ToList();
+
+                if (!closedOrders.Any())
+                {
+                    return BadRequest(new
+                    {
+                        Success = false,
+                        StatusCode = (int)HttpStatusCode.BadRequest,
+                        Message = "Teslim edilmiş bir siparişiniz olmadığı için hesap isteyemezsiniz"
+                    });
+                }
+
+
                 var point = _userService.GetById(User.Identity.GetId()).Point;
 
                 if (point < dto.UsedPoint)
