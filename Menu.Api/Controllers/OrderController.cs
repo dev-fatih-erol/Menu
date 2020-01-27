@@ -672,11 +672,11 @@ namespace Menu.Api.Controllers
             });
         }
 
-        // POST me/order
+        // POST user/order/venue/5/table/5
         [HttpPost]
         [Authorize(Roles = "User")]
-        [Route("Me/Order")]
-        public IActionResult Create([FromBody] CreateOrderDto dto)
+        [Route("User/Order/Venue/{venueId:int}/Table/{tableId:int}")]
+        public IActionResult Create(int venueId, int tableId, [FromBody] CreateOrderDto dto)
         {
             if (!ModelState.IsValid)
             {
@@ -688,7 +688,7 @@ namespace Menu.Api.Controllers
                 });
             }
 
-            var table = _tableService.GetById(dto.TableId, dto.VenueId);
+            var table = _tableService.GetById(tableId, venueId);
 
             if (table != null)
             {
@@ -696,7 +696,7 @@ namespace Menu.Api.Controllers
 
                 if (orderTable != null)
                 {
-                    if (!orderTable.TableId.Equals(dto.TableId) || !orderTable.VenueId.Equals(dto.VenueId))
+                    if (!orderTable.TableId.Equals(tableId) || !orderTable.VenueId.Equals(venueId))
                     {
                         return BadRequest(new
                         {
@@ -739,7 +739,7 @@ namespace Menu.Api.Controllers
 
                     foreach (var orderDetail in dto.OrderDetail)
                     {
-                        var product = _productService.GetByIdAndVenueId(orderDetail.ProductId, dto.VenueId);
+                        var product = _productService.GetByIdAndVenueId(orderDetail.ProductId, venueId);
 
                         if (product == null)
                         {
@@ -825,8 +825,8 @@ namespace Menu.Api.Controllers
                 {
                     IsClosed = false,
                     CreatedDate = DateTime.Now,
-                    VenueId = dto.VenueId,
-                    TableId = dto.TableId,
+                    VenueId = venueId,
+                    TableId = tableId,
                     UserId = User.Identity.GetId()
                 };
 
@@ -841,7 +841,7 @@ namespace Menu.Api.Controllers
 
                 foreach (var orderDetail in dto.OrderDetail)
                 {
-                    var product = _productService.GetByIdAndVenueId(orderDetail.ProductId, dto.VenueId);
+                    var product = _productService.GetByIdAndVenueId(orderDetail.ProductId, venueId);
 
                     if (product == null)
                     {
@@ -915,7 +915,7 @@ namespace Menu.Api.Controllers
 
                 _orderTableService.SaveChanges();
 
-                var changedTableStatus = _tableService.GetById(dto.TableId);
+                var changedTableStatus = _tableService.GetById(tableId);
 
                 if (changedTableStatus.TableStatus == TableStatus.Closed)
                 {

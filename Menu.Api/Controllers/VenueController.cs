@@ -85,7 +85,7 @@ namespace Menu.Api.Controllers
         // GET venue/5/details
         [HttpGet]
         [Authorize(Roles = "User")]
-        [Route("Venue/{id:int}/details")]
+        [Route("Venue/{id:int}/Details")]
         public IActionResult GetDetailById(int id)
         {
             var venue = _venueService.GetDetailById(id);
