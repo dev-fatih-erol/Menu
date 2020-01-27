@@ -356,7 +356,7 @@ namespace Menu.Api.Controllers
                     {
                         PaymentMethods = venue.VenuePaymentMethod.Select(v => new
                         {
-                            v.PaymentMethod.Id,
+                            v.Id,
                             v.PaymentMethod.Text
                         }),
                         user.Point,
@@ -532,7 +532,7 @@ namespace Menu.Api.Controllers
                                 orderTable.Venue.Name,
                                 orderTable.Venue.Photo
                             },
-                            Order = orderTable.Order.Select(o => new
+                            Order = orderTable.Order.OrderByDescending(o => o.CreatedDate).Select(o => new
                             {
                                 o.Id,
                                 o.Code,
@@ -601,7 +601,7 @@ namespace Menu.Api.Controllers
                             orderTable.Venue.Name,
                             orderTable.Venue.Photo
                         },
-                        Order = orderTable.Order.Select(o => new
+                        Order = orderTable.Order.OrderByDescending(o => o.CreatedDate).Select(o => new
                         {
                             o.Id,
                             o.Code,
@@ -747,7 +747,7 @@ namespace Menu.Api.Controllers
                             {
                                 Success = false,
                                 StatusCode = (int)HttpStatusCode.NotFound,
-                                Message = $"{product.Name} başka bir mekana ait bir ürün"
+                                Message = "Başka bir mekana ürünler mevcut"
                             });
                         }
 
@@ -849,7 +849,7 @@ namespace Menu.Api.Controllers
                         {
                             Success = false,
                             StatusCode = (int)HttpStatusCode.NotFound,
-                            Message = $"{product.Name} başka bir mekana ait bir ürün"
+                            Message = "Başka bir mekana ürünler mevcut"
                         });
                     }
 
