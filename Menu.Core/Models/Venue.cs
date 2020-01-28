@@ -30,6 +30,9 @@ namespace Menu.Core.Models
         public virtual List<Cash> Cash { get; set; }
 
 
+        public virtual List<Kitchen> Kitchen { get; set; }
+
+
         public virtual List<Waiter> Waiter { get; set; }
 
 
