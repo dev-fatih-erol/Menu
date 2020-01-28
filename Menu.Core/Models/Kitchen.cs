@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Menu.Core.Models
 {
-    public class Waiter
+    public class Kitchen
     {
         public int Id { get; set; }
 
         public string Name { get; set; }
-
-        public string Surname { get; set; }
 
         public string Username { get; set; }
 
@@ -21,8 +18,5 @@ namespace Menu.Core.Models
         public int VenueId { get; set; }
 
         public virtual Venue Venue { get; set; }
-
-
-        public virtual List<TableWaiter> TableWaiter { get; set; }
     }
 }

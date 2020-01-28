@@ -18,6 +18,8 @@ namespace Menu.Data
 
         public DbSet<Cash> Cashes { get; set; }
 
+        public DbSet<Kitchen> Kitchens { get; set; }
+
         public DbSet<Waiter> Waiters { get; set; }
 
         public DbSet<Table> Tables { get; set; }
@@ -66,6 +68,9 @@ namespace Menu.Data
 
             modelBuilder.Entity<Cash>()
                 .ToTable("Cash");
+
+            modelBuilder.Entity<Kitchen>()
+                .ToTable("Kitchen");
 
             modelBuilder.Entity<Waiter>()
                 .ToTable("Waiter");

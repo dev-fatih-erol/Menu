@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Menu.Data;
+using Menu.Service;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -24,8 +25,6 @@ namespace Menu.Kitchen
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -42,6 +41,8 @@ namespace Menu.Kitchen
                 options.DefaultRequestCulture = new RequestCulture("tr-TR", "tr-TR");
             });
 
+            services.AddScoped<IKitchenService, KitchenService>();
+
             services.AddRouting(options => options.LowercaseUrls = true);
 
             services.AddAntiforgery(options => options.Cookie.Name = "x-csrf-token");
@@ -51,7 +52,6 @@ namespace Menu.Kitchen
             services.AddControllersWithViews();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())

@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Menu.Kitchen.Attributes;
+using Menu.Kitchen.Extensions;
 using Menu.Kitchen.Models.HomeViewModels;
+using Menu.Service;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -13,6 +15,13 @@ namespace Menu.Kitchen.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly IKitchenService _kitchenService;
+
+        public HomeController(IKitchenService kitchenService)
+        {
+            _kitchenService = kitchenService;
+        }
+
         [HttpGet]
         [Route("")]
         [AnonymousOnly]
@@ -36,9 +45,9 @@ namespace Menu.Kitchen.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            int? manager = 1;
+            var kitchen = _kitchenService.GetByUsernameAndPassword(model.Username, model.Password.ToMD5());
 
-            if (manager != null)
+            if (kitchen != null)
             {
                 var claims = new List<Claim>
                     {
