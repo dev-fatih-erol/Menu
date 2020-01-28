@@ -28,10 +28,13 @@ namespace Menu.Api.Controllers
 
         private readonly IWaiterService _waiterService;
 
+        private readonly ITableWaiterService _tableWaiterService;
+
         public WaiterController(ILogger<WaiterController> logger,
             IMapper mapper,
             IConfiguration configuration,
-            IWaiterService waiterService)
+            IWaiterService waiterService,
+            ITableWaiterService tableWaiterService)
         {
             _logger = logger;
 
@@ -40,28 +43,29 @@ namespace Menu.Api.Controllers
             _configuration = configuration;
 
             _waiterService = waiterService;
+
+            _tableWaiterService = tableWaiterService;
         }
 
-        // GET: waiter/5/Tables
+        // GET: waiter/tables
         [HttpGet]
         [Authorize(Roles = "Waiter")]
         [Route("Waiter/Tables")]
-        public IActionResult GetWithTableById()
+        public IActionResult GetByWaiterId()
         {
-            var waiters = _waiterService.GetWithTableById(User.Identity.GetId());
+            var tables = _tableWaiterService.GetByWaiterId(User.Identity.GetId());
 
-            if (waiters.Any())
+            if (tables.Any())
             {
                 return Ok(new
                 {
                     Success = true,
                     StatusCode = (int)HttpStatusCode.OK,
-                    Result = waiters.Select(w => w.TableWaiter.Select(w => new
-                    {
-                        w.Table.Id,
-                        w.Table.Name,
-                        w.Table.TableStatus
-                    }))
+                    Result = tables.Select(t => new {
+                        t.Table.Id,
+                        t.Table.Name,
+                        t.Table.TableStatus
+                    })
                 });
             }
 

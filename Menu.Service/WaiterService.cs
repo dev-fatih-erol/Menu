@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Menu.Core.Models;
 using Menu.Data;
 
@@ -12,29 +11,6 @@ namespace Menu.Service
         public WaiterService(MenuContext context)
         {
             _context = context;
-        }
-
-        // Garsonun sorumlu olduğu masaları getirir
-        public List<Waiter> GetWithTableById(int id)
-        {
-            return _context.Waiters
-                           .Where(w => w.Id == id)
-                           .Select(w => new Waiter
-                           {
-                               Id = w.Id,
-                               Name = w.Name,
-                               Surname = w.Surname,
-                               Username = w.Username,
-                               Password = w.Password,
-                               TableWaiter = w.TableWaiter.Select(w => new TableWaiter
-                               {
-                                   Id = w.Id,
-                                   CreatedDate = w.CreatedDate,
-                                   WaiterId = w.WaiterId,
-                                   TableId = w.TableId,
-                                   Table = w.Table
-                               }).ToList()
-                           }).ToList();
         }
 
         public Waiter GetByUsernameAndPassword(string username, string password)
