@@ -185,6 +185,7 @@ namespace Menu.Service
                                    OrderWaiter = new OrderWaiter
                                    {
                                        Id = o.OrderWaiter.Id,
+                                       CreatedDate = o.CreatedDate,
                                        OrderId = o.OrderWaiter.OrderId,
                                        WaiterId = o.OrderWaiter.WaiterId,
                                        Waiter = new Waiter

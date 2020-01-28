@@ -15,13 +15,47 @@ namespace Menu.Service
             _context = context;
         }
 
-        public List<Order> GetByVenueId(int venueId)
+        public List<Order> GetByVenueId(int venueId, OrderStatus orderStatus)
         {
             return _context.Orders
-                           .Where(o => o.OrderTable.Venue.Id == venueId)
+                           .Where(o => o.OrderTable.Venue.Id == venueId &&
+                                       o.OrderStatus == orderStatus)
+                           .OrderBy(o => o.CreatedDate)
                            .Select(o => new Order {
                                Id = o.Id,
-                               OrderTable = o.OrderTable
+                               Code = o.Code,
+                               Description = o.Description,
+                               OrderStatus = o.OrderStatus,
+                               CreatedDate = o.CreatedDate,
+                               OrderDetail = o.OrderDetail,
+                               OrderTableId = o.OrderTableId,
+                               OrderTable = new OrderTable
+                               {
+                                   Id = o.Id,
+                                   IsClosed = o.OrderTable.IsClosed,
+                                   CreatedDate = o.OrderTable.CreatedDate,
+                                   VenueId = o.OrderTable.VenueId,
+                                   TableId = o.OrderTable.TableId,
+                                   Table = o.OrderTable.Table,
+                                   UserId = o.OrderTable.UserId,
+                                   User = o.OrderTable.User
+                               },
+                               OrderWaiter = new OrderWaiter
+                               {
+                                   Id = o.OrderWaiter.Id,
+                                   CreatedDate = o.OrderWaiter.CreatedDate,
+                                   OrderId = o.OrderWaiter.OrderId,
+                                   WaiterId = o.OrderWaiter.WaiterId,
+                                   Waiter = new Waiter
+                                   {
+                                       Id = o.OrderWaiter.Waiter.Id,
+                                       Name = o.OrderWaiter.Waiter.Name,
+                                       Surname = o.OrderWaiter.Waiter.Surname,
+                                       Username = o.OrderWaiter.Waiter.Username,
+                                       Password = o.OrderWaiter.Waiter.Password,
+                                       CreatedDate = o.OrderWaiter.Waiter.CreatedDate
+                                   }
+                               }
                            }).ToList();
         }
 

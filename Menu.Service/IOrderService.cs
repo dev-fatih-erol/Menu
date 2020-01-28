@@ -6,7 +6,7 @@ namespace Menu.Service
 {
     public interface IOrderService
     {
-        public List<Order> GetByVenueId(int venueId);
+        List<Order> GetByVenueId(int venueId, OrderStatus orderStatus);
 
         Order GetById(int id, OrderStatus orderStatus);
 
