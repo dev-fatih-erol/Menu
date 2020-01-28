@@ -5,5 +5,7 @@
         public string KitchenName { get; set; }
 
         public string VenueName { get; set; }
+
+        public string VenuePhoto { get; set; }
     }
 }

@@ -21,7 +21,8 @@ namespace Menu.Kitchen.Components
             var model = new ProfileViewModel
             {
                 KitchenName = kitchen.Name,
-                VenueName = kitchen.Venue.Name
+                VenueName = kitchen.Venue.Name,
+                VenuePhoto = kitchen.Venue.Photo
             };
 
             return View(model);
