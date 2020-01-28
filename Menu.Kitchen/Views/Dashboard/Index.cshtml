@@ -1141,11 +1141,18 @@
         </div>
     </div>
 </div>
-<div id="orders"></div>
-sssss
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script>$(document).ready(function () {
         $.get("https://localhost:5003/orders", function (data) {
             console.log(data);
         });
     });</script>
+
+@section Styles {
+    <style>
+
+        .page-container {
+            padding-left: 0px !important;
+        }
+    </style>
+}

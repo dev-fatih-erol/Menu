@@ -28,6 +28,11 @@ namespace Menu.Service
                                     .Select(k => new Kitchen
                                     {
                                          Id = k.Id,
+                                         Name = k.Name,
+                                         Username = k.Username,
+                                         Password = k.Password,
+                                         CreatedDate = k.CreatedDate,
+                                         VenueId = k.VenueId,
                                          Venue = k.Venue
                                     }).FirstOrDefault();
         }
