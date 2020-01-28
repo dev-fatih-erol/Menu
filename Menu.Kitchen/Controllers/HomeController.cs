@@ -51,7 +51,7 @@ namespace Menu.Kitchen.Controllers
             {
                 var claims = new List<Claim>
                     {
-                        new Claim(ClaimTypes.NameIdentifier, "1")
+                        new Claim(ClaimTypes.NameIdentifier, kitchen.Id.ToString())
                     };
 
                 var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

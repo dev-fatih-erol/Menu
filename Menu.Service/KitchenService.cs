@@ -22,6 +22,16 @@ namespace Menu.Service
                     .FirstOrDefault();
         }
 
+        public Kitchen GetById(int id)
+        {
+            return _context.Kitchens.Where(k => k.Id == id)
+                                    .Select(k => new Kitchen
+                                    {
+                                         Id = k.Id,
+                                         Venue = k.Venue
+                                    }).FirstOrDefault();
+        }
+
         public void Create(Kitchen kitchen)
         {
             _context.Kitchens.Add(kitchen);

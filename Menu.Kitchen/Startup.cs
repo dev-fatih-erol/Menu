@@ -41,6 +41,8 @@ namespace Menu.Kitchen
                 options.DefaultRequestCulture = new RequestCulture("tr-TR", "tr-TR");
             });
 
+            services.AddScoped<IOrderService, OrderService>();
+
             services.AddScoped<IKitchenService, KitchenService>();
 
             services.AddRouting(options => options.LowercaseUrls = true);
