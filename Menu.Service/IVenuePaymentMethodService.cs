@@ -4,7 +4,7 @@ namespace Menu.Service
 {
     public interface IVenuePaymentMethodService
     {
-        VenuePaymentMethod GetById(int id);
+        VenuePaymentMethod GetByVenueId(int paymentMethodId, int venueId);
 
         void Create(VenuePaymentMethod venuePaymentMethod);
 

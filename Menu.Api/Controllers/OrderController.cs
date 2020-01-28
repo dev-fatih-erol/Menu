@@ -356,7 +356,7 @@ namespace Menu.Api.Controllers
                     {
                         PaymentMethods = venue.VenuePaymentMethod.Select(v => new
                         {
-                            v.Id,
+                            v.PaymentMethod.Id,
                             v.PaymentMethod.Text
                         }),
                         user.Point,
@@ -404,9 +404,9 @@ namespace Menu.Api.Controllers
                     });
                 }
 
-                var venuePaymentMethod = _venuePaymentMethodService.GetById(dto.VenuePaymentMethodId);
+                var venuePaymentMethod = _venuePaymentMethodService.GetByVenueId(dto.PaymentMethodId, orderTable.VenueId);
 
-                if (venuePaymentMethod != null)
+                if (venuePaymentMethod == null)
                 {
                     return BadRequest(new
                     {
@@ -470,7 +470,7 @@ namespace Menu.Api.Controllers
 
                 var newOrderPayment = new OrderPayment
                 {
-                    VenuePaymentMethodId = dto.VenuePaymentMethodId,
+                    VenuePaymentMethodId = dto.PaymentMethodId,
                     Tip = dto.Tip,
                     EarnedPoint = Convert.ToInt32(totalPrice) * 10,
                     UsedPoint = dto.UsedPoint,

@@ -6,6 +6,6 @@
 
         public int UsedPoint { get; set; }
 
-        public int VenuePaymentMethodId { get; set; }
+        public int PaymentMethodId { get; set; }
     }
 }

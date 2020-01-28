@@ -13,10 +13,11 @@ namespace Menu.Service
             _context = context;
         }
 
-        public VenuePaymentMethod GetById(int id)
+        public VenuePaymentMethod GetByVenueId(int paymentMethodId, int venueId)
         {
             return _context.VenuePaymentMethods
-                           .Where(v => v.PaymentMethod.Id == id)
+                           .Where(v => v.PaymentMethod.Id == paymentMethodId &&
+                                       v.Venue.Id == venueId)
                            .Select(v => new VenuePaymentMethod {
                                Id = v.Id,
                                CreatedDate = v.CreatedDate,
