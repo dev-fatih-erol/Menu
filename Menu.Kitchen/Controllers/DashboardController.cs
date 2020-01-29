@@ -45,7 +45,8 @@ namespace Menu.Kitchen.Controllers
                     order.Id,
                     order.Code,
                     order.Description,
-                    order.CreatedDate,
+                    OrderStatus = order.OrderStatus.GetDescription(),
+                    CreatedDate = order.CreatedDate.ToString("HH:mm"),
                     orderDetails = order.OrderDetail.Select(orderDetail => new
                     {
                         orderDetail.Id,
@@ -54,6 +55,10 @@ namespace Menu.Kitchen.Controllers
                         orderDetail.OptionItem,
                         orderDetail.Quantity
                     }),
+                    Table = new
+                    {
+                        order.OrderTable.Table.Name,
+                    },
                     User = new
                     {
                         order.OrderTable.User.Name,

@@ -34,7 +34,7 @@
     </div>
     <div class="container-fluid">
         <div id="card-view">
-            <div class="row">
+            <div id="orders" class="row">
                 <div class="col-md-3">
                     <div class="card">
                         <div class="card-body">
@@ -1141,15 +1141,97 @@
         </div>
     </div>
 </div>
+<script id="template" type="text/x-handlebars-template">
+    {{#each this}}
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div class="media">
+                        <div class="avatar avatar-image rounded">
+                            <img src="{{user.photo}}" alt="{{user.name}} {{user.surname}}">
+                        </div>
+                        <div class="m-l-10">
+                            <h5 class="m-b-0">{{user.name}} {{user.surname}}</h5>
+                            <span class="text-muted font-size-13">{{createdDate}}</span>
+                        </div>
+                    </div>
+                    <div class="dropdown dropdown-animated scale-left">
+                        <a class="text-gray font-size-18" href="javascript:void(0);" data-toggle="dropdown">
+                            <i class="anticon anticon-ellipsis"></i>
+                        </a>
+                        <div class="dropdown-menu">
+                            <button class="dropdown-item" type="button">
+                                <i class="anticon anticon-eye"></i>
+                                <span class="m-l-10">View</span>
+                            </button>
+                            <button class="dropdown-item" type="button">
+                                <i class="anticon anticon-edit"></i>
+                                <span class="m-l-10">Edit</span>
+                            </button>
+                            <button class="dropdown-item" type="button">
+                                <i class="anticon anticon-delete"></i>
+                                <span class="m-l-10">Delete</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <p class="m-t-25">{{description}}</p>
+                <div class="m-t-30">
+                    <div class="d-flex justify-content-between">
+                        <span class="font-weight-semibold">Sipariş Durumu</span>
+                    </div>
+                    <div class="progress progress-sm m-t-10">
+                        <div class="progress-bar" role="progressbar" style="width: 100%"></div>
+                    </div>
+                </div>
+                <div class="m-t-20">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="badge badge-pill badge-blue">{{orderStatus}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="m-t-20">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <div class="m-b-0 text-dark font-weight-semibold">{{waiter.name}} {{waiter.surname}}</div>
+                                    <div class="m-b-0 opacity-07 font-size-13">{{table.name}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <div class="m-b-0 text-dark font-weight-semibold">Sipariş Kodu</div>
+                                    <div class="m-b-0 opacity-07 font-size-13">{{code}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/each}}
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.2/handlebars.js"></script>
 <script>$(document).ready(function () {
         $.get("https://localhost:5003/orders", function (data) {
-            console.log(data);
+            console.log(data)
+            var template = $("#template").html();
+            var compiledCode = Handlebars.compile(template);
+            var result = compiledCode(data);
+            $("#orders").html(result);
         });
     });</script>
 
 @section Styles {
     <style>
+
 
         .page-container {
             padding-left: 0px !important;
