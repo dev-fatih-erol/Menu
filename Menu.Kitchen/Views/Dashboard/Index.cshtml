@@ -1212,6 +1212,74 @@
                         </div>
                     </div>
                 </div>
+                <div class="m-t-20">
+                    <button class="btn btn-primary btn-block m-r-5" data-toggle="modal" data-target="#exampleModalScrollable-{{id}}">Siparişi Görüntüle</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="exampleModalScrollable-{{id}}">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalScrollableTitle">Sipariş Detayları</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <i class="anticon anticon-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">{{table.name}}</h5>
+                        <div>
+                            <h5 class="mb-0">Sipariş Kodu: {{code}}</h5>
+                        </div>
+                    </div>
+                    <div class="alert alert-primary m-t-10">
+                        <div class="d-flex align-items-center justify-content-start">
+                            <span class="alert-icon">
+                                <i class="anticon anticon-info-o"></i>
+                            </span>
+                            <span>{{description}}</span>
+                        </div>
+                    </div>
+                    <div class="table-responsive m-t-30">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Ürün Adı</th>
+                                    <th>Ürün Seçenekleri</th>
+                                    <th>Adet</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each orderDetails}}
+                                <tr>
+                                    <td width="25%">
+                                        <div class="media align-items-center">
+                                            <div class="avatar avatar-image rounded" style="min-width: 40px">
+                                                <img src="{{this.photo}}" alt="{{this.name}}">
+                                            </div>
+                                            <div class="m-l-10">
+                                                <span>{{this.name}}</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td width="60%">
+                                        <span>{{this.optionItem}}</span>
+                                    </td>
+                                    <td width="15%">
+                                        <span>{{this.quantity}}</span>
+                                    </td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
             </div>
         </div>
     </div>
