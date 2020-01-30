@@ -71,5 +71,15 @@ namespace Menu.Kitchen.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+
+        [HttpPost]
+        [Authorize]
+        [Route("Logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync();
+
+            return RedirectToAction("Index", "Home");
+        }
     }
 }

@@ -31,4 +31,10 @@ $(document).ready(function () {
            
         });
     });
+    $(document).on("click", "#logout", function () {
+        var url = host + '/logout'
+        $.post(url, function (data) {
+            location.href = host;
+        });
+    });
 });
