@@ -67,6 +67,13 @@ namespace Menu.Service
                            .FirstOrDefault();
         }
 
+        public Order GetById(int id)
+        {
+            return _context.Orders
+                           .Where(o => o.Id == id)
+                           .FirstOrDefault();
+        }
+
         public void Create(Order order)
         {
             _context.Orders.Add(order);

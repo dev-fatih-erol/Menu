@@ -10,6 +10,8 @@ namespace Menu.Service
 
         Order GetById(int id, OrderStatus orderStatus);
 
+        Order GetById(int id);
+
         void Create(Order order);
 
         void SaveChanges();
