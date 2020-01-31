@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using Menu.Api.Hubs;
 using Menu.Api.Services;
 using Menu.Data;
 using Menu.Service;
@@ -108,6 +109,8 @@ namespace Menu.Api
 
             services.AddAutoMapper(typeof(Startup));
 
+            services.AddSignalR();
+
             services.AddDataProtection();
 
             services.AddControllers();
@@ -133,6 +136,7 @@ namespace Menu.Api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<OrderHub>("/orderHub");
             });
         }
     }
