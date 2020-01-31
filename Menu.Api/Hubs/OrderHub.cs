@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Menu.Core.Enums;
 using Menu.Service;
@@ -20,15 +21,17 @@ namespace Menu.Api.Hubs
         {
             var httpContext = Context.GetHttpContext();
 
-            var groupName = httpContext.Request.Query["groupName"];
+            var groupName = httpContext.Request.Query.GetQueryParameterValue<string>("groupName");
             
             await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
 
             await base.OnConnectedAsync();
         }
 
-        public Task ReloadVenueOrders(int venueId, string groupName)
+        public Task ReloadVenueOrders(string id, string groupName)
         {
+            int venueId = Convert.ToInt32(id);
+
             var approvedOrders = _orderService.GetByVenueId(venueId, OrderStatus.Approved).Select(order => new
             {
                 order.Id,
