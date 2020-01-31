@@ -109,6 +109,14 @@ namespace Menu.Api
 
             services.AddAutoMapper(typeof(Startup));
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                        builder => builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader());
+            });
+
             services.AddSignalR();
 
             services.AddDataProtection();
@@ -132,6 +140,8 @@ namespace Menu.Api
             app.UseAuthorization();
 
             app.UseRequestLocalization();
+
+            app.UseCors("CorsPolicy");
 
             app.UseEndpoints(endpoints =>
             {
