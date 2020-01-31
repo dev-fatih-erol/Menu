@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Menu.Core.Enums;
-using Menu.Core.Models;
 using Menu.Kitchen.Extensions;
 using Menu.Service;
 using Microsoft.AspNetCore.Authorization;
@@ -22,7 +20,6 @@ namespace Menu.Kitchen.Controllers
 
             _kitchenService = kitchenService;
         }
-
 
         [HttpPost]
         [Authorize]
@@ -72,7 +69,7 @@ namespace Menu.Kitchen.Controllers
                         order.Id,
                         order.Code,
                         order.Description,
-                        OrderStatus = order.OrderStatus.GetDescription(),
+                        OrderStatus = order.OrderStatus.ToOrderStatus(),
                         CreatedDate = order.CreatedDate.ToString("HH:mm"),
                         orderDetails = order.OrderDetail.Select(orderDetail => new
                         {

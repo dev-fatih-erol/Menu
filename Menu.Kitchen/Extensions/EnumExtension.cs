@@ -1,20 +1,22 @@
-﻿using System;
-using System.ComponentModel;
-using System.Reflection;
+﻿using Menu.Core.Enums;
 
 namespace Menu.Kitchen.Extensions
 {
     public static class EnumExtension
     {
-        public static string GetDescription(this Enum value)
+        public static string ToOrderStatus(this OrderStatus source)
         {
-            FieldInfo fieldInfo = value.GetType().GetField(value.ToString());
-
-            if (fieldInfo == null) return null;
-
-            var attribute = (DescriptionAttribute)fieldInfo.GetCustomAttribute(typeof(DescriptionAttribute));
-
-            return attribute.Description;
+            return source switch
+            {
+                OrderStatus.Pending => "Onay Bekliyor",
+                OrderStatus.Approved => "Onaylandı",
+                OrderStatus.Denied => "Rededildi",
+                OrderStatus.Preparing => "Hazırlanıyor",
+                OrderStatus.Cancel => "İptal",
+                OrderStatus.Prepared => "Hazırlandı",
+                OrderStatus.Closed => "Teslim Edildi",
+                _ => null,
+            };
         }
     }
 }
