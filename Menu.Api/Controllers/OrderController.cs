@@ -470,7 +470,7 @@ namespace Menu.Api.Controllers
 
                 var newOrderPayment = new OrderPayment
                 {
-                    VenuePaymentMethodId = dto.PaymentMethodId,
+                    VenuePaymentMethodId = venuePaymentMethod.Id,
                     Tip = dto.Tip,
                     EarnedPoint = Convert.ToInt32(totalPrice) * 10,
                     UsedPoint = dto.UsedPoint,
