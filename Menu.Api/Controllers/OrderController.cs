@@ -747,7 +747,7 @@ namespace Menu.Api.Controllers
                             {
                                 Success = false,
                                 StatusCode = (int)HttpStatusCode.NotFound,
-                                Message = "Başka bir mekana ürünler mevcut"
+                                Message = "Başka bir mekanda ürünler mevcut"
                             });
                         }
 
