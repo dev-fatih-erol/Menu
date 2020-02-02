@@ -58,6 +58,10 @@ namespace Menu.Data
 
         public DbSet<SuggestionComplaint> SuggestionComplaints { get; set; }
 
+        public DbSet<Feature> Features { get; set; }
+
+        public DbSet<VenueFeature> VenueFeatures { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<City>()
@@ -128,6 +132,12 @@ namespace Menu.Data
 
             modelBuilder.Entity<SuggestionComplaint>()
                 .ToTable("SuggestionComplaint");
+
+            modelBuilder.Entity<Feature>()
+                .ToTable("Feature");
+
+            modelBuilder.Entity<VenueFeature>()
+                .ToTable("VenueFeature");
 
             modelBuilder.Entity<Venue>()
                 .Property(v => v.VenueType)

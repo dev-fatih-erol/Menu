@@ -99,6 +99,8 @@ namespace Menu.Api
 
             services.AddScoped<IFavoriteService, FavoriteService>();
 
+            services.AddScoped<IVenueFeatureService, VenueFeatureService>();
+
             services.AddScoped<ISuggestionComplaintService, SuggestionComplaintService>();
 
             services.AddTransient<ISmsSender, SmsSender>();

@@ -52,5 +52,8 @@ namespace Menu.Core.Models
 
 
         public virtual List<Favorite> Favorite { get; set; }
+
+
+        public virtual List<VenueFeature> VenueFeature { get; set; }
     }
 }

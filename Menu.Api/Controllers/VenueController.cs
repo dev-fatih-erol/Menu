@@ -19,15 +19,56 @@ namespace Menu.Api.Controllers
 
         private readonly IVenueService _venueService;
 
+        private readonly IVenueFeatureService _venueFeaturervice;
+
+        private readonly IVenuePaymentMethodService _venuePaymentMethodrvice;
+
         public VenueController(ILogger<VenueController> logger,
             IMapper mapper,
-            IVenueService venueService)
+            IVenueService venueService,
+            IVenueFeatureService venueFeatureService,
+            IVenuePaymentMethodService venuePaymentMethodService)
         {
             _logger = logger;
 
             _mapper = mapper;
 
             _venueService = venueService;
+
+            _venueFeaturervice = venueFeatureService;
+
+            _venuePaymentMethodrvice = venuePaymentMethodService;
+        }
+
+        // GET venue/5/features
+        [HttpGet]
+        [Authorize(Roles = "User")]
+        [Route("Venue/{venueId:int}/features")]
+        public IActionResult GetByVenueId(int venueId)
+        {
+            var features = _venueFeaturervice.GetByVenueId(venueId)
+                .Select(f => new
+                {
+                    f.Feature.Id,
+                    f.Feature.Text
+                }).ToList();
+
+            var paymentMethods = _venuePaymentMethodrvice.GetByVenueId(venueId).Select(v => new
+            {
+                v.PaymentMethod.Id,
+                v.PaymentMethod.Text
+            }).ToList();
+            
+            return Ok(new
+            {
+                Success = true,
+                StatusCode = (int)HttpStatusCode.OK,
+                Result = new
+                {
+                    features,
+                    paymentMethods
+                }
+            });
         }
 
         // GET venue/filter

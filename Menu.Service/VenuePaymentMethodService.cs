@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Menu.Core.Models;
 using Menu.Data;
 
@@ -11,6 +12,20 @@ namespace Menu.Service
         public VenuePaymentMethodService(MenuContext context)
         {
             _context = context;
+        }
+
+        public List<VenuePaymentMethod> GetByVenueId(int venueId)
+        {
+            return _context.VenuePaymentMethods.Where(v => v.Venue.Id == venueId)
+                                         .Select(v => new VenuePaymentMethod
+                                         {
+                                             Id = v.Id,
+                                             CreatedDate = v.CreatedDate,
+                                             VenueId = v.VenueId,
+                                             PaymentMethodId = v.PaymentMethodId,
+                                             PaymentMethod = v.PaymentMethod
+                                         })
+                                         .ToList();
         }
 
         public VenuePaymentMethod GetByVenueId(int paymentMethodId, int venueId)
