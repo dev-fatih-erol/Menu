@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Menu.Core.Models;
 using Menu.Data;
 
@@ -20,6 +21,13 @@ namespace Menu.Service
                                   w.Username == username &&
                                   w.Password == password)
                            .FirstOrDefault();
+        }
+
+        public List<Waiter> GetByVenueId(int venueId)
+        {
+            return _context.Waiters
+                           .Where(w => w.Venue.Id == venueId)
+                           .ToList();
         }
 
         public Waiter GetById(int id)
