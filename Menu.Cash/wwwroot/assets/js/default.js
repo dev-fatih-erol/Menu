@@ -9,6 +9,14 @@ $(document).ready(function () {
         $("#tables").html(result);
     });
 
+    $.get(host + "/waiters", function (data) {
+        console.log(data)
+        var template = $("#template-waiters").html();
+        var compiledCode = Handlebars.compile(template);
+        var result = compiledCode(data);
+        $("#waiters > tbody").append(result);
+    });
+
     $(document).on("click", "#logout", function () {
         var url = host + '/logout'
         $.post(url, function (data) {

@@ -17,7 +17,7 @@
                     </div>
 
                     <div class="table-responsive m-t-30">
-                        <table class="table table-hover">
+                        <table id="waiters" class="table table-hover">
                             <thead>
                                 <tr>
                                     <th>Garson Adı</th>
@@ -25,84 +25,6 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="avatar avatar-image" style="min-width: 40px">
-                                                <img src="~/assets/images/avatars/thumb-4.jpg" alt="">
-                                            </div>
-                                            <span class="m-l-10">Mehmet Yaman</span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-pill badge-cyan font-size-12">Aktif</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="avatar avatar-image" style="min-width: 40px">
-                                                <img src="~/assets/images/avatars/thumb-1.jpg" alt="">
-                                            </div>
-                                            <span class="m-l-10">Nilgün Çağlayan</span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-pill badge-red font-size-12">Mola</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="avatar avatar-image" style="min-width: 40px">
-                                                <img src="~/assets/images/avatars/thumb-6.jpg" alt="">
-                                            </div>
-                                            <span class="m-l-10">Ahmet Çağlayan</span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-pill badge-black font-size-12">Kapalı</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="avatar avatar-image" style="min-width: 40px">
-                                                <img src="~/assets/images/avatars/thumb-6.jpg" alt="">
-                                            </div>
-                                            <span class="m-l-10">Ahmet Çağlayan</span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-pill badge-black font-size-12">Kapalı</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="avatar avatar-image" style="min-width: 40px">
-                                                <img src="~/assets/images/avatars/thumb-6.jpg" alt="">
-                                            </div>
-                                            <span class="m-l-10">Ahmet Çağlayan</span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-pill badge-black font-size-12">Kapalı</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="avatar avatar-image" style="min-width: 40px">
-                                                <img src="~/assets/images/avatars/thumb-6.jpg" alt="">
-                                            </div>
-                                            <span class="m-l-10">Ahmet Çağlayan</span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-pill badge-black font-size-12">Kapalı</span>
-                                    </td>
-                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -129,8 +51,23 @@
             </div>
         </a>
     </div>
-    {{else}}
-    <div class="col-md-3">Empty</div>
+    {{/each}}
+</script>
+<script id="template-waiters" type="text/x-handlebars-template">
+    {{#each this}}
+    <tr>
+        <td>
+            <div class="d-flex align-items-center">
+                <div class="avatar avatar-image" style="min-width: 40px">
+                    <img src="https://cdn2.iconfinder.com/data/icons/food-and-drink-49/100/Waiter-01-512.png" alt="">
+                </div>
+                <span class="m-l-10">{{name}} {{surname}}</span>
+            </div>
+        </td>
+        <td>
+            <span class="badge badge-pill badge-cyan font-size-12">Aktif</span>
+        </td>
+    </tr>
     {{/each}}
 </script>
 @section Styles {

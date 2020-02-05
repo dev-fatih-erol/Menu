@@ -43,7 +43,7 @@ namespace Menu.Cash.Controllers
             if (cash != null)
             {
                 var tables = _tableService.GetByVenueId(cash.Venue.Id);
-
+           
                 return Ok(tables.Select(table => new
                 {
                     table.Id,
@@ -65,7 +65,7 @@ namespace Menu.Cash.Controllers
             if (cash != null)
             {
                 var waiters = _waiterService.GetByVenueId(cash.Venue.Id);
-
+      
                 return Ok(waiters.Select(waiter => new
                 {
                     waiter.Id,
