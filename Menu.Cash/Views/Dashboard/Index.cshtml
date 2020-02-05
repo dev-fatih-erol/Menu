@@ -1,0 +1,522 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+}
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-body">
+                <h4>Siparişler</h4>
+                <p>Yoğunluk olmaması adına lütfen siparişlerinizi zamanında teslim edin!</p>
+                <div class="m-t-25">
+                    <ul class="nav nav-tabs nav-justified" id="myTabJustified" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="home-tab-justified" data-toggle="tab" href="#home-justified" role="tab" aria-controls="home-justified" aria-selected="true">Aktif Siparişler</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="profile-tab-justified" data-toggle="tab" href="#profile-justified" role="tab" aria-controls="profile-justified" aria-selected="false">Hazırlanmakta olan siparişler</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="contact-tab-justified" data-toggle="tab" href="#contact-justified" role="tab" aria-controls="contact-justified" aria-selected="false">Hazırlanan Siparişler</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content m-t-15" id="myTabContentJustified">
+                        <div class="tab-pane fade show active" id="home-justified" role="tabpanel" aria-labelledby="home-tab-justified">
+                            <div id="orders-approved" class="row m-t-30"></div>
+                        </div>
+                        <div class="tab-pane fade" id="profile-justified" role="tabpanel" aria-labelledby="profile-tab-justified">
+                            <div id="orders-preparing" class="row m-t-30"></div>
+                        </div>
+                        <div class="tab-pane fade" id="contact-justified" role="tabpanel" aria-labelledby="contact-tab-justified">
+                            <div id="orders-prepared" class="row m-t-30"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script id="template-orders-approved" type="text/x-handlebars-template">
+    {{#each this}}
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div class="media">
+                        <div class="avatar avatar-image rounded">
+                            <img src="{{user.photo}}" alt="{{user.name}} {{user.surname}}">
+                        </div>
+                        <div class="m-l-10">
+                            <h5 class="m-b-0">{{user.name}} {{user.surname}}</h5>
+                            <span class="text-muted font-size-13">{{createdDate}}</span>
+                        </div>
+                    </div>
+                    <div class="dropdown dropdown-animated scale-left">
+                        <a class="text-gray font-size-18" href="javascript:void(0);" data-toggle="dropdown">
+                            <i class="anticon anticon-ellipsis"></i>
+                        </a>
+                        <div class="dropdown-menu">
+                            <button data-id="{{id}}" data-status="3" class="dropdown-item order-action" type="button">
+                                <i class="anticon anticon-eye"></i>
+                                <span class="m-l-10">Hazırlanıyor (Sonraki işlem)</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="m-t-30">
+                    <div class="d-flex justify-content-between">
+                        <span class="font-weight-semibold">Sipariş Durumu</span>
+                    </div>
+                    <div class="progress progress-sm m-t-10">
+                        <div class="progress-bar bg-danger" role="progressbar" style="width: 33%"></div>
+                    </div>
+                </div>
+                <div class="m-t-20">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="badge badge-pill badge-red">{{orderStatus}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="m-t-20">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <div class="m-b-0 text-dark font-weight-semibold">{{waiter.name}} {{waiter.surname}}</div>
+                                    <div class="m-b-0 opacity-07 font-size-13">{{table.name}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <div class="m-b-0 text-dark font-weight-semibold">Sipariş Kodu</div>
+                                    <div class="m-b-0 opacity-07 font-size-13">{{code}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="m-t-20">
+                    <button class="btn btn-primary btn-block m-r-5" data-toggle="modal" data-target="#modal-orders-approved-{{id}}">Siparişi Görüntüle</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modal-orders-approved-{{id}}">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Sipariş Detayları</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <i class="anticon anticon-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">{{table.name}}</h5>
+                        <div>
+                            <h5 class="mb-0">Sipariş Kodu: {{code}}</h5>
+                        </div>
+                    </div>
+                    <div class="alert alert-primary m-t-10">
+                        <div class="d-flex align-items-center justify-content-start">
+                            <span class="alert-icon">
+                                <i class="anticon anticon-info-o"></i>
+                            </span>
+                            <span>{{description}}</span>
+                        </div>
+                    </div>
+                    <div class="table-responsive m-t-30">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Ürün Adı</th>
+                                    <th>Ürün Seçenekleri</th>
+                                    <th>Adet</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each orderDetails}}
+                                <tr>
+                                    <td width="25%">
+                                        <div class="media align-items-center">
+                                            <div class="avatar avatar-image rounded" style="min-width: 40px">
+                                                <img src="{{this.photo}}" alt="{{this.name}}">
+                                            </div>
+                                            <div class="m-l-10">
+                                                <span>{{this.name}}</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td width="60%">
+                                        <span>{{this.optionItem}}</span>
+                                    </td>
+                                    <td width="15%">
+                                        <span>{{this.quantity}}</span>
+                                    </td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Kapat</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{else}}
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="alert alert-primary">
+                    <div class="d-flex justify-content-start">
+                        <span class="alert-icon m-r-20 font-size-30">
+                            <i class="anticon anticon-info-circle"></i>
+                        </span>
+                        <div>
+                            <h5 class="alert-heading">Bilgilendirme</h5>
+                            <p>Aktif sipariş bulunmamaktadır.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3"></div>
+    {{/each}}
+</script>
+<script id="template-orders-preparing" type="text/x-handlebars-template">
+    {{#each this}}
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div class="media">
+                        <div class="avatar avatar-image rounded">
+                            <img src="{{user.photo}}" alt="{{user.name}} {{user.surname}}">
+                        </div>
+                        <div class="m-l-10">
+                            <h5 class="m-b-0">{{user.name}} {{user.surname}}</h5>
+                            <span class="text-muted font-size-13">{{createdDate}}</span>
+                        </div>
+                    </div>
+                    <div class="dropdown dropdown-animated scale-left">
+                        <a class="text-gray font-size-18" href="javascript:void(0);" data-toggle="dropdown">
+                            <i class="anticon anticon-ellipsis"></i>
+                        </a>
+                        <div class="dropdown-menu">
+                            <button data-id="{{id}}" data-status="1" class="dropdown-item order-action" type="button">
+                                <i class="anticon anticon-eye"></i>
+                                <span class="m-l-10">Onaylandı (Önceki işlem)</span>
+                            </button>
+                            <button data-id="{{id}}" data-status="5" class="dropdown-item order-action" type="button">
+                                <i class="anticon anticon-edit"></i>
+                                <span class="m-l-10">Hazırlandı (Sonraki işlem)</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="m-t-30">
+                    <div class="d-flex justify-content-between">
+                        <span class="font-weight-semibold">Sipariş Durumu</span>
+                    </div>
+                    <div class="progress progress-sm m-t-10">
+                        <div class="progress-bar" role="progressbar" style="width: 66%"></div>
+                    </div>
+                </div>
+                <div class="m-t-20">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="badge badge-pill badge-blue">{{orderStatus}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="m-t-20">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <div class="m-b-0 text-dark font-weight-semibold">{{waiter.name}} {{waiter.surname}}</div>
+                                    <div class="m-b-0 opacity-07 font-size-13">{{table.name}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <div class="m-b-0 text-dark font-weight-semibold">Sipariş Kodu</div>
+                                    <div class="m-b-0 opacity-07 font-size-13">{{code}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="m-t-20">
+                    <button class="btn btn-primary btn-block m-r-5" data-toggle="modal" data-target="#modal-orders-preparing-{{id}}">Siparişi Görüntüle</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modal-orders-preparing-{{id}}">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Sipariş Detayları</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <i class="anticon anticon-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">{{table.name}}</h5>
+                        <div>
+                            <h5 class="mb-0">Sipariş Kodu: {{code}}</h5>
+                        </div>
+                    </div>
+                    <div class="alert alert-primary m-t-10">
+                        <div class="d-flex align-items-center justify-content-start">
+                            <span class="alert-icon">
+                                <i class="anticon anticon-info-o"></i>
+                            </span>
+                            <span>{{description}}</span>
+                        </div>
+                    </div>
+                    <div class="table-responsive m-t-30">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Ürün Adı</th>
+                                    <th>Ürün Seçenekleri</th>
+                                    <th>Adet</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each orderDetails}}
+                                <tr>
+                                    <td width="25%">
+                                        <div class="media align-items-center">
+                                            <div class="avatar avatar-image rounded" style="min-width: 40px">
+                                                <img src="{{this.photo}}" alt="{{this.name}}">
+                                            </div>
+                                            <div class="m-l-10">
+                                                <span>{{this.name}}</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td width="60%">
+                                        <span>{{this.optionItem}}</span>
+                                    </td>
+                                    <td width="15%">
+                                        <span>{{this.quantity}}</span>
+                                    </td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Kapat</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{else}}
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="alert alert-primary">
+                    <div class="d-flex justify-content-start">
+                        <span class="alert-icon m-r-20 font-size-30">
+                            <i class="anticon anticon-info-circle"></i>
+                        </span>
+                        <div>
+                            <h5 class="alert-heading">Bilgilendirme</h5>
+                            <p>Hazırlanmkata olan sipariş bulunmamaktadır.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3"></div>
+    {{/each}}
+</script>
+<script id="template-orders-prepared" type="text/x-handlebars-template">
+    {{#each this}}
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div class="media">
+                        <div class="avatar avatar-image rounded">
+                            <img src="{{user.photo}}" alt="{{user.name}} {{user.surname}}">
+                        </div>
+                        <div class="m-l-10">
+                            <h5 class="m-b-0">{{user.name}} {{user.surname}}</h5>
+                            <span class="text-muted font-size-13">{{createdDate}}</span>
+                        </div>
+                    </div>
+                    <div class="dropdown dropdown-animated scale-left">
+                        <a class="text-gray font-size-18" href="javascript:void(0);" data-toggle="dropdown">
+                            <i class="anticon anticon-ellipsis"></i>
+                        </a>
+                        <div class="dropdown-menu">
+                            <button data-id="{{id}}" data-status="3" class="dropdown-item order-action" type="button">
+                                <i class="anticon anticon-eye"></i>
+                                <span class="m-l-10">Hazırlanıyor (Önceki işlem)</span>
+                            </button>
+                            <button data-id="{{id}}" data-status="6" class="dropdown-item order-action" type="button">
+                                <i class="anticon anticon-edit"></i>
+                                <span class="m-l-10">Teslim Edildi (Sonraki işlem)</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="m-t-30">
+                    <div class="d-flex justify-content-between">
+                        <span class="font-weight-semibold">Sipariş Durumu</span>
+                    </div>
+                    <div class="progress progress-sm m-t-10">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: 100%"></div>
+                    </div>
+                </div>
+                <div class="m-t-20">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="badge badge-pill badge-green">{{orderStatus}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="m-t-20">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <div class="m-b-0 text-dark font-weight-semibold">{{waiter.name}} {{waiter.surname}}</div>
+                                    <div class="m-b-0 opacity-07 font-size-13">{{table.name}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <div class="m-b-0 text-dark font-weight-semibold">Sipariş Kodu</div>
+                                    <div class="m-b-0 opacity-07 font-size-13">{{code}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="m-t-20">
+                    <button class="btn btn-primary btn-block m-r-5" data-toggle="modal" data-target="#modal-orders-prepared-{{id}}">Siparişi Görüntüle</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modal-orders-prepared-{{id}}">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Sipariş Detayları</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <i class="anticon anticon-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">{{table.name}}</h5>
+                        <div>
+                            <h5 class="mb-0">Sipariş Kodu: {{code}}</h5>
+                        </div>
+                    </div>
+                    <div class="alert alert-primary m-t-10">
+                        <div class="d-flex align-items-center justify-content-start">
+                            <span class="alert-icon">
+                                <i class="anticon anticon-info-o"></i>
+                            </span>
+                            <span>{{description}}</span>
+                        </div>
+                    </div>
+                    <div class="table-responsive m-t-30">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Ürün Adı</th>
+                                    <th>Ürün Seçenekleri</th>
+                                    <th>Adet</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each orderDetails}}
+                                <tr>
+                                    <td width="25%">
+                                        <div class="media align-items-center">
+                                            <div class="avatar avatar-image rounded" style="min-width: 40px">
+                                                <img src="{{this.photo}}" alt="{{this.name}}">
+                                            </div>
+                                            <div class="m-l-10">
+                                                <span>{{this.name}}</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td width="60%">
+                                        <span>{{this.optionItem}}</span>
+                                    </td>
+                                    <td width="15%">
+                                        <span>{{this.quantity}}</span>
+                                    </td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Kapat</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{else}}
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="alert alert-primary">
+                    <div class="d-flex justify-content-start">
+                        <span class="alert-icon m-r-20 font-size-30">
+                            <i class="anticon anticon-info-circle"></i>
+                        </span>
+                        <div>
+                            <h5 class="alert-heading">Bilgilendirme</h5>
+                            <p>Hazırlanan sipariş bulunmamaktadır.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3"></div>
+    {{/each}}
+</script>
+@section Styles {
+    <style>
+
+        .page-container {
+            padding-left: 0px !important;
+        }
+    </style>
+}
+
+@section Scripts {
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aspnet-signalr/1.1.4/signalr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.2/handlebars.js"></script>
+    <script src="~/assets/js/default.js" asp-append-version="true"></script>
+}

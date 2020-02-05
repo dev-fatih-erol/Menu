@@ -1,0 +1,117 @@
+﻿@{
+    Layout = "";
+}
+
+@model IndexViewModel
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Oturum Aç</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="shortcut icon" href="/assets/images/logo/favicon.png">
+    <link href="/assets/css/app.min.css" rel="stylesheet">
+    <style>
+        ul{
+            list-style: none;
+        }
+
+        .field-validation-error {
+            color: #b94a48;
+            display: inline-block;
+            *display: inline;
+            padding-left: 5px;
+            vertical-align: middle;
+            *zoom: 1;
+        }
+
+        .field-validation-valid {
+            display: none;
+        }
+
+        .input-validation-error {
+            color: #b94a48;
+            border-color: #b94a48;
+        }
+
+            .input-validation-error:focus {
+                border-color: #953b39;
+                -webkit-box-shadow: 0 0 6px #d59392;
+                -moz-box-shadow: 0 0 6px #d59392;
+                box-shadow: 0 0 6px #d59392;
+            }
+
+        .validation-summary-errors {
+            color: #b94a48;
+        }
+
+        .validation-summary-valid {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <div class="container-fluid p-h-0 p-v-20 bg full-height d-flex" style="background-image: url('/assets/images/others/login-3.png')">
+            <div class="d-flex flex-column justify-content-between w-100">
+                <div class="container d-flex h-100">
+                    <div class="row align-items-center w-100">
+                        <div class="col-md-7 col-lg-5 m-h-auto">
+                            <div class="card shadow-lg">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center justify-content-between m-b-30">
+                                        <img class="img-fluid" alt="" src="/assets/images/logo/logobimenu.png">
+                                        <h2 class="m-b-0">Kasa</h2>
+                                    </div>
+                                    <form asp-action="Index" asp-controller="Home" method="post">
+                                        <div class="m-b-10">
+                                            <div asp-validation-summary="ModelOnly"></div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label asp-for="Username" class="font-weight-semibold">Kullanıcı Adı</label>
+                                            <div class="input-affix m-b-10">
+                                                <i class="prefix-icon anticon anticon-user"></i>
+                                                <input asp-for="Username" type="text" class="form-control" placeholder="Kullanıcı adı">
+                                            </div>
+                                            <span asp-validation-for="Username"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label asp-for="Password" class="font-weight-semibold">Şifre</label>
+                                            <div class="input-affix m-b-10">
+                                                <i class="prefix-icon anticon anticon-lock"></i>
+                                                <input asp-for="Password" type="password" class="form-control" id="password" placeholder="Şifre">
+                                            </div>
+                                            <span asp-validation-for="Password"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <input type="submit" class="btn btn-primary" value="Giriş yap">
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-none d-md-flex p-h-40 justify-content-between">
+                    <span class="">© @DateTime.Now.Year Bimenu Tüm hakkı saklıdır</span>
+                    <ul class="list-inline">
+                        <li class="list-inline-item">
+                            <a class="text-dark text-link" href="#">Politaka</a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a class="text-dark text-link" href="#">Kullanım Şartları</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="/assets/js/vendors.min.js"></script>
+    <script src="/assets/js/app.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+</body>
+</html>
