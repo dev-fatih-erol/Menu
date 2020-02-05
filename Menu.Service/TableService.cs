@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Menu.Core.Models;
 using Menu.Data;
 
@@ -11,6 +12,20 @@ namespace Menu.Service
         public TableService(MenuContext context)
         {
             _context = context;
+        }
+
+        public List<Table> GetByVenueId(int venueId)
+        {
+            return _context.Tables
+                           .Where(t => t.Venue.Id == venueId)
+                           .Select(t => new Table
+                           {
+                               Id = t.Id,
+                               Name = t.Name,
+                               TableStatus = t.TableStatus,
+                               CreatedDate = t.CreatedDate,
+                               VenueId = t.VenueId
+                           }).ToList();
         }
 
         public Table GetById(int id, int venueId)
