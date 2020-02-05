@@ -35,5 +35,6 @@
     <Folder Include="Components\" />
     <Folder Include="Models\ComponentViewModels\" />
     <Folder Include="Views\Shared\Components\" />
+    <Folder Include="Views\Table\" />
   </ItemGroup>
 </Project>

@@ -36,7 +36,7 @@
 <script id="template-tables" type="text/x-handlebars-template">
     {{#each this}}
     <div class="col-md-3">
-        <a href="/home/asd">
+        <a href="/table/{{id}}/detail">
             <div class="card ">
                 <div class="card-body {{#ifEquals tableStatus "Kapalı"}}statusfalse{{/ifEquals}} {{#ifEquals tableStatus "Açık"}}statustrue{{/ifEquals}}">
                     <div class="d-flex justify-content-between align-items-center">

@@ -1,0 +1,222 @@
+﻿@{
+    ViewData["Title"] = "Masa Siparişleri";
+}
+<div class="main-content">
+    <div class="row">
+        <div class="col-md-2 col-lg-2">
+            <a href="/home/asd">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="media align-items-center">
+                            <div class="avatar avatar-icon avatar-lg avatar-blue">
+                            </div>
+                            <i class="anticon anticon"></i>
+                            <div class="m-l-15">
+                                <h2 class="m-b-0">Geri Dön</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-10 col-lg-10">
+            <div class="card">
+                <div class="card-body">
+                    <div class="media align-items-center">
+                        <div class="avatar avatar-icon avatar-lg avatar-cyan">
+                            <i class="anticon anticon-table"></i>
+                        </div>
+                        <div class="m-l-15">
+                            <h2 class="m-b-0"> Masa  1 </h2>
+                            <h3 class="m-b-0"> ₺ 125,50 </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-9">
+            <div class="card">
+                <div class="card-body">
+                    <div class="m-t-25">
+                        <div class="accordion orders-actual" id="accordion-default"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="card">
+                <div style="height:100% !important;" class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Kasa Durum :</h5>
+                        <div>
+                            <a href="#" class="btn btn-default btn-sm statustruewhite statustrue">Online</a>
+                        </div>
+                    </div>
+                    <div class="table-responsive m-t-30">
+                        <table id="waiters" class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Garson Adı</th>
+                                    <th>Durumu </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script id="template-orders-actual" type="text/x-handlebars-template">
+    {{#each this}}
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title">
+                <a data-toggle="collapse" href="#collapseOneDefault">
+                    <span>{{name}} {{surname}} <span style="float:right;" class="m-b-0">Toplam: ₺ {{totalPrice}} </span></span>
+                </a>
+            </h5>
+        </div>
+        <div id="collapseOneDefault" class="collapse" data-parent="#accordion-default">
+            {{#each orders}}
+            <div class="card">
+                <div class="card-body">
+                    <div class="alert alert-primary ">
+                        <div class="d-flex justify-content-start">
+                            <span class="alert-icon m-r-20 font-size-30">
+                                <i class="anticon anticon-info-circle"></i>
+                            </span>
+                            <div>
+                                <h5 class="alert-heading">Durumu : {{orderStatus}}</h5>
+                                <p>Sipariş Kodu : {{code}} </p>
+                                <p> Onaylayan Garson : {{name}} {{surname}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive m-t-30">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Ürün Adı</th>
+                                    <th>Ürün Seçenekleri</th>
+                                    <th>Adet</th>
+                                    <th>Fiyat</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each orderDetails}}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar avatar-image" style="min-width: 40px">
+                                                <img src="{{photo}}">
+                                            </div>
+                                            <span class="m-l-10">{{name}}</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span>{{optionItem}}</span>
+                                    </td>
+                                    <td>{{quantity}}</td>
+                                    <td>₺ {{price}} </td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                        <div style="float:right;" class="alert alert-success d-flex justify-content-start">
+                            <h2 class="m-b-0">₺ {{totalPrice}}</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+    {{/each}}
+</script>
+<script id="template-waiters" type="text/x-handlebars-template">
+    {{#each this}}
+    <tr>
+        <td>
+            <div class="d-flex align-items-center">
+                <div class="avatar avatar-image" style="min-width: 40px">
+                    <img src="https://cdn2.iconfinder.com/data/icons/food-and-drink-49/100/Waiter-01-512.png" alt="">
+                </div>
+                <span class="m-l-10">{{name}} {{surname}}</span>
+            </div>
+        </td>
+        <td>
+            <span class="badge badge-pill badge-cyan font-size-12">Aktif</span>
+        </td>
+    </tr>
+    {{/each}}
+</script>
+@section Styles {
+    <style>
+
+
+        .statustrue {
+            background-color: green;
+        }
+
+        .statustruewhite {
+            color: white;
+        }
+
+        .statusfalse {
+            background-color: red;
+        }
+
+        .orderpaymentstatus {
+            animation: blinker 0.9s linear infinite;
+            color: white;
+        }
+
+        @@keyframes blinker {
+            50% {
+                opacity: 0;
+            }
+        }
+
+        .card-body {
+            border-radius: 33px !important;
+        }
+
+        .card {
+            border-radius: 35px !important;
+            border: 2px solid #bbb61d !important;
+        }
+
+        .card-title {
+            background-color: black;
+        }
+
+        .alert {
+            padding: 0px !important;
+        }
+
+        .accordion > .card > .card-header > .card-title > a {
+            font-weight: 900;
+            background-color: maroon;
+            color: white;
+            height: 100px;
+            margin-top: 15px;
+        }
+
+        .page-container {
+            padding-left: 0px !important;
+        }
+    </style>
+}
+
+@section Scripts {
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aspnet-signalr/1.1.4/signalr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.2/handlebars.js"></script>
+    <script src="~/assets/js/table.js" asp-append-version="true"></script>
+}

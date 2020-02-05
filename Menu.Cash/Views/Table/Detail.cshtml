@@ -1,0 +1,257 @@
+﻿@{
+    ViewData["Title"] = "Masa Detay";
+}
+<div class="main-content">
+    <div class="row">
+        <div class="col-md-2 col-lg-2">
+            <a href="/home/index">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="media align-items-center">
+                            <div class="avatar avatar-icon avatar-lg avatar-blue">
+                            </div>
+                            <i class="anticon anticon"></i>
+                            <div class="m-l-15">
+                                <h2 class="m-b-0">Geri Dön</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-10 col-lg-10">
+            <div class="card">
+                <div class="card-body">
+                    <div class="media align-items-center">
+                        <div class="avatar avatar-icon avatar-lg avatar-cyan">
+                            <i class="anticon anticon-table"></i>
+                        </div>
+                        <div class="m-l-15">
+                            <h2 class="m-b-0"> Masa  1 </h2>
+                            <h3 class="m-b-0"> ₺ 125,50 </h3>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="row">
+        <div class="col-lg-9">
+            <div class="row">
+                <div class="col-md-6">
+                    <a href="/table/@ViewContext.RouteData.Values["tableId"]/orders">
+                        <div class="card ">
+                            <div class="card-body statustrue">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h2 class="m-b-0 text statustruewhite">Siparişler</h2>
+
+                                    </div>
+                                    <span class="badge badge-pill badge-gold font-size-12">
+                                        <span class="font-weight-semibold m-l-5 statustruewhite">Var</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-6">
+                    <a href="">
+                        <div class="card ">
+                            <div class="card-body statustrue">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h2 class="m-b-0 text statustruewhite">Geçmiş Siparişler</h2>
+
+                                    </div>
+                                    <span class="badge badge-pill badge-gold font-size-12">
+                                        <span class="font-weight-semibold m-l-5 statustruewhite">Boş</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-12">
+                    <a href="">
+                        <div class="card ">
+                            <div class="card-body statustrue">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h2 class="m-b-0 text statustruewhite">Hesap İstekleri</h2>
+
+                                    </div>
+                                    <span class="badge badge-pill badge-gold font-size-12">
+                                        <span class="font-weight-semibold m-l-5 statustruewhite orderpaymentstatus">Var</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+
+            </div>
+
+        </div>
+        <div class="col-lg-3">
+            <div class="card">
+                <div style="height:100% !important;" class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Kasa Durum :</h5>
+                        <div>
+                            <a href="#" class="btn btn-default btn-sm statustruewhite statustrue">Online</a>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive m-t-30">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Garson Adı</th>
+                                    <th>Durumu </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar avatar-image" style="min-width: 40px">
+                                                <img src="~/assets/images/avatars/thumb-4.jpg" alt="">
+                                            </div>
+                                            <span class="m-l-10">Mehmet Yaman</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-pill badge-cyan font-size-12">Aktif</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar avatar-image" style="min-width: 40px">
+                                                <img src="~/assets/images/avatars/thumb-1.jpg" alt="">
+                                            </div>
+                                            <span class="m-l-10">Nilgün Çağlayan</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-pill badge-red font-size-12">Mola</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar avatar-image" style="min-width: 40px">
+                                                <img src="~/assets/images/avatars/thumb-6.jpg" alt="">
+                                            </div>
+                                            <span class="m-l-10">Ahmet Çağlayan</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-pill badge-black font-size-12">Kapalı</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar avatar-image" style="min-width: 40px">
+                                                <img src="~/assets/images/avatars/thumb-6.jpg" alt="">
+                                            </div>
+                                            <span class="m-l-10">Ahmet Çağlayan</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-pill badge-black font-size-12">Kapalı</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar avatar-image" style="min-width: 40px">
+                                                <img src="~/assets/images/avatars/thumb-6.jpg" alt="">
+                                            </div>
+                                            <span class="m-l-10">Ahmet Çağlayan</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-pill badge-black font-size-12">Kapalı</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar avatar-image" style="min-width: 40px">
+                                                <img src="~/assets/images/avatars/thumb-6.jpg" alt="">
+                                            </div>
+                                            <span class="m-l-10">Ahmet Çağlayan</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-pill badge-black font-size-12">Kapalı</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+@section Styles {
+    <style>
+
+        .statustrue {
+            background-color: green;
+        }
+
+        .statustruewhite {
+            color: white;
+        }
+
+        .statusfalse {
+            background-color: red;
+        }
+
+        .orderpaymentstatus {
+            animation: blinker 0.9s linear infinite;
+            color: white;
+        }
+
+        @@keyframes blinker {
+            50% {
+                opacity: 0;
+            }
+        }
+
+        .card-body {
+            border-radius: 33px !important;
+            height: 120px !important;
+        }
+
+        .card {
+            border-radius: 35px !important;
+            border: 2px solid #bbb61d !important;
+        }
+
+        .alert {
+            padding: 0px !important;
+        }
+
+        .page-container {
+            padding-left: 0px !important;
+        }
+    </style>
+}
+
+@section Scripts {
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aspnet-signalr/1.1.4/signalr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.2/handlebars.js"></script>
+}
