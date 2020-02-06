@@ -1,10 +1,12 @@
 ﻿let host = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port;
 
-$(document).ready(function () {
+let apiUrl = GetApiUrl();
 
+$(document).ready(function () {
+  
     var groupName = document.getElementById("group-name").value;
 
-    const orderHubUrl = "https://localhost:5001/orderHub?groupName=" + groupName;
+    const orderHubUrl = apiUrl + "/orderHub?groupName=" + groupName;
 
     var connection = new signalR.HubConnectionBuilder().withUrl(orderHubUrl, {
         skipNegotiation: true,
@@ -77,3 +79,10 @@ $(document).ready(function () {
         });
     });
 });
+
+function GetApiUrl() {
+    if (location.hostname === "localhost") {
+        return "https://localhost:5001";
+    }
+    return "http://mottomobil.net";
+}
