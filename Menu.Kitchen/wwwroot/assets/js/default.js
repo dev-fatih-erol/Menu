@@ -84,5 +84,5 @@ function GetApiUrl() {
     if (location.hostname === "localhost") {
         return "https://localhost:5001";
     }
-    return "http://mottomobil.net";
+    return "https://www.mottomobil.net";
 }
