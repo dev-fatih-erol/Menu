@@ -12,6 +12,10 @@ namespace Menu.Data
         {
         }
 
+        public DbSet<AppAbout> AppAbouts { get; set; }
+
+        public DbSet<AppSlider> AppSliders { get; set; }
+
         public DbSet<City> Cities { get; set; }
 
         public DbSet<Venue> Venues { get; set; }
@@ -64,6 +68,12 @@ namespace Menu.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<AppAbout>()
+                .ToTable("AppAbout");
+
+            modelBuilder.Entity<AppSlider>()
+                .ToTable("AppSlider");
+
             modelBuilder.Entity<City>()
                 .ToTable("City");
 

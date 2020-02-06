@@ -61,6 +61,10 @@ namespace Menu.Api
                 };
             });
 
+            services.AddScoped<IAppAboutService, AppAboutService>();
+
+            services.AddScoped<IAppSliderService, AppSliderService>();
+
             services.AddScoped<ICityService, CityService>();
 
             services.AddScoped<IVenueService, VenueService>();
