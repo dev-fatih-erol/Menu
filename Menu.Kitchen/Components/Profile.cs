@@ -22,8 +22,7 @@ namespace Menu.Kitchen.Components
             {
                 KitchenName = kitchen.Name,
                 VenueName = kitchen.Venue.Name,
-                VenuePhoto = kitchen.Venue.Photo,
-                VenueId = kitchen.Venue.Id
+                VenuePhoto = kitchen.Venue.Photo
             };
 
             return View(model);

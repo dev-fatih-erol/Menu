@@ -7,7 +7,5 @@
         public string VenueName { get; set; }
 
         public string VenuePhoto { get; set; }
-
-        public int VenueId { get; set; }
     }
 }

@@ -51,6 +51,8 @@ namespace Menu.Kitchen
 
             services.AddDbContext<MenuContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddDataProtection();
+
             services.AddControllersWithViews();
         }
 
