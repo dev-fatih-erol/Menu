@@ -20,6 +20,124 @@
         </div>
     </div>
 </div>
+<div class="modal modal-right fade" id="side-modal-right">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title h4">Hesabı Kapat</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <i class="anticon anticon-close"></i>
+                </button>
+            </div>
+            <div class="side-modal-wrapper">
+                <div class="vertical-align">
+                    <div class="table-cell">
+                        <div class="modal-body">
+                            <div class="alert alert-warning">
+                                <div class="d-flex justify-content-start">
+                                    <span class="alert-icon m-r-20 font-size-30">
+                                        <i class="anticon anticon-exclamation-circle"></i>
+                                    </span>
+                                    <div>
+                                        <h5 class="alert-heading">Dikkat</h5>
+                                        <p>
+                                            Eğer Kullanıcı başka bir sipariş vermeyecekse bu işlemi gerçekleştirin. Aksi takdirde
+                                            bu işlemin geriye dönüşü yoktur.
+                                        </p>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <div style="background:gainsboro;" class="card">
+                                <div class="card-body">
+                                    <h3 style="text-align:center; font-weight:700;">Ümit Çubukçuoğlu</h3>
+                                    <div class="form-group">
+                                        <div class="form-group row">
+                                            <label for="inputPassword3" class="col-sm-4 col-form-label">Toplam</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control" disabled id="productName" placeholder="Product Name" value="₺ 35,50 ">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="inputPassword3" class="col-sm-4 col-form-label">Puanı</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control" disabled id="productName" placeholder="Product Name" value="₺ 15 ">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="background:gainsboro;" class="card">
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <div class="form-group row">
+                                            <label for="inputPassword3" class="col-sm-4 col-form-label">Puan Kullanımı</label>
+                                            <div class="col-sm-8">
+                                                <select class="custom-select" id="productCategory">
+                                                    <option value="1">0 ₺</option>
+                                                    <option value="2">5 ₺</option>
+                                                    <option value="3" selected="">10 ₺</option>
+                                                    <option value="4">15 ₺</option>
+                                                    <option value="5">20 ₺</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="inputPassword3" class="col-sm-4 col-form-label">Ödeme Tipi</label>
+                                            <div class="col-sm-8">
+                                                <select class="custom-select" id="productStatus">
+                                                    <option value="1" selected="">Nakit</option>
+                                                    <option value="2">Kredi Kartı</option>
+                                                    <option value="3">Sodexo</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="inputPassword3" class="col-sm-4 col-form-label">Bahşiş</label>
+                                            <div class="col-sm-8">
+                                                <select class="custom-select" id="productCategory">
+                                                    <option value="1" selected="">0 ₺</option>
+                                                    <option value="2">5 ₺</option>
+                                                    <option value="3">10 ₺</option>
+                                                    <option value="4">15 ₺</option>
+                                                    <option value="5">20 ₺</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-12">
+                                        <div class="m-l-15">
+                                            <span class="m-b-0 tyte">
+                                                Toplam : <span class="byte">₺ 5,25</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div style="float:left;" class="col-md-6">
+
+                                        <select class="custom-select" id="productStatus">
+                                            <option value="1" selected="">Durum Seçin</option>
+                                            <option value="2">Ödendi</option>
+                                            <option value="3">Ödenmedi</option>
+                                            <option value="3">Bizden VİP</option>
+                                        </select>
+                                    </div>
+                                    <div style="float:right;" class="col-md-6">
+                                        <button class="btn btn-primary">Kapat</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <script id="template-orders-actual" type="text/x-handlebars-template">
     {{#each this}}
     <div class="col-md-3">
@@ -63,7 +181,7 @@
                 </div>
                 <div class="m-t-20">
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#bd-example-modal-xl-{{id}}">Siparişleri Görüntüle</button>
-                    <button data-toggle="modal" data-target="#side-modal-right-{{id}}" class="btn btn-primary">Hesabı Al</button>
+                    <button data-toggle="modal" data-target="#side-modal-right" class="btn btn-primary">Hesabı Al</button>
                 </div>
                 <div class="modal fade" id="bd-example-modal-xl-{{id}}">
                     <div class="modal-dialog modal-xl">
@@ -166,130 +284,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal modal-right fade" id="side-modal-right-{{id}}">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title h4">Hesabı Kapat</h5>
-                                <button type="button" class="close" data-dismiss="modal">
-                                    <i class="anticon anticon-close"></i>
-                                </button>
-                            </div>
-                            <div class="side-modal-wrapper">
-                                <div class="vertical-align">
-                                    <div class="table-cell">
-                                        <div class="modal-body">
-
-
-                                            <div class="alert alert-warning">
-                                                <div class="d-flex justify-content-start">
-                                                    <span class="alert-icon m-r-20 font-size-30">
-                                                        <i class="anticon anticon-exclamation-circle"></i>
-                                                    </span>
-                                                    <div>
-                                                        <h5 class="alert-heading">Dikkat</h5>
-                                                        <p>
-                                                            Eğer Kullanıcı başka bir sipariş vermeyecekse bu işlemi gerçekleştirin. Aksi takdirde
-                                                            bu işlemin geriye dönüşü yoktur.
-                                                        </p>
-                                                    </div>
-
-                                                </div>
-
-                                            </div>
-                                            <div style="background:gainsboro;" class="card">
-                                                <div class="card-body">
-                                                    <h3 style="text-align:center; font-weight:700;">Ümit Çubukçuoğlu</h3>
-                                                    <div class="form-group">
-                                                        <div class="form-group row">
-                                                            <label for="inputPassword3" class="col-sm-4 col-form-label">Toplam</label>
-                                                            <div class="col-sm-8">
-                                                                <input type="text" class="form-control" disabled id="productName" placeholder="Product Name" value="₺ 35,50 ">
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group row">
-                                                            <label for="inputPassword3" class="col-sm-4 col-form-label">Puanı</label>
-                                                            <div class="col-sm-8">
-                                                                <input type="text" class="form-control" disabled id="productName" placeholder="Product Name" value="₺ 15 ">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div style="background:gainsboro;" class="card">
-
-                                                <div class="card-body">
-
-                                                    <div class="form-group">
-
-
-                                                        <div class="form-group row">
-                                                            <label for="inputPassword3" class="col-sm-4 col-form-label">Puan Kullanımı</label>
-                                                            <div class="col-sm-8">
-                                                                <select class="custom-select" id="productCategory">
-                                                                    <option value="1">0 ₺</option>
-                                                                    <option value="2">5 ₺</option>
-                                                                    <option value="3" selected="">10 ₺</option>
-                                                                    <option value="4">15 ₺</option>
-                                                                    <option value="5">20 ₺</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group row">
-                                                            <label for="inputPassword3" class="col-sm-4 col-form-label">Ödeme Tipi</label>
-                                                            <div class="col-sm-8">
-                                                                <select class="custom-select" id="productStatus">
-                                                                    <option value="1" selected="">Nakit</option>
-                                                                    <option value="2">Kredi Kartı</option>
-                                                                    <option value="3">Sodexo</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group row">
-                                                            <label for="inputPassword3" class="col-sm-4 col-form-label">Bahşiş</label>
-                                                            <div class="col-sm-8">
-                                                                <select class="custom-select" id="productCategory">
-                                                                    <option value="1" selected="">0 ₺</option>
-                                                                    <option value="2">5 ₺</option>
-                                                                    <option value="3">10 ₺</option>
-                                                                    <option value="4">15 ₺</option>
-                                                                    <option value="5">20 ₺</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row">
-                                                    <div class="col-sm-12">
-                                                        <div class="m-l-15">
-                                                            <span class="m-b-0 tyte">
-                                                                Toplam : <span class="byte">₺ 5,25</span>
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-12">
-                                                    <div style="float:left;" class="col-md-6">
-
-                                                        <select class="custom-select" id="productStatus">
-                                                            <option value="1" selected="">Durum Seçin</option>
-                                                            <option value="2">Ödendi</option>
-                                                            <option value="3">Ödenmedi</option>
-                                                            <option value="3">Bizden VİP</option>
-                                                        </select>
-                                                    </div>
-                                                    <div style="float:right;" class="col-md-6">
-                                                        <button class="btn btn-primary">Kapat</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -297,6 +291,7 @@
 </script>
 @section Styles {
     <style>
+
 
 
         .statustrue {

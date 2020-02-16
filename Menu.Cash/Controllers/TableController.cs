@@ -68,6 +68,61 @@ namespace Menu.Cash.Controllers
 
         [HttpGet]
         [Authorize]
+        [Route("Ajax/User/{id:int}/Orders")]
+        public IActionResult UserCheckOut(int id)
+        {
+            var orderTable = _orderTableService.GetByUserId(id, false);
+
+            if (orderTable != null)
+            {
+                var venue = _venueService.GetPaymentMethodById(orderTable.VenueId);
+
+                if (venue == null)
+                {
+                    return NotFound(new
+                    {
+                        Success = false,
+                        StatusCode = (int)HttpStatusCode.NotFound,
+                        Message = "Mekan bulunamadı"
+                    });
+                }
+
+                var totalPrice = orderTable.Order.Where(o => o.OrderStatus != OrderStatus.Cancel &&
+                                             o.OrderStatus != OrderStatus.Denied &&
+                                             o.OrderStatus != OrderStatus.Pending)
+                                 .Select(o => o.OrderDetail
+                                 .Sum(o => o.Price * o.Quantity)).Sum();
+
+                var user = _userService.GetById(User.Identity.GetId());
+
+                return Ok(new
+                {
+                    Success = true,
+                    StatusCode = (int)HttpStatusCode.OK,
+                    Result = new
+                    {
+                        PaymentMethods = venue.VenuePaymentMethod.Select(v => new
+                        {
+                            v.PaymentMethod.Id,
+                            v.PaymentMethod.Text
+                        }),
+                        user.Point,
+                        TLPoint = user.Point * 0.001,
+                        TotalPrice = string.Format("{0:N2}", totalPrice)
+                    }
+                });
+            }
+
+            return NotFound(new
+            {
+                Success = false,
+                StatusCode = (int)HttpStatusCode.NotFound,
+                Message = "Sipariş bulunamadı"
+            });
+        }
+
+        [HttpGet]
+        [Authorize]
         [Route("Ajax/Table/{tableId:int}/orders")]
         public IActionResult TableOrders(int tableId)
         {

@@ -19,6 +19,12 @@ $(document).ready(function () {
     Handlebars.registerHelper('ifEquals', function (arg1, arg2, options) {
         return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
     });
+
+    $(document).on('show.bs.modal', '#side-modal-right', function (e) {
+        $.get(host + "/ajax/user/" + "1" + "/orders", function (data) {
+            console.log(data)
+        });
+    });
 });
 
 function getValueAtIndex(index) {
