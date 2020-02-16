@@ -49,6 +49,12 @@ namespace Menu.Cash
 
             services.AddScoped<IOrderTableService, OrderTableService>();
 
+            services.AddScoped<IUserService, UserService>();
+
+            services.AddScoped<IVenueService, VenueService>();
+
+            services.AddScoped<IVenuePaymentMethodService, VenuePaymentMethodService>();
+
             services.AddRouting(options => options.LowercaseUrls = true);
 
             services.AddAntiforgery(options => options.Cookie.Name = "x-csrf-token");

@@ -43,6 +43,13 @@ namespace Menu.Service
                            }).FirstOrDefault();
         }
 
+        public VenuePaymentMethod GetById(int id)
+        {
+            return _context.VenuePaymentMethods
+                           .Where(v => v.Id == id)
+                           .FirstOrDefault();
+        }
+
         public void Create(VenuePaymentMethod venuePaymentMethod)
         {
             _context.VenuePaymentMethods.Add(venuePaymentMethod);

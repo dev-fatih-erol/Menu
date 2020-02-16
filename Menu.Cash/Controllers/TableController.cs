@@ -21,10 +21,19 @@ namespace Menu.Cash.Controllers
 
         private readonly IOrderTableService _orderTableService;
 
+        private readonly IUserService _userService;
+
+        private readonly IVenueService _venueService;
+
+        private readonly IVenuePaymentMethodService _venuePaymentMethodService;
+
         public TableController(ITableService tableService,
             ICashService cashService,
             IWaiterService waiterService,
-            IOrderTableService orderTableService)
+            IOrderTableService orderTableService,
+            IUserService userService,
+            IVenueService venueService,
+            IVenuePaymentMethodService venuePaymentMethodService)
         {
             _tableService = tableService;
 
@@ -33,6 +42,12 @@ namespace Menu.Cash.Controllers
             _waiterService = waiterService;
 
             _orderTableService = orderTableService;
+
+            _userService = userService;
+
+            _venueService = venueService;
+
+            _venuePaymentMethodService = venuePaymentMethodService;
         }
 
         [HttpGet]
@@ -63,7 +78,7 @@ namespace Menu.Cash.Controllers
             {
                 orderTable.Id,
                 orderTable.IsClosed,
-                orderTable.CreatedDate,
+                createdDate = orderTable.CreatedDate.ToString("HH:mm"),
                 orderTable.User.Name,
                 orderTable.User.Surname,
                 Orders = orderTable.Order.Where(o => o.OrderStatus != OrderStatus.Pending).Select(o => new

@@ -9,6 +9,8 @@ namespace Menu.Service
 
         List<VenuePaymentMethod> GetByVenueId(int venueId);
 
+        VenuePaymentMethod GetById(int id);
+
         void Create(VenuePaymentMethod venuePaymentMethod);
 
         void SaveChanges();
