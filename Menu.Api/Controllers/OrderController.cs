@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Threading.Tasks;
 using AutoMapper;
 using Menu.Api.Extensions;
 using Menu.Api.Helpers;
@@ -45,6 +49,8 @@ namespace Menu.Api.Controllers
         private readonly IOrderWaiterService _orderWaiterService;
 
         private readonly IVenuePaymentMethodService _venuePaymentMethodService;
+
+        private readonly string _key = "key=AAAA7Tr-w-A:APA91bFkdAPrjKgsrKdzqFpR1EXzmie3oUk6KaVgaPmdCyNdOsik_zyMJZHo2MgAAXYShzwJjj1dnlPpn-DvhW5JnYyzwDyahdVV9FyoHYV4K6XUggKJTm0uXRLxVhodorwKEzThBkqc";
 
         public OrderController(ILogger<OrderController> logger,
             IMapper mapper,
@@ -672,11 +678,266 @@ namespace Menu.Api.Controllers
             });
         }
 
+        [HttpPost]
+        [Authorize(Roles = "Waiter")]
+        [Route("Waiter/Order/Venue/{venueId:int}/Table/{tableId:int}/Guest/{guestId:int}")]
+        public IActionResult Create(int venueId, int tableId,int guestId, [FromBody] CreateOrderDto dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new
+                {
+                    Success = false,
+                    StatusCode = (int)HttpStatusCode.BadRequest,
+                    Errors = ModelState.GetErrors()
+                });
+            }
+
+            var table = _tableService.GetById(tableId, venueId);
+
+            if (table != null)
+            {
+                var orderTable = _orderTableService.GetByUserId(guestId, false);
+
+                if (orderTable != null)
+                {
+                    if (!orderTable.TableId.Equals(tableId) || !orderTable.VenueId.Equals(venueId))
+                    {
+                        return BadRequest(new
+                        {
+                            Success = false,
+                            StatusCode = (int)HttpStatusCode.BadRequest,
+                            Message = "Başka bir mekandan veya masadan sipariş veremezsiniz."
+                        });
+                    }
+
+                    if (orderTable.OrderPayment != null)
+                    {
+                        return BadRequest(new
+                        {
+                            Success = false,
+                            StatusCode = (int)HttpStatusCode.BadRequest,
+                            Message = "Hesap isteme işleminden sonra sipariş veremezsiniz."
+                        });
+                    }
+
+                    var order = new Order
+                    {
+                        Code = RandomHelper.Generate(1000, 9999).ToString(),
+                        Description = dto.Description ?? null,
+                        OrderStatus = OrderStatus.Approved,
+                        CreatedDate = DateTime.Now,
+                        OrderTableId = orderTable.Id
+                    };
+
+                    foreach (var orderDetail in dto.OrderDetail)
+                    {
+                        var product = _productService.GetByIdAndVenueId(orderDetail.ProductId, venueId);
+
+                        if (product == null)
+                        {
+                            return NotFound(new
+                            {
+                                Success = false,
+                                StatusCode = (int)HttpStatusCode.NotFound,
+                                Message = "Başka bir mekanda ürünler mevcut"
+                            });
+                        }
+
+                        var openingTime = new TimeSpan(product.OpeningTime);
+
+                        var closingTime = new TimeSpan(product.ClosingTime);
+
+                        var currentTime = DateTime.Now.TimeOfDay;
+
+                        if (!((currentTime >= openingTime) && (currentTime <= closingTime)))
+                        {
+                            return BadRequest(new
+                            {
+                                Success = false,
+                                StatusCode = (int)HttpStatusCode.BadRequest,
+                                Message = $"{product.Name} ürünü şuan mevcut değil"
+                            });
+                        }
+
+                        string optionItemText = null;
+
+                        var productPrice = product.Price;
+
+                        if (orderDetail.Options != null && orderDetail.Options.Any())
+                        {
+                            foreach (var orderOption in orderDetail.Options)
+                            {
+                                var option = _optionService.GetById(orderOption.Id);
+
+                                if (option != null)
+                                {
+                                    foreach (var orderOptionItem in orderOption.OptionItems)
+                                    {
+                                        var optionItem = _optionItemService.GetById(orderOptionItem.Id, option.Id);
+
+                                        if (optionItem != null)
+                                        {
+                                            optionItemText += optionItem.Name + ',';
+
+                                            productPrice += optionItem.Price;
+                                        }
+                                    }
+                                }
+                            }
+
+                            optionItemText = optionItemText.TrimEnd(',');
+                        }
+
+                        var newOrderDetail = new OrderDetail
+                        {
+                            Name = product.Name,
+                            Photo = product.Photo,
+                            OptionItem = optionItemText,
+                            Quantity = orderDetail.Quantity,
+                            Price = productPrice,
+                            Order = order
+                        };
+
+                        _orderDetailService.Create(newOrderDetail);
+                    }
+
+                    _orderService.Create(order);
+
+                    _orderService.SaveChanges();
+
+                    return Ok(new
+                    {
+                        Success = true,
+                        StatusCode = (int)HttpStatusCode.OK,
+                        Result = true
+                    });
+                }
+
+                var newOrderTable = new OrderTable
+                {
+                    IsClosed = false,
+                    CreatedDate = DateTime.Now,
+                    VenueId = venueId,
+                    TableId = tableId,
+                    UserId = guestId
+                };
+
+                var newOrder = new Order
+                {
+                    Code = RandomHelper.Generate(1000, 9999).ToString(),
+                    Description = dto.Description ?? null,
+                    OrderStatus = OrderStatus.Approved,
+                    CreatedDate = DateTime.Now,
+                    OrderTable = newOrderTable
+                };
+
+                foreach (var orderDetail in dto.OrderDetail)
+                {
+                    var product = _productService.GetByIdAndVenueId(orderDetail.ProductId, venueId);
+
+                    if (product == null)
+                    {
+                        return NotFound(new
+                        {
+                            Success = false,
+                            StatusCode = (int)HttpStatusCode.NotFound,
+                            Message = "Başka bir mekana ürünler mevcut"
+                        });
+                    }
+
+                    var openingTime = new TimeSpan(product.OpeningTime);
+
+                    var closingTime = new TimeSpan(product.ClosingTime);
+
+                    var currentTime = DateTime.Now.TimeOfDay;
+
+                    if (!((currentTime >= openingTime) && (currentTime <= closingTime)))
+                    {
+                        return BadRequest(new
+                        {
+                            Success = false,
+                            StatusCode = (int)HttpStatusCode.BadRequest,
+                            Message = $"{product.Name} ürünü şuan mevcut değil"
+                        });
+                    }
+
+                    string optionItemText = null;
+
+                    var productPrice = product.Price;
+
+                    if (orderDetail.Options != null && orderDetail.Options.Any())
+                    {
+                        foreach (var orderOption in orderDetail.Options)
+                        {
+                            var option = _optionService.GetById(orderOption.Id);
+
+                            if (option != null)
+                            {
+                                foreach (var orderOptionItem in orderOption.OptionItems)
+                                {
+                                    var optionItem = _optionItemService.GetById(orderOptionItem.Id, option.Id);
+
+                                    if (optionItem != null)
+                                    {
+                                        optionItemText += optionItem.Name + ',';
+
+                                        productPrice += optionItem.Price;
+                                    }
+                                }
+                            }
+                        }
+
+                        optionItemText = optionItemText.TrimEnd(',');
+                    }
+
+                    var newOrderDetail = new OrderDetail
+                    {
+                        Name = product.Name,
+                        Photo = product.Photo,
+                        OptionItem = optionItemText,
+                        Quantity = orderDetail.Quantity,
+                        Price = productPrice,
+                        Order = newOrder
+                    };
+
+                    _orderDetailService.Create(newOrderDetail);
+                }
+
+                _orderTableService.Create(newOrderTable);
+
+                _orderTableService.SaveChanges();
+
+                var changedTableStatus = _tableService.GetById(tableId);
+
+                if (changedTableStatus.TableStatus == TableStatus.Closed)
+                {
+                    changedTableStatus.TableStatus = TableStatus.Open;
+
+                    _tableService.SaveChanges();
+                }
+
+                return Ok(new
+                {
+                    Success = true,
+                    StatusCode = (int)HttpStatusCode.OK,
+                    Result = true
+                });
+            }
+
+            return NotFound(new
+            {
+                Success = false,
+                StatusCode = (int)HttpStatusCode.NotFound,
+                Message = "Mekan veya masa bulunamadı"
+            });
+        }
+
         // POST user/order/venue/5/table/5
         [HttpPost]
         [Authorize(Roles = "User")]
         [Route("User/Order/Venue/{venueId:int}/Table/{tableId:int}")]
-        public IActionResult Create(int venueId, int tableId, [FromBody] CreateOrderDto dto)
+        public async Task<IActionResult> Create(int venueId, int tableId, [FromBody] CreateOrderDto dto)
         {
             if (!ModelState.IsValid)
             {
@@ -718,7 +979,7 @@ namespace Menu.Api.Controllers
 
                     var pendingOrders = orderTable.Order.Where(o => o.OrderStatus == OrderStatus.Pending).ToList();
 
-                    if (pendingOrders.Count() > 5)
+                    if (pendingOrders.Count() > 3)
                     {
                         return BadRequest(new
                         {
@@ -812,6 +1073,24 @@ namespace Menu.Api.Controllers
                     _orderService.Create(order);
 
                     _orderService.SaveChanges();
+
+                    string json = @"{
+    ""to"": ""dsZp6qLiZng:APA91bFWdDUF1WLE2WdVfayWN9WpVFe7PdVPvCHvjSo2GfShnQwlwYGhuyHUV3CKm6sDFz6lZu--W5chGcNgfzjMniJ9eHxCXJyhMZ__wteqfIANM4Y5ajThLECd2iEzpOoSHY-H6Amh"",
+    ""notification"": {
+        ""body"": ""asddd""
+    }
+}";
+                    var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+                    using var httpClient = new HttpClient();
+
+                    httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                    httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", _key);
+
+                    var response = await httpClient.PostAsync("https://fcm.googleapis.com/fcm/send", stringContent);
+
+                    await response.Content.ReadAsStringAsync();
 
                     return Ok(new
                     {

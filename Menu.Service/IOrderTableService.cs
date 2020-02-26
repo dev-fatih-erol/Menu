@@ -5,6 +5,8 @@ namespace Menu.Service
 {
     public interface IOrderTableService
     {
+        OrderTable GetByGuest(int tableId);
+
         OrderTable GetDetailById(int id, int userId, bool isClosed);
 
         OrderTable GetDetailById(int id, int userId);

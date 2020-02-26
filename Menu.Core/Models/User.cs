@@ -19,6 +19,8 @@ namespace Menu.Core.Models
 
         public int Point { get; set; }
 
+        public bool IsGuest { get; set; }
+
         public DateTime CreatedDate { get; set; }
 
 

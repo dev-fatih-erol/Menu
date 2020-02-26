@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Text;
 using AutoMapper;
 using Menu.Api.Extensions;
+using Menu.Api.Helpers;
 using Menu.Api.Models;
 using Menu.Core.Models;
 using Menu.Service;
@@ -31,12 +32,15 @@ namespace Menu.Api.Controllers
 
         private readonly IUserService _userService;
 
+        private readonly IOrderTableService _orderTableService;
+
         public UserController(ILogger<UserController> logger,
             IConfiguration configuration,
             IMapper mapper,
             IDataProtectionProvider provider,
             ICityService cityService,
-            IUserService userService)
+            IUserService userService,
+            IOrderTableService orderTableService)
         {
             _logger = logger;
 
@@ -50,6 +54,69 @@ namespace Menu.Api.Controllers
             _cityService = cityService;
 
             _userService = userService;
+
+            _orderTableService = orderTableService;
+        }
+
+        [HttpGet]
+        //[Authorize(Roles = "Waiter")]
+        [Route("User/Guest/Table/{tableId:int}")]
+        public IActionResult GetGuest(int tableId)
+        {
+            var orderTable = _orderTableService.GetByGuest(tableId);
+
+            if (orderTable != null)
+            {
+                return Ok(new
+                {
+                    Success = true,
+                    StatusCode = (int)HttpStatusCode.OK,
+                    Result = new
+                    {
+                        orderTable.User.Id,
+                        orderTable.User.Name
+                    }
+                });
+            }
+
+            return NotFound(new
+            {
+                Success = false,
+                StatusCode = (int)HttpStatusCode.NotFound,
+                Message = "Kullanıcı bulunamadı"
+            });
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Waiter")]
+        [Route("User/Guest")]
+        public IActionResult CreateGuest()
+        { 
+            var random = RandomHelper.Generate(1000, 10000);
+
+            var newUser = new User
+            {
+                Name = "Misafir-" + random,
+                Surname = "M",
+                PhoneNumber = "0",
+                Password = "0",
+                Photo = "https://walldeco.id/themes/walldeco/assets/images/avatar-default.jpg",
+                CreatedDate = DateTime.Now,
+                CityId = 34,
+                Point = 0,
+                IsGuest = true
+            };
+
+            _userService.Create(newUser);
+
+            _userService.SaveChanges();
+
+            return Ok(new
+            {
+                Success = true,
+                StatusCode = (int)HttpStatusCode.OK,
+                Result = newUser.Id
+            });
         }
 
         // POST user/changepassword
@@ -270,7 +337,9 @@ namespace Menu.Api.Controllers
                         Password = dto.Password.ToMD5(),
                         Photo = "https://walldeco.id/themes/walldeco/assets/images/avatar-default.jpg",
                         CreatedDate = DateTime.Now,
-                        CityId = dto.CityId
+                        CityId = dto.CityId,
+                        Point = 10000,
+                        IsGuest = false
                     };
 
                     _userService.Create(newUser);

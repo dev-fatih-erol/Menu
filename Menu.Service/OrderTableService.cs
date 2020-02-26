@@ -14,6 +14,17 @@ namespace Menu.Service
             _context = context;
         }
 
+        public OrderTable GetByGuest(int tableId)
+        {
+            return _context.OrderTables
+                .Where(o => o.Table.Id == tableId && o.User.IsGuest == true && o.IsClosed == false)
+                .Select(o => new OrderTable
+                {
+                    User = o.User
+                })
+                .FirstOrDefault();                      
+        }
+
         public OrderTable GetDetailById(int id, int userId, bool isClosed)
         {
             return _context.OrderTables.Where(o => o.Id == id &&
