@@ -106,6 +106,8 @@ namespace Menu.Api
 
             services.AddScoped<ISuggestionComplaintService, SuggestionComplaintService>();
 
+            services.AddScoped<IWaiterTokenService, WaiterTokenService>();
+
             services.AddTransient<ISmsSender, SmsSender>();
 
             services.AddSingleton(Configuration);
