@@ -52,6 +52,69 @@ namespace Menu.Cash.Controllers
 
         [HttpGet]
         [Authorize]
+        [Route("Table/Old")]
+        public IActionResult Old()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        [Authorize]
+        [Route("Ajax/Table/Old")]
+        public IActionResult OldOrders()
+        {
+            var cash = _cashService.GetById(User.Identity.GetId());
+
+            var orderTables = _orderTableService.GetByOldTableId(cash.Venue.Id, true)
+                                           .Where(o => o.Order.Any(o => o.OrderStatus != OrderStatus.Pending)).OrderByDescending(x => x.OrderCash.CreatedDate).ToList();
+
+            return Ok(orderTables.Select(orderTable => new
+            {
+                orderTable.Id,
+                orderTable.IsClosed,
+                createdDate = orderTable.CreatedDate.ToString("HH:mm"),
+                orderTable.User.Name,
+                orderTable.User.Surname,
+                orderTable.TableId,
+                table = orderTable.Table.Name,
+                orderpayment = orderTable.OrderPayment.VenuePaymentMethod.PaymentMethod.Text,
+                ordercash = orderTable.OrderCash.OrderCashStatus.ToOrderCashStatus(),
+                cashdate = orderTable.OrderCash.CreatedDate.ToString("MM/dd/yyyy HH:mm:ss"),
+                Orders = orderTable.Order.Where(o => o.OrderStatus != OrderStatus.Pending).Select(o => new
+                {
+
+                    o.Id,
+                    o.Code,
+                    o.Description,
+                    orderStatus = o.OrderStatus.ToOrderStatus(),
+                    o.OrderWaiter.Waiter.Name,
+                    o.OrderWaiter.Waiter.Surname,
+                    OrderDetails = o.OrderDetail.Select(o => new
+                    {
+                        o.Id,
+                        o.Name,
+                        o.Photo,
+                        o.Quantity,
+                        price = string.Format("{0:N2}", o.Price),
+                        o.OptionItem,
+                    }).ToList(),
+                    TotalPrice = string.Format("{0:N2}", orderTable.Order.Where(or => or.Id == o.Id &&
+                                                              or.OrderStatus != OrderStatus.Cancel &&
+                                                              o.OrderStatus != OrderStatus.Pending &&
+                                                              or.OrderStatus != OrderStatus.Denied)
+                                                 .Select(or => or.OrderDetail
+                                                 .Sum(or => or.Price * or.Quantity)).Sum())
+                }).ToList(),
+                TotalPrice = string.Format("{0:N2}", orderTable.Order.Where(o => o.OrderStatus != OrderStatus.Cancel &&
+                                                         o.OrderStatus != OrderStatus.Pending &&
+                                                         o.OrderStatus != OrderStatus.Denied)
+                                                     .Select(o => o.OrderDetail
+                                                     .Sum(o => o.Price * o.Quantity)).Sum())
+            }));
+        }
+
+        [HttpGet]
+        [Authorize]
         [Route("Table/{tableId:int}/Detail")]
         public IActionResult Detail()
         {

@@ -1,0 +1,418 @@
+﻿@{
+    ViewData["Title"] = "Geçmiş Siparişler";
+}
+
+<div class="main-content">
+    <div class="d-md-flex align-items-md-center justify-content-between">
+        <div class="media m-v-10 align-items-center">
+            <a href="#">
+                <div style="background:black;color:white;" class="avatar avatar-image avatar-lg">
+                    <i class="anticon anticon-double-left"></i>
+                </div>
+            </a>
+            <div class="media-body m-l-15">
+                <h4 class="m-b-0"></h4>
+            </div>
+            <div class="input-affix m-v-10">
+                <i class="prefix-icon anticon anticon-search opacity-04"></i>
+                <input type="text" class="form-control" placeholder="Geçmiş Sipariş Ara">
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div id="card-view">
+            <div class="row olders">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script id="template-old" type="text/x-handlebars-template">
+    {{#each this}}
+
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <div style="width:50px;" class="avatar avatar-image rounded">
+                    <div style="background:white;font-weight:800;color:black;border-radius:24px;">No:{{id}}</div>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <div class="media">
+
+                        <div class="m-l-10">
+                            <div class="m-l-10">
+                                <h5 class="m-b-0"><i class="fas fa-user-alt"></i> {{name}} {{surname}}</h5>
+                                <span class="text-muted font-size-13"><i class="far fa-calendar-alt"></i> {{cashdate}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="media">
+
+                        <div class="m-l-10">
+                            <div class="m-l-10">
+                                <h5 style="text-align:center;" class="m-b-0">  <i class="fas fa-desktop"></i> </h5>
+                                <span class="text-muted font-size-13">{{table}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="m-t-30">
+                    <div class="progress progress-sm m-t-10">
+                    </div>
+                </div>
+                <div class="m-t-20">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <div class="m-b-0 text-dark font-weight-semibold kanter"><i class="anticon anticon-dollar"></i> Ödeme : <span class="panter">{{orderpayment}}</span> </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <div class="m-b-0 text-dark font-weight-semibold kanter"><i class="fas fa-shopping-cart"></i> Toplam : <span class="panter">{{totalPrice}}</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="m-t-20">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <div class="m-b-0 text-dark font-weight-semibold kanter"><i class="fas fa-money-bill-alt"></i> Durum :<span class="panter">{{ordercash}}</span> </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <div class="m-b-0 text-dark font-weight-semibold kanter">
+
+                                        <button type="button" class="btn btn-icon btn-danger btn-rounded " data-toggle="modal" data-target="#bd-example-modal-xl-{{id}}">
+                                            <i class="anticon anticon-zoom-in"></i>
+                                        </button>  Siparişleri
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="bd-example-modal-xl-{{id}}">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title h4">{{name}} {{surname}} Siparişleri</h5>
+                                <button type="button" class="close" data-dismiss="modal">
+                                    <i class="anticon anticon-close"></i>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-12 ">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="media align-items-center">
+                                                    <div class="m-l-15">
+                                                        <span class="m-b-0 tyte">
+                                                            Genel Toplam : <span class="byte">₺ {{totalPrice}}</span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    {{#each orders}}
+                                    <div class="col-md-12 col-lg-12">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="alert alert-primary ">
+                                                    <div class="d-flex justify-content-start">
+                                                        <span class="alert-icon m-r-20 font-size-30">
+                                                            <i class="anticon anticon-info-circle"></i>
+                                                        </span>
+                                                        <div>
+                                                            <h5 class="alert-heading">Durumu : {{orderStatus}}</h5>
+                                                            <p>Sipariş Numarası : {{code}} </p>
+                                                            <p>Onaylayan Garson : {{name}} {{surname}}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="table-responsive m-t-30">
+                                                    <table class="table table-hover">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Ürün Adı</th>
+                                                                <th>Seçenekler</th>
+                                                                <th>Adet</th>
+                                                                <th>Fiyat</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {{#each orderDetails}}
+                                                            <tr>
+                                                                <td width="25%">
+                                                                    <div class="d-flex align-items-center">
+                                                                        <div class="avatar avatar-image" style="min-width: 40px">
+                                                                            <img src="{{photo}}">
+                                                                        </div>
+                                                                        <span class="m-l-10">{{name}}</span>
+                                                                    </div>
+                                                                </td>
+                                                                <td width="45%">
+                                                                    <span>{{optionItem}}</span>
+                                                                </td>
+                                                                <td width="15%">{{quantity}}</td>
+                                                                <td width="15%">₺ {{price}} </td>
+                                                            </tr>
+                                                            {{/each}}
+                                                        </tbody>
+                                                    </table>
+                                                    <div style="float:right;" class="alert alert-success d-flex justify-content-start">
+                                                        <h2 class="m-b-0">Toplam :  ₺ {{totalPrice}}</h2>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{/each}}
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">Kapat</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    {{/each}}
+
+</script>
+
+@section Styles {
+    <style>
+
+        .statustrue {
+            background-color: green;
+        }
+
+        .statustruewhite {
+            color: white;
+        }
+
+        .statusfalse {
+            background-color: red;
+        }
+
+        .orderpaymentstatus {
+            animation: blinker 0.9s linear infinite;
+            color: white;
+        }
+
+        @@keyframes blinker {
+            50% {
+                opacity: 0;
+            }
+        }
+
+        .card-body {
+            border-radius: 13px !important;
+            padding: 0.55rem;
+        }
+
+        .card {
+            border-radius: 15px !important;
+            border: 1px solid #c3c3c3 !important;
+        }
+
+        .card-title {
+            background-color: black;
+        }
+
+        .alert {
+            padding: 5px !important;
+            border-radius: 15px;
+        }
+
+        .accordion > .card > .card-header > .card-title > a {
+            font-weight: 900;
+            background-color: maroon;
+            color: white;
+            height: 100px;
+            margin-top: 15px;
+        }
+
+        .page-container {
+            padding-left: 0px !important;
+        }
+
+
+        @@media only screen and (max-width: 2000px) and (min-width: 400px) {
+            .m-l-15 {
+                margin-left: 0px !important;
+                width: 100% !important;
+            }
+        }
+
+        @@media only screen and (max-width:399px) and (min-width: 150px) {
+            .m-l-15 {
+                margin-left: 0px !important;
+                width: 84% !important;
+            }
+        }
+
+        @@media only screen and (max-width:2000px) and (min-width: 600px) {
+            ul#myTabVertical {
+                width: 21% !important;
+            }
+        }
+
+        @@media only screen and (max-width:599px) and (min-width: 150px) {
+            ul#myTabVertical {
+                display: -webkit-inline-box !important;
+            }
+        }
+
+
+        @@media only screen and (max-width: 600px) {
+            .d-flex {
+                display: flex !important;
+            }
+        }
+
+        @@media only screen and (max-width: 600px) {
+            li.nav-item {
+                width: 70% !important;
+            }
+        }
+
+        @@media (max-width:1350px) and (min-width: 102px) {
+            .col-lg-6 {
+                flex: 100%;
+                max-width: 100% !important;
+            }
+        }
+
+        @@media (max-width:1350px) and (min-width: 767px) {
+            .col-md-3 {
+                flex: 0 0 50%;
+                max-width: 50%;
+            }
+        }
+
+        .nav-tabs.flex-column > li > a.active.nav-link {
+            border-bottom: 0px;
+            border-radius: 30px;
+            border-right: 18px solid #ff0e0e;
+            background: #00a50d;
+            color: white;
+        }
+
+        .nav-tabs.flex-column {
+            border-right: 24px solid #ffffff;
+            border-bottom: 0px;
+        }
+
+        .btn-icon.btn-sm {
+            font-size: 19px;
+            color: white;
+            background: red;
+        }
+
+        .byte {
+            font-size: 25px;
+            font-weight: 800;
+            color: green;
+            float: right;
+            margin-right: 25px;
+        }
+
+        .tyte {
+            font-size: 25px;
+            font-weight: 800;
+            color: red;
+            margin-left: 24px;
+        }
+
+        .badge-red {
+            color: #ff1500;
+            background: rgba(222,68,54,0.05);
+            border-color: transparent;
+            font-weight: 900;
+            font-size: 15px;
+        }
+
+        .form-control[disabled] {
+            cursor: not-allowed;
+            background-color: #ededed;
+            background: #dcdcdc;
+            color: black;
+            font-size: 18px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .pcx {
+            background: red;
+            color: white !important;
+            text-align: center;
+            border: 1px solid white;
+        }
+
+        .b1x {
+            border: 1px solid black;
+            text-align: center;
+        }
+
+        .ixr1 {
+            background: green;
+            color: white;
+            border-radius: 5px;
+            padding: 5px;
+        }
+
+        .it {
+            background-color: dodgerblue;
+            color: white;
+            border-radius: 15px;
+            padding: 5px;
+        }
+
+        span.font-size-13 {
+            font-size: 13px !important;
+            font-weight: 900;
+            color: red !important;
+        }
+
+        .panter {
+            color: green;
+            font-weight: 900;
+            text-align: center !important;
+            font-size: 13px;
+        }
+
+        .kanter {
+            font-weight: bold !important;
+            font-size: 13px;
+        }
+    </style>
+}
+
+@section Scripts {
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aspnet-signalr/1.1.4/signalr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.2/handlebars.js"></script>
+    <script src="~/assets/js/old.js" asp-append-version="true"></script>
+}
