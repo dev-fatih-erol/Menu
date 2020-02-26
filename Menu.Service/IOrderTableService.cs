@@ -17,7 +17,7 @@ namespace Menu.Service
 
         List<OrderTable> GetPendingByTableId(int tableId, bool isClosed);
 
-        List<OrderTable> GetByTableId(int tableId, bool isClosed);
+        List<OrderTable> GetByTableId(int venueId, int tableId, bool isClosed);
 
         List<OrderTable> GetByUserId(int userId);
 

@@ -235,10 +235,11 @@ namespace Menu.Service
                            }).ToList();
         }
 
-        public List<OrderTable> GetByTableId(int tableId, bool isClosed)
+        public List<OrderTable> GetByTableId(int venueId, int tableId, bool isClosed)
         {
             return _context.OrderTables
-                           .Where(o => o.TableId == tableId &&
+                           .Where(o => o.Venue.Id == venueId &&
+                                       o.TableId == tableId &&
                                        o.IsClosed == isClosed)
                            .Select(o => new OrderTable
                            {

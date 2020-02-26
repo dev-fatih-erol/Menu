@@ -48,6 +48,8 @@ namespace Menu.Api.Controllers
 
         private readonly IOrderWaiterService _orderWaiterService;
 
+        private readonly ICashService _cashService;
+
         private readonly IVenuePaymentMethodService _venuePaymentMethodService;
 
         private readonly string _key = "key=AAAA7Tr-w-A:APA91bFkdAPrjKgsrKdzqFpR1EXzmie3oUk6KaVgaPmdCyNdOsik_zyMJZHo2MgAAXYShzwJjj1dnlPpn-DvhW5JnYyzwDyahdVV9FyoHYV4K6XUggKJTm0uXRLxVhodorwKEzThBkqc";
@@ -66,7 +68,8 @@ namespace Menu.Api.Controllers
             IOptionItemService optionItemService,
             ITableWaiterService tableWaiterService,
             IOrderWaiterService orderWaiterService,
-            IVenuePaymentMethodService venuePaymentMethodService)
+            IVenuePaymentMethodService venuePaymentMethodService,
+            ICashService cashService)
         {
             _logger = logger;
 
@@ -97,6 +100,8 @@ namespace Menu.Api.Controllers
             _orderWaiterService = orderWaiterService;
 
             _venuePaymentMethodService = venuePaymentMethodService;
+
+            _cashService = cashService;
         }
 
         // Get waiter/table/5/order/checkout
@@ -200,7 +205,9 @@ namespace Menu.Api.Controllers
                 });
             }
 
-            var orderTables = _orderTableService.GetByTableId(tableId, false)
+            var cash = _cashService.GetById(User.Identity.GetId());
+
+            var orderTables = _orderTableService.GetByTableId(cash.Venue.Id, tableId, false)
                                            .Where(o => o.Order.Any(o => o.OrderStatus == OrderStatus.Pending)).ToList();
 
             if (!orderTables.Any())
@@ -269,7 +276,9 @@ namespace Menu.Api.Controllers
                 });
             }
 
-            var orderTables = _orderTableService.GetByTableId(tableId, false)
+            var cash = _cashService.GetById(User.Identity.GetId());
+
+            var orderTables = _orderTableService.GetByTableId(cash.Venue.Id, tableId, false)
                                            .Where(o => o.Order.Any(o => o.OrderStatus != OrderStatus.Pending)).ToList();
 
             if (!orderTables.Any())

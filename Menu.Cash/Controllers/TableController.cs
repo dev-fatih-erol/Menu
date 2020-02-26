@@ -189,7 +189,9 @@ namespace Menu.Cash.Controllers
         [Route("Ajax/Table/{tableId:int}/orders")]
         public IActionResult TableOrders(int tableId)
         {
-            var orderTables = _orderTableService.GetByTableId(tableId, false)
+            var cash = _cashService.GetById(User.Identity.GetId());
+
+            var orderTables = _orderTableService.GetByTableId(cash.Venue.Id,tableId, false)
                                            .Where(o => o.Order.Any(o => o.OrderStatus != OrderStatus.Pending)).ToList();
 
             return Ok(orderTables.Select(orderTable => new
