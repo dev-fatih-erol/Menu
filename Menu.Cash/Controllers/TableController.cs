@@ -52,6 +52,161 @@ namespace Menu.Cash.Controllers
 
         [HttpGet]
         [Authorize]
+        [Route("Table/Reports")]
+        public IActionResult Reports()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        [Authorize]
+        [Route("Ajax/Table/Reports")]
+        public IActionResult AllReports()
+        {
+            var cash = _cashService.GetById(User.Identity.GetId());
+
+            var orderTables = _orderTableService.GetByReports(cash.Venue.Id, true);
+
+            var TotalPriceSum = string.Format("{0:N2}", orderTables.Where(x =>
+            x.OrderCash.OrderCashStatus == OrderCashStatus.PaymentCompleted)
+            .Sum(x => x.Order.Where(x => x.Id == x.Id &&
+                                    x.OrderStatus != OrderStatus.Cancel &&
+                                    x.OrderStatus != OrderStatus.Pending &&
+                                    x.OrderStatus != OrderStatus.Denied)
+                                                 .Select(or => or.OrderDetail
+                                                 .Sum(or => or.Price * or.Quantity)).Sum()));
+
+            var vipmisafirpriceSum = string.Format("{0:N2}", orderTables.Where(x =>
+             x.OrderCash.OrderCashStatus == OrderCashStatus.Treat)
+             .Sum(x => x.Order.Where(x => x.Id == x.Id &&
+                                    x.OrderStatus != OrderStatus.Cancel &&
+                                    x.OrderStatus != OrderStatus.Pending &&
+                                    x.OrderStatus != OrderStatus.Denied)
+                                                  .Select(or => or.OrderDetail
+                                                  .Sum(or => or.Price * or.Quantity)).Sum()));
+
+            var nakitSum = string.Format("{0:N2}", orderTables.Where(x =>
+            x.OrderCash.OrderCashStatus == OrderCashStatus.PaymentCompleted &&
+            x.OrderPayment.VenuePaymentMethod.PaymentMethod.Text == "Nakit")
+            .Sum(x => x.Order.Where(x => x.Id == x.Id &&
+                                    x.OrderStatus != OrderStatus.Cancel &&
+                                    x.OrderStatus != OrderStatus.Pending &&
+                                    x.OrderStatus != OrderStatus.Denied)
+                                                 .Select(or => or.OrderDetail
+                                                 .Sum(or => or.Price * or.Quantity)).Sum()));
+            var KrediKartıSum = string.Format("{0:N2}", orderTables.Where(x =>
+            x.OrderCash.OrderCashStatus == OrderCashStatus.PaymentCompleted &&
+            x.OrderPayment.VenuePaymentMethod.PaymentMethod.Text == "Kredi Kartı")
+                .Sum(x => x.Order.Where(x => x.Id == x.Id &&
+                                    x.OrderStatus != OrderStatus.Cancel &&
+                                    x.OrderStatus != OrderStatus.Pending &&
+                                    x.OrderStatus != OrderStatus.Denied)
+                                          .Select(or => or.OrderDetail
+                                          .Sum(or => or.Price * or.Quantity)).Sum()));
+
+            var MultinetSum = string.Format("{0:N2}", orderTables.Where(x =>
+            x.OrderCash.OrderCashStatus == OrderCashStatus.PaymentCompleted &&
+            x.OrderPayment.VenuePaymentMethod.PaymentMethod.Text == "Multinet")
+                .Sum(x => x.Order.Where(x => x.Id == x.Id &&
+                                    x.OrderStatus != OrderStatus.Cancel &&
+                                    x.OrderStatus != OrderStatus.Pending &&
+                                    x.OrderStatus != OrderStatus.Denied)
+                                         .Select(or => or.OrderDetail
+                                         .Sum(or => or.Price * or.Quantity)).Sum()));
+            var SodexoSum = string.Format("{0:N2}", orderTables.Where(x =>
+            x.OrderCash.OrderCashStatus == OrderCashStatus.PaymentCompleted &&
+            x.OrderPayment.VenuePaymentMethod.PaymentMethod.Text == "Sodexo")
+                .Sum(x => x.Order.Where(x => x.Id == x.Id &&
+                                    x.OrderStatus != OrderStatus.Cancel &&
+                                    x.OrderStatus != OrderStatus.Pending &&
+                                    x.OrderStatus != OrderStatus.Denied)
+                                          .Select(or => or.OrderDetail
+                                          .Sum(or => or.Price * or.Quantity)).Sum()));
+            var TicketRestaurantSum = string.Format("{0:N2}", orderTables.Where(x =>
+            x.OrderCash.OrderCashStatus == OrderCashStatus.PaymentCompleted &&
+            x.OrderPayment.VenuePaymentMethod.PaymentMethod.Text == "Ticket Restaurant")
+                .Sum(x => x.Order.Where(x => x.Id == x.Id &&
+                                     x.OrderStatus != OrderStatus.Cancel &&
+                                     x.OrderStatus != OrderStatus.Pending &&
+                                     x.OrderStatus != OrderStatus.Denied)
+                                          .Select(or => or.OrderDetail
+                                          .Sum(or => or.Price * or.Quantity)).Sum()));
+            var SetCardSum = string.Format("{0:N2}", orderTables.Where(x =>
+            x.OrderCash.OrderCashStatus == OrderCashStatus.PaymentCompleted &&
+            x.OrderPayment.VenuePaymentMethod.PaymentMethod.Text == "SetCard")
+                .Sum(x => x.Order.Where(x => x.Id == x.Id &&
+                                     x.OrderStatus != OrderStatus.Cancel &&
+                                     x.OrderStatus != OrderStatus.Pending &&
+                                     x.OrderStatus != OrderStatus.Denied)
+                                          .Select(or => or.OrderDetail
+                                          .Sum(or => or.Price * or.Quantity)).Sum()));
+            var WinwinSum = string.Format("{0:N2}", orderTables.Where(x =>
+            x.OrderCash.OrderCashStatus == OrderCashStatus.PaymentCompleted &&
+            x.OrderPayment.VenuePaymentMethod.PaymentMethod.Text == "Winwin")
+                .Sum(x => x.Order.Where(x => x.Id == x.Id &&
+                                    x.OrderStatus != OrderStatus.Cancel &&
+                                    x.OrderStatus != OrderStatus.Pending &&
+                                    x.OrderStatus != OrderStatus.Denied)
+                                           .Select(or => or.OrderDetail
+                                           .Sum(or => or.Price * or.Quantity)).Sum()));
+            var MetropolSum = string.Format("{0:N2}", orderTables.Where(x =>
+            x.OrderCash.OrderCashStatus == OrderCashStatus.PaymentCompleted &&
+            x.OrderPayment.VenuePaymentMethod.PaymentMethod.Text == "Metropol")
+                .Sum(x => x.Order.Where(x => x.Id == x.Id &&
+                                     x.OrderStatus != OrderStatus.Cancel &&
+                                     x.OrderStatus != OrderStatus.Pending &&
+                                     x.OrderStatus != OrderStatus.Denied)
+                                            .Select(or => or.OrderDetail
+                                            .Sum(or => or.Price * or.Quantity)).Sum()));
+            var KacakSum = string.Format("{0:N2}", orderTables.Where(x =>
+            x.OrderCash.OrderCashStatus == OrderCashStatus.NoPayment)
+                .Sum(x => x.Order.Where(x => x.Id == x.Id &&
+                                    x.OrderStatus != OrderStatus.Cancel &&
+                                    x.OrderStatus != OrderStatus.Pending &&
+                                    x.OrderStatus != OrderStatus.Denied)
+                                             .Select(or => or.OrderDetail
+                                             .Sum(or => or.Price * or.Quantity)).Sum()));
+
+            var KacakSayisi = orderTables.Where(x => x.OrderCash.OrderCashStatus == OrderCashStatus.NoPayment).Count();
+
+            var VipSayisi = orderTables.Where(x => x.OrderCash.OrderCashStatus == OrderCashStatus.Treat).Count();
+
+            var Toplammusteri = orderTables.Count();
+
+            var onlineMusteri = orderTables.Where(x => x.User.IsGuest == false).Count();
+
+            var normalMusteri = orderTables.Where(x => x.User.IsGuest == true).Count();
+
+            return Ok(new
+            {
+                Success = true,
+                StatusCode = (int)HttpStatusCode.OK,
+                Result = new
+                {
+                    cashprice = nakitSum,
+                    creditcardprice = KrediKartıSum,
+                    sodexoprice = SodexoSum,
+                    ticketrestaurantprice = TicketRestaurantSum,
+                    setcardprice = SetCardSum,
+                    winwinprice = WinwinSum,
+                    metropolprice = MetropolSum,
+                    kacakprice = KacakSum,
+                    multinetprice = MultinetSum,
+                    totalprice = TotalPriceSum,
+                    vipprice = vipmisafirpriceSum,
+                    kacaksayisi = KacakSayisi,
+                    vipsayisi = VipSayisi,
+                    toplammusteri = Toplammusteri,
+                    onlinemusteri = onlineMusteri,
+                    normalmusteri = normalMusteri,
+                }
+            });
+
+
+        }
+
+        [HttpGet]
+        [Authorize]
         [Route("Table/Old")]
         public IActionResult Old()
         {

@@ -14,6 +14,57 @@ namespace Menu.Service
             _context = context;
         }
 
+        public List<OrderTable> GetByReports(int venueId, bool isClosed)
+        {
+            return _context.OrderTables
+                           .Where(o => o.IsClosed == isClosed && o.Venue.Id == venueId)
+                           .Select(o => new OrderTable
+                           {
+                               Id = o.Id,
+                               IsClosed = o.IsClosed,
+                               CreatedDate = o.CreatedDate,
+                               VenueId = o.VenueId,
+                               TableId = o.TableId,
+                               UserId = o.UserId,
+                               User = o.User,
+                               Table = new Table
+                               {
+                                   Name = o.Table.Name,
+                               },
+                               OrderCash = new OrderCash
+                               {
+                                   Id = o.OrderCash.Id,
+                                   OrderCashStatus = o.OrderCash.OrderCashStatus,
+                                   CreatedDate = o.OrderCash.CreatedDate,
+                               },
+                               OrderPayment = new OrderPayment
+                               {
+                                   Id = o.OrderPayment.Id,
+                                   VenuePaymentMethodId = o.OrderPayment.VenuePaymentMethod.PaymentMethodId,
+                                   VenuePaymentMethod = new VenuePaymentMethod
+                                   {
+                                       Id = o.OrderPayment.VenuePaymentMethod.Id,
+                                       PaymentMethodId = o.OrderPayment.VenuePaymentMethod.PaymentMethodId,
+                                       PaymentMethod = new PaymentMethod
+                                       {
+                                           Text = o.OrderPayment.VenuePaymentMethod.PaymentMethod.Text,
+                                       },
+                                   },
+                               },
+                               Order = o.Order.Select(o => new Order
+                               {
+                                   Id = o.Id,
+                                   Code = o.Code,
+                                   Description = o.Description,
+                                   OrderStatus = o.OrderStatus,
+                                   CreatedDate = o.CreatedDate,
+                                   OrderTableId = o.OrderTableId,
+                                   OrderDetail = o.OrderDetail,
+
+                               }).ToList()
+                           }).ToList();
+        }
+
         public List<OrderTable> GetByOldTableId(int venueId, bool isClosed)
         {
             return _context.OrderTables

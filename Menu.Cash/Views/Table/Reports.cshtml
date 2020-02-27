@@ -1,0 +1,506 @@
+﻿@{
+    ViewData["Title"] = "Geçmiş Siparişler";
+}
+
+<div class="main-content">
+    <div class="page-header no-gutters">
+        <div class="d-md-flex align-items-md-center justify-content-between">
+
+            <div class="media m-v-10 align-items-center">
+                <div class="avatar avatar-image avatar-lg">
+                    <img src="assets/images/avatars/thumb-3.jpg" alt="">
+                </div>
+                <div class="media-body m-l-15">
+                    <h4 class="m-b-0">Raporlar</h4>
+                    <span class="text-gray">Project Manager</span>
+                </div>
+            </div>
+            <div class="col-md-2 col-lg-2">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="avatar avatar-icon avatar-lg avatar-blue">
+                                <i class="text-primary anticon anticon-profile"></i>
+                            </div>
+                            <div>
+                                <button type="button" class="btn btn-secondary btn-tone m-r-5">  Gün Sonu Al</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="reports row ">
+
+
+    </div>
+
+</div>
+
+
+<script id="template-reports" type="text/x-handlebars-template">
+
+    <div class="col-md-12 col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="avatar avatar-icon avatar-lg avatar-blue">
+                        <i class="text-success anticon anticon-team"></i>
+                    </div>
+                    <div>
+                        <p class="m-b-0">Toplam Müşteri</p>
+                        <h2 class="m-b-0">
+                            <span>{{toplammusteri}}</span>
+                        </h2>
+                    </div>
+                    <div>
+                        <p class="m-b-0">Online Müşteri</p>
+                        <h2 class="m-b-0">
+                            <span>{{onlinemusteri}}</span>
+                        </h2>
+                    </div>
+                    <div>
+                        <p class="m-b-0">Normal Müşteri</p>
+                        <h2 class="m-b-0">
+                            <span>{{normalmusteri}}</span>
+                        </h2>
+                    </div>
+                    <div>
+                        <p class="m-b-0">VİP-Misafir</p>
+                        <h2 class="m-b-0">
+                            <span>{{vipsayisi}} </span>
+                        </h2>
+                    </div>
+                    <div>
+                        <p class="m-b-0">Kaçak</p>
+                        <h2 class="m-b-0">
+                            <span>{{kacaksayisi}} </span>
+                        </h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-md-6 col-lg-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="m-b-0">Nakit</p>
+                        <h2 class="m-b-0">
+                            <span>₺ {{cashprice}}</span>
+                        </h2>
+                    </div>
+                    <div class="avatar avatar-icon avatar-lg avatar-blue">
+                        <i class="anticon anticon-dollar"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="m-b-0">Kredi Kartı</p>
+                        <h2 class="m-b-0">
+                            <span>₺ {{cashprice}}</span>
+                        </h2>
+                    </div>
+                    <div class="avatar avatar-icon avatar-lg avatar-cyan">
+                        <i class="fab fa-cc-visa"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="m-b-0">Sodexo</p>
+                        <h2 class="m-b-0">
+                            <span>₺ {{sodexoprice}} </span>
+                        </h2>
+                    </div>
+                    <div class="avatar avatar-icon avatar-lg avatar-red">
+                        <i class="anticon anticon-profile"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="m-b-0">Multinet</p>
+                        <h2 class="m-b-0">
+                            <span>₺ {{multinetprice}}</span>
+                        </h2>
+                    </div>
+                    <div class="avatar avatar-icon avatar-lg avatar-gold">
+                        <i class="anticon anticon-bar-chart"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="m-b-0">Ticket - Restaurant</p>
+                        <h2 class="m-b-0">
+                            <span>₺ {{ticketrestaurantprice}}</span>
+                        </h2>
+                    </div>
+                    <div class="avatar avatar-icon avatar-lg avatar-gold">
+                        <i class="anticon anticon-bar-chart"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="m-b-0">SetCard</p>
+                        <h2 class="m-b-0">
+                            <span>₺ {{setcardprice}} </span>
+                        </h2>
+                    </div>
+                    <div class="avatar avatar-icon avatar-lg avatar-gold">
+                        <i class="anticon anticon-bar-chart"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="m-b-0">Winwin</p>
+                        <h2 class="m-b-0">
+                            <span>₺ {{winwinprice}}</span>
+                        </h2>
+                    </div>
+                    <div class="avatar avatar-icon avatar-lg avatar-gold">
+                        <i class="anticon anticon-bar-chart"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="m-b-0">Metropol</p>
+                        <h2 class="m-b-0">
+                            <span>₺ {{metropolprice}}</span>
+                        </h2>
+                    </div>
+                    <div class="avatar avatar-icon avatar-lg avatar-gold">
+                        <i class="anticon anticon-bar-chart"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="m-b-0">Kaçak Toplam</p>
+                        <h2 class="m-b-0">
+                            <span>₺ {{kacakprice}}</span>
+                        </h2>
+                    </div>
+                    <div class="avatar avatar-icon avatar-lg avatar-gold">
+                        <i class="anticon anticon-bar-chart"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="m-b-0">Vip - Misafir Toplam</p>
+                        <h2 class="m-b-0">
+                            <span>₺ {{vipprice}} </span>
+                        </h2>
+                    </div>
+                    <div class="avatar avatar-icon avatar-lg avatar-gold">
+                        <i class="anticon anticon-bar-chart"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="m-b-0">Ana Toplam</p>
+                        <h2 class="m-b-0">
+                            <span>₺ {{totalprice}}   </span>
+                        </h2>
+                    </div>
+
+                    <div class="alert alert-danger">
+                        <div class="d-flex justify-content-start">
+                            <span class="alert-icon  font-size-20">
+                                <i class="anticon anticon-close-circle"></i>
+                            </span>
+                            <div>
+
+                                <p>VİP ve Kaçak Dahil Edilmemiştir.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+</script>
+
+@section Styles {
+    <style>
+
+        .statustrue {
+            background-color: green;
+        }
+
+        .statustruewhite {
+            color: white;
+        }
+
+        .statusfalse {
+            background-color: red;
+        }
+
+        .orderpaymentstatus {
+            animation: blinker 0.9s linear infinite;
+            color: white;
+        }
+
+        @@keyframes blinker {
+            50% {
+                opacity: 0;
+            }
+        }
+
+        .card-body {
+            border-radius: 13px !important;
+            padding: 0.55rem;
+        }
+
+        .card {
+            border-radius: 15px !important;
+            border: 1px solid #c3c3c3 !important;
+        }
+
+        .card-title {
+            background-color: black;
+        }
+
+        .alert {
+            padding: 5px !important;
+            border-radius: 15px;
+        }
+
+        .accordion > .card > .card-header > .card-title > a {
+            font-weight: 900;
+            background-color: maroon;
+            color: white;
+            height: 100px;
+            margin-top: 15px;
+        }
+
+        .page-container {
+            padding-left: 0px !important;
+        }
+
+
+        @@media only screen and (max-width: 2000px) and (min-width: 400px) {
+            .m-l-15 {
+                margin-left: 0px !important;
+                width: 100% !important;
+            }
+        }
+
+        @@media only screen and (max-width:399px) and (min-width: 150px) {
+            .m-l-15 {
+                margin-left: 0px !important;
+                width: 84% !important;
+            }
+        }
+
+        @@media only screen and (max-width:2000px) and (min-width: 600px) {
+            ul#myTabVertical {
+                width: 21% !important;
+            }
+        }
+
+        @@media only screen and (max-width:599px) and (min-width: 150px) {
+            ul#myTabVertical {
+                display: -webkit-inline-box !important;
+            }
+        }
+
+
+        @@media only screen and (max-width: 600px) {
+            .d-flex {
+                display: flex !important;
+            }
+        }
+
+        @@media only screen and (max-width: 600px) {
+            li.nav-item {
+                width: 70% !important;
+            }
+        }
+
+        @@media (max-width:1350px) and (min-width: 102px) {
+            .col-lg-6 {
+                flex: 100%;
+                max-width: 100% !important;
+            }
+        }
+
+        @@media (max-width:1350px) and (min-width: 767px) {
+            .col-md-3 {
+                flex: 0 0 50%;
+                max-width: 50%;
+            }
+        }
+
+        .nav-tabs.flex-column > li > a.active.nav-link {
+            border-bottom: 0px;
+            border-radius: 30px;
+            border-right: 18px solid #ff0e0e;
+            background: #00a50d;
+            color: white;
+        }
+
+        .nav-tabs.flex-column {
+            border-right: 24px solid #ffffff;
+            border-bottom: 0px;
+        }
+
+        .btn-icon.btn-sm {
+            font-size: 19px;
+            color: white;
+            background: red;
+        }
+
+        .byte {
+            font-size: 25px;
+            font-weight: 800;
+            color: green;
+            float: right;
+            margin-right: 25px;
+        }
+
+        .tyte {
+            font-size: 25px;
+            font-weight: 800;
+            color: red;
+            margin-left: 24px;
+        }
+
+        .badge-red {
+            color: #ff1500;
+            background: rgba(222,68,54,0.05);
+            border-color: transparent;
+            font-weight: 900;
+            font-size: 15px;
+        }
+
+        .form-control[disabled] {
+            cursor: not-allowed;
+            background-color: #ededed;
+            background: #dcdcdc;
+            color: black;
+            font-size: 18px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .pcx {
+            background: red;
+            color: white !important;
+            text-align: center;
+            border: 1px solid white;
+        }
+
+        .b1x {
+            border: 1px solid black;
+            text-align: center;
+        }
+
+        .ixr1 {
+            background: green;
+            color: white;
+            border-radius: 5px;
+            padding: 5px;
+        }
+
+        .it {
+            background-color: dodgerblue;
+            color: white;
+            border-radius: 15px;
+            padding: 5px;
+        }
+
+        span.font-size-13 {
+            font-size: 13px !important;
+            font-weight: 900;
+            color: red !important;
+        }
+
+        .panter {
+            color: green;
+            font-weight: 900;
+            text-align: center !important;
+            font-size: 13px;
+        }
+
+        .kanter {
+            font-weight: bold !important;
+            font-size: 13px;
+        }
+    </style>
+}
+
+@section Scripts {
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aspnet-signalr/1.1.4/signalr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.2/handlebars.js"></script>
+    <script src="~/assets/js/reports.js" asp-append-version="true"></script>
+}
