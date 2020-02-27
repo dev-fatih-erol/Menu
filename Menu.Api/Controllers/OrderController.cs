@@ -171,7 +171,7 @@ namespace Menu.Api.Controllers
                 _orderWaiterService.Create(newOrderWaiter);
 
                 _orderWaiterService.SaveChanges();
-
+               
                 return Ok(new
                 {
                     Success = true,
@@ -206,9 +206,9 @@ namespace Menu.Api.Controllers
                 });
             }
 
-            var cash = _cashService.GetById(User.Identity.GetId());
+            var waiter = _tableWaiterService.GetByWaiterId(User.Identity.GetId());
 
-            var orderTables = _orderTableService.GetByTableId(cash.Venue.Id, tableId, false)
+            var orderTables = _orderTableService.GetByTableId(tableWaiter.Waiter.VenueId, tableId, false)
                                            .Where(o => o.Order.Any(o => o.OrderStatus == OrderStatus.Pending)).ToList();
 
             if (!orderTables.Any())
@@ -277,9 +277,9 @@ namespace Menu.Api.Controllers
                 });
             }
 
-            var cash = _cashService.GetById(User.Identity.GetId());
+            var waiter = _tableWaiterService.GetByWaiterId(User.Identity.GetId());
 
-            var orderTables = _orderTableService.GetByTableId(cash.Venue.Id, tableId, false)
+            var orderTables = _orderTableService.GetByTableId(tableWaiter.Waiter.VenueId, tableId, false)
                                            .Where(o => o.Order.Any(o => o.OrderStatus != OrderStatus.Pending)).ToList();
 
             if (!orderTables.Any())
@@ -456,7 +456,6 @@ namespace Menu.Api.Controllers
                     });
                 }
 
-
                 var point = _userService.GetById(User.Identity.GetId()).Point;
 
                 if (point < dto.UsedPoint)
@@ -508,7 +507,9 @@ namespace Menu.Api.Controllers
                     foo.registration_ids = tokens;
                     foo.notification = new
                     {
-                        body = waiters.Select(x => x.Table.Name).FirstOrDefault() + " isimli masa " + venuePaymentMethod.PaymentMethod.Text + " ile hesap istemiştir"
+                        title = "Hesap İsteği",
+                        body = waiters.Select(x => x.Table.Name).FirstOrDefault() + " isimli masa " + venuePaymentMethod.PaymentMethod.Text + " ile hesap istemiştir",
+                        data = new { tableId = orderTable.TableId }
                     };
 
                     string json = Newtonsoft.Json.JsonConvert.SerializeObject(foo);
@@ -1122,7 +1123,9 @@ namespace Menu.Api.Controllers
                         foo.registration_ids = tokens1;
                         foo.notification = new
                         {
-                            body = table.Name + " isimli masadan sipariş gelmiştir"
+                            title = "Sipariş var",
+                            body = table.Name + " isimli masadan sipariş gelmiştir",
+                            data = new { tableId }
                         };
 
                         string json = Newtonsoft.Json.JsonConvert.SerializeObject(foo);
@@ -1261,7 +1264,9 @@ namespace Menu.Api.Controllers
                     foo.registration_ids = tokens;
                     foo.notification = new
                     {
-                        body = table.Name + " isimli masadan sipariş gelmiştir"
+                        title = "Sipariş var",
+                        body = table.Name + " isimli masadan sipariş gelmiştir",
+                        data = new { tableId }
                     };
 
                     string json = Newtonsoft.Json.JsonConvert.SerializeObject(foo);

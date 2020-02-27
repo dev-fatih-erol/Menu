@@ -36,7 +36,9 @@ namespace Menu.Api.Controllers
                 foo.registration_ids = tokens;
                 foo.notification = new
                 {
-                    body = waiters.Select(x => x.Table.Name).FirstOrDefault()  + " isimli masadan çağrı var"
+                    title = "Çağrı var",
+                    body = waiters.Select(x => x.Table.Name).FirstOrDefault()  + " isimli masadan çağrı var",
+                    data = new { tableId }
                 };
 
                 string json = Newtonsoft.Json.JsonConvert.SerializeObject(foo);
