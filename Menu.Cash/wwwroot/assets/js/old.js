@@ -16,10 +16,22 @@ $(document).ready(function () {
         });
     });
 
+
+    $(document).on("click", ".btnSave", function () {
+        const id = $(this).data("id");
+        const val = $("#select-" + id).val();
+        $.post("demo_test_post.asp",
+            {
+                orderCashStatus: val,
+            },
+            function (data, status) {
+                alert("");
+            });
+    });
+
     Handlebars.registerHelper('ifEquals', function (arg1, arg2, options) {
         return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
     });
-
 });
 
 function getValueAtIndex(index1) {

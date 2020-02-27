@@ -102,6 +102,14 @@
                         </div>
                     </div>
                 </div>
+                <div class="m-t-20">
+                    <select id="select-{{id}}">
+                        <option {{#ifEquals ordercash "Ödeme Yapılmadı"}} selected{{/ifEquals}} value="Ödeme Yapılmadı">Ödeme Yapılmadı</option>
+                        <option {{#ifEquals ordercash "Ödendi"}} selected{{/ifEquals}} value="Ödendi">Ödendi</option>
+                        <option {{#ifEquals ordercash "Vip - Misafir"}} selected{{/ifEquals}} value="Vip - Misafir">Vip - Misafir</option>
+                    </select>
+                    <button data-id="{{id}}" class="btn btn-default m-r-5 btnSave">Kaydet</button>
+                </div>
                 <div class="modal fade" id="bd-example-modal-xl-{{id}}">
                     <div class="modal-dialog modal-xl">
                         <div class="modal-content">
