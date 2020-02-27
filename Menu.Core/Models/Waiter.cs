@@ -25,6 +25,6 @@ namespace Menu.Core.Models
 
         public virtual List<TableWaiter> TableWaiter { get; set; }
 
-        public virtual List<WaiterToken> WaiterToken { get; set; }
+        public virtual WaiterToken WaiterToken { get; set; }
     }
 }

@@ -5,6 +5,8 @@ namespace Menu.Service
 {
     public interface ITableWaiterService
     {
+        List<TableWaiter> GetByTableId(int tableId);
+
         List<TableWaiter> GetByWaiterId(int waiterId);
 
         TableWaiter GetByTableIdAndWaiterId(int tableId, int waiterId);

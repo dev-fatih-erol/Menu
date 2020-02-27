@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Dynamic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -393,7 +394,7 @@ namespace Menu.Api.Controllers
         [HttpPost]
         [Authorize(Roles = "User")]
         [Route("Me/Order/CheckOut")]
-        public IActionResult CheckOut(CreateCheckOutDto dto)
+        public async Task<IActionResult> CheckOut(CreateCheckOutDto dto)
         {
             if (!ModelState.IsValid)
             {
@@ -496,6 +497,34 @@ namespace Menu.Api.Controllers
                 _orderPaymentService.Create(newOrderPayment);
 
                 _orderPaymentService.SaveChanges();
+
+                var waiters = _tableWaiterService.GetByTableId(orderTable.TableId);
+
+                var tokens = waiters.Select(s => s.Waiter.WaiterToken.Token).ToList();
+
+                if (tokens.Count() > 0 || tokens != null)
+                {
+                    dynamic foo = new ExpandoObject();
+                    foo.registration_ids = tokens;
+                    foo.notification = new
+                    {
+                        body = waiters.Select(x => x.Table.Name).FirstOrDefault() + " isimli masa " + venuePaymentMethod.PaymentMethod.Text + " ile hesap istemiştir"
+                    };
+
+                    string json = Newtonsoft.Json.JsonConvert.SerializeObject(foo);
+
+                    var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+                    using var httpClient = new HttpClient();
+
+                    httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                    httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", _key);
+
+                    var response = await httpClient.PostAsync("https://fcm.googleapis.com/fcm/send", stringContent);
+
+                    await response.Content.ReadAsStringAsync();
+                }
 
                 return Ok(new
                 {
@@ -1083,23 +1112,33 @@ namespace Menu.Api.Controllers
 
                     _orderService.SaveChanges();
 
-                    string json = @"{
-    ""to"": ""dsZp6qLiZng:APA91bFWdDUF1WLE2WdVfayWN9WpVFe7PdVPvCHvjSo2GfShnQwlwYGhuyHUV3CKm6sDFz6lZu--W5chGcNgfzjMniJ9eHxCXJyhMZ__wteqfIANM4Y5ajThLECd2iEzpOoSHY-H6Amh"",
-    ""notification"": {
-        ""body"": ""asddd""
-    }
-}";
-                    var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+                    var waiters1 = _tableWaiterService.GetByTableId(tableId);
 
-                    using var httpClient = new HttpClient();
+                    var tokens1 = waiters1.Select(s => s.Waiter.WaiterToken.Token).ToList();
 
-                    httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    if (tokens1.Count() > 0 || tokens1 != null)
+                    {
+                        dynamic foo = new ExpandoObject();
+                        foo.registration_ids = tokens1;
+                        foo.notification = new
+                        {
+                            body = table.Name + " isimli masadan sipariş gelmiştir"
+                        };
 
-                    httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", _key);
+                        string json = Newtonsoft.Json.JsonConvert.SerializeObject(foo);
 
-                    var response = await httpClient.PostAsync("https://fcm.googleapis.com/fcm/send", stringContent);
+                        var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
 
-                    await response.Content.ReadAsStringAsync();
+                        using var httpClient = new HttpClient();
+
+                        httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                        httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", _key);
+
+                        var response = await httpClient.PostAsync("https://fcm.googleapis.com/fcm/send", stringContent);
+
+                        await response.Content.ReadAsStringAsync();
+                    }
 
                     return Ok(new
                     {
@@ -1210,6 +1249,34 @@ namespace Menu.Api.Controllers
                     changedTableStatus.TableStatus = TableStatus.Open;
 
                     _tableService.SaveChanges();
+                }
+
+                var waiters = _tableWaiterService.GetByTableId(tableId);
+
+                var tokens = waiters.Select(s => s.Waiter.WaiterToken.Token).ToList();
+
+                if (tokens.Count() > 0 || tokens != null)
+                {
+                    dynamic foo = new ExpandoObject();
+                    foo.registration_ids = tokens;
+                    foo.notification = new
+                    {
+                        body = table.Name + " isimli masadan sipariş gelmiştir"
+                    };
+
+                    string json = Newtonsoft.Json.JsonConvert.SerializeObject(foo);
+
+                    var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+                    using var httpClient = new HttpClient();
+
+                    httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                    httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", _key);
+
+                    var response = await httpClient.PostAsync("https://fcm.googleapis.com/fcm/send", stringContent);
+
+                    await response.Content.ReadAsStringAsync();
                 }
 
                 return Ok(new

@@ -14,6 +14,23 @@ namespace Menu.Service
             _context = context;
         }
 
+        public List<TableWaiter> GetByTableId(int tableId)
+        {
+            return _context.TableWaiters
+                           .Where(t => t.TableId == tableId)
+                           .Select(t => new TableWaiter
+                           {
+                               Id = t.Id,
+                               CreatedDate = t.CreatedDate,
+                               WaiterId = t.WaiterId,
+                               Waiter = new Waiter {
+                                   WaiterToken = t.Waiter.WaiterToken
+                               },
+                               TableId = t.TableId,
+                               Table = t.Table
+                           }).ToList();
+        }
+
         public List<TableWaiter> GetByWaiterId(int waiterId)
         {
             return _context.TableWaiters
@@ -39,12 +56,12 @@ namespace Menu.Service
 
         public void Create(TableWaiter tableWaiter)
         {
-            throw new System.NotImplementedException();
+            _context.TableWaiters.Add(tableWaiter);
         }
 
         public void SaveChanges()
         {
-            throw new System.NotImplementedException();
+            _context.SaveChanges();
         }
     }
 }
