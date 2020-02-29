@@ -108,7 +108,7 @@
                         <option {{#ifEquals ordercash "Ödendi"}} selected{{/ifEquals}} value="Ödendi">Ödendi</option>
                         <option {{#ifEquals ordercash "Vip - Misafir"}} selected{{/ifEquals}} value="Vip - Misafir">Vip - Misafir</option>
                     </select>
-                    <button data-id="{{id}}" class="btn btn-default m-r-5 btnSave">Kaydet</button>
+                    <button data-cash="{{ordercashId}}" data-id="{{id}}" class="btn btn-default m-r-5 btnSave">Kaydet</button>
                 </div>
                 <div class="modal fade" id="bd-example-modal-xl-{{id}}">
                     <div class="modal-dialog modal-xl">

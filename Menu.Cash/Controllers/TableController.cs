@@ -25,6 +25,8 @@ namespace Menu.Cash.Controllers
 
         private readonly IVenueService _venueService;
 
+        private readonly IOrderCashService _orderCashService;
+
         private readonly IVenuePaymentMethodService _venuePaymentMethodService;
 
         public TableController(ITableService tableService,
@@ -33,7 +35,8 @@ namespace Menu.Cash.Controllers
             IOrderTableService orderTableService,
             IUserService userService,
             IVenueService venueService,
-            IVenuePaymentMethodService venuePaymentMethodService)
+            IVenuePaymentMethodService venuePaymentMethodService,
+            IOrderCashService orderCashService)
         {
             _tableService = tableService;
 
@@ -48,6 +51,25 @@ namespace Menu.Cash.Controllers
             _venueService = venueService;
 
             _venuePaymentMethodService = venuePaymentMethodService;
+
+            _orderCashService = orderCashService;
+        }
+
+        [HttpPost]
+        [Authorize]
+        [Route("Ajax/Table/ChangeOrderCashStatus")]
+        public IActionResult ChangeOrderCashStatus(int id, string orderCashStatus)
+        {
+            var orderCash = _orderCashService.GetById(id);
+
+            if (orderCash != null)
+            {
+                orderCash.OrderCashStatus = orderCashStatus.ToOrderCashStatusEnum();
+
+                _orderCashService.SaveChanges();
+            }
+            
+            return Ok();
         }
 
         [HttpGet]
@@ -233,11 +255,11 @@ namespace Menu.Cash.Controllers
                 orderTable.TableId,
                 table = orderTable.Table.Name,
                 orderpayment = orderTable.OrderPayment.VenuePaymentMethod.PaymentMethod.Text,
+                ordercashId = orderTable.OrderCash.Id,
                 ordercash = orderTable.OrderCash.OrderCashStatus.ToOrderCashStatus(),
                 cashdate = orderTable.OrderCash.CreatedDate.ToString("MM/dd/yyyy HH:mm:ss"),
                 Orders = orderTable.Order.Where(o => o.OrderStatus != OrderStatus.Pending).Select(o => new
                 {
-
                     o.Id,
                     o.Code,
                     o.Description,

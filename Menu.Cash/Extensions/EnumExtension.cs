@@ -4,6 +4,17 @@ namespace Menu.Cash.Extensions
 {
     public static class EnumExtension
     {
+        public static OrderCashStatus ToOrderCashStatusEnum(this string source)
+        {
+            return source switch
+            {
+                "Ödeme Yapılmadı" => OrderCashStatus.NoPayment,
+                "Ödendi" => OrderCashStatus.PaymentCompleted,
+                "Vip - Misafir" => OrderCashStatus.Treat,
+                _ => OrderCashStatus.NoPayment,
+            };
+        }
+
         public static string ToOrderCashStatus(this OrderCashStatus source)
         {
             return source switch

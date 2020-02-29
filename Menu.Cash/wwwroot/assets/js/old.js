@@ -19,13 +19,15 @@ $(document).ready(function () {
 
     $(document).on("click", ".btnSave", function () {
         const id = $(this).data("id");
-        const val = $("#select-" + id).val();
-        $.post("demo_test_post.asp",
+        const cash = $(this).data("cash");
+        const val = $("#select-" + id + " :selected").val();
+        $.post(host + "/Ajax/Table/ChangeOrderCashStatus",
             {
+                id: cash,
                 orderCashStatus: val,
             },
             function (data, status) {
-                alert("");
+                alert("Başarılı bir şekilde değiştirildi.");
             });
     });
 

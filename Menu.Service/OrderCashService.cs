@@ -14,6 +14,13 @@ namespace Menu.Service
             _context = context;
         }
 
+        public OrderCash GetById(int id)
+        {
+            return _context.OrderCashes
+                           .Where(o => o.Id == id)
+                           .FirstOrDefault();
+        }
+
         public OrderCash GetByUserIdAndOrderTableId(int userId, int orderTableId)
         {
             return _context.OrderCashes
