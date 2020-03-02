@@ -25,6 +25,8 @@ namespace Menu.Service
 
         OrderTable GetById(int id, int userId, bool isClosed);
 
+        List<OrderTable> GetByTableId(int tableId, bool isClosed);
+
         void Create(OrderTable orderTable);
 
         void SaveChanges();

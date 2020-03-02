@@ -70,6 +70,12 @@ namespace Menu.Service
                            }).FirstOrDefault();
         }
 
+        public OrderPayment GetById(int id)
+        {
+            return _context.OrderPayments
+                           .Where(o => o.Id == id).FirstOrDefault();
+        }
+
         public void Create(OrderPayment orderPayment)
         {
             _context.OrderPayments.Add(orderPayment);

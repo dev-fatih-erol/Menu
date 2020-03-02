@@ -9,6 +9,8 @@ namespace Menu.Service
 
         OrderPayment GetByOrderTableId(int orderTableId);
 
+        OrderPayment GetById(int id);
+
         void Create(OrderPayment orderPayment);
 
         void SaveChanges();

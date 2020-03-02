@@ -5,6 +5,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Menu.Cash.Extensions;
 using Menu.Core.Enums;
+using Menu.Core.Models;
 using Menu.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -58,6 +59,140 @@ namespace Menu.Cash.Controllers
             _orderCashService = orderCashService;
 
             _orderPaymentService = orderPaymentService;
+        }
+
+        [HttpPost]
+        [Authorize]
+        [Route("Ajax/User/{id:int}/Orders")]
+        public IActionResult UserCheckOut(int id, int paymentMethod, int cashStatus, int cashId)
+        {
+            var orderTable = _orderTableService.GetByUserId(id, false);
+
+            if (orderTable != null)
+            {
+                var totalPrice = orderTable.Order.Where(o => o.OrderStatus != OrderStatus.Cancel &&
+         o.OrderStatus != OrderStatus.Denied &&
+         o.OrderStatus != OrderStatus.Pending)
+        .Select(o => o.OrderDetail
+        .Sum(o => o.Price * o.Quantity)).Sum();
+                if (orderTable.OrderPayment == null)
+                {
+                    var newOrderPayment = new OrderPayment
+                    {
+                        VenuePaymentMethodId = paymentMethod,
+                        Tip = 0,
+                        EarnedPoint = OrderCashStatus.NoPayment == (OrderCashStatus)cashStatus ? 0 : Convert.ToInt32(totalPrice) * 10,
+                        UsedPoint = 0,
+                        CreatedDate = DateTime.Now,
+                        OrderTableId = orderTable.Id
+                    };
+
+                    _orderPaymentService.Create(newOrderPayment);
+
+                    _orderPaymentService.SaveChanges();
+
+                    var newOrderCash1 = new OrderCash
+                    {
+                        CashId = cashId,
+                        OrderTableId = orderTable.Id,
+                        OrderCashStatus = (OrderCashStatus)cashStatus,
+                        CreatedDate = DateTime.Now
+                    };
+
+                    _orderCashService.Create(newOrderCash1);
+
+                    _cashService.SaveChanges();
+
+                    var orderTablenNew1 = _orderTableService.GetById(orderTable.Id, id, false);
+
+                    orderTablenNew1.IsClosed = true;
+
+                    _orderTableService.SaveChanges();
+
+                    var user1 = _userService.GetById(id);
+
+                    var point1 = OrderCashStatus.NoPayment == (OrderCashStatus)cashStatus ? 0 : Convert.ToInt32(totalPrice) * 10;
+
+                    user1.Point += point1;
+
+                    _userService.SaveChanges();
+
+                    var orderTableIsLast1 = _orderTableService.GetByTableId(orderTable.TableId, false);
+
+                    if (orderTableIsLast1.Count() == 0)
+                    {
+                        var table = _tableService.GetById(orderTable.TableId);
+
+                        table.TableStatus = TableStatus.Closed;
+
+                        _tableService.SaveChanges();
+                    }
+
+                    return Ok(new
+                    {
+                        Success = true,
+                        StatusCode = (int)HttpStatusCode.OK,
+                        Result = true
+                    });
+                }
+
+                var orderPayment = _orderPaymentService.GetById(orderTable.OrderPayment.Id);
+
+                orderPayment.VenuePaymentMethodId = paymentMethod;
+                orderPayment.EarnedPoint = OrderCashStatus.NoPayment == (OrderCashStatus)cashStatus ? 0 : Convert.ToInt32(totalPrice) * 10;
+                _orderPaymentService.SaveChanges();
+
+                var newOrderCash = new OrderCash
+                {
+                    CashId = cashId,
+                    OrderTableId = orderTable.Id,
+                    OrderCashStatus = (OrderCashStatus)cashStatus,
+                    CreatedDate = DateTime.Now
+                };
+
+                _orderCashService.Create(newOrderCash);
+
+                _cashService.SaveChanges();
+
+                var orderTablenNew = _orderTableService.GetById(orderTable.Id, id, false);
+
+                orderTablenNew.IsClosed = true;
+
+                _orderTableService.SaveChanges();
+
+                var user = _userService.GetById(id);
+
+                var point = OrderCashStatus.NoPayment == (OrderCashStatus)cashStatus ? 0 : Convert.ToInt32(totalPrice) * 10;
+
+                user.Point += point;
+
+                _userService.SaveChanges();
+
+                var orderTableIsLast = _orderTableService.GetByTableId(orderTable.TableId, false);
+
+                if (orderTableIsLast.Count() == 0)
+                {
+                    var table = _tableService.GetById(orderTable.TableId);
+
+                    table.TableStatus = TableStatus.Closed;
+
+                    _tableService.SaveChanges();
+                }
+
+                return Ok(new
+                {
+                    Success = true,
+                    StatusCode = (int)HttpStatusCode.OK,
+                    Result = true
+                });
+            }
+
+            return NotFound(new
+            {
+                Success = false,
+                StatusCode = (int)HttpStatusCode.NotFound,
+                Message = "Sipariş bulunamadı"
+            });
         }
 
         [HttpPost]

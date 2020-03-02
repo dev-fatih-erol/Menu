@@ -21,7 +21,10 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '.show-modal-btn', function (e) {
+
         const userId = $(this).data("userid");
+        $('#save-payment').data("userid", userId);
+
         $.get(host + "/ajax/user/" + userId + "/orders", function (data) {
             console.log(data)
             $("#total-price").val(data.result.totalPrice)
@@ -40,6 +43,21 @@ $(document).ready(function () {
             });
 
             $('#payment-method option[value="' + data.result.orderPaymentMethod + '"]').prop("selected", true);
+        });
+    });
+
+    $(document).on('click', '#save-payment', function (e) {
+        let paymentMethod = $('#payment-method').val();
+        let cashStatus = $('#cash-status').val();
+        const userId = $(this).data("userid");
+        const cashId = $("#cashIdHdn").val();
+        $.post(host + "/ajax/user/" + userId + "/orders",
+            {
+                paymentMethod: paymentMethod,
+                cashStatus: cashStatus,
+                cashId : cashId
+            },
+            function (data, status) {
         });
     });
 });

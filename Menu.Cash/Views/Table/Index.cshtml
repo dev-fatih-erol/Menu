@@ -1,6 +1,10 @@
-﻿@{
+﻿@using Menu.Cash.Extensions
+
+@{
     ViewData["Title"] = "Masa Siparişleri";
 }
+
+<input id="cashIdHdn" type="hidden" value="@User.Identity.GetId()"/>
 <div class="main-content">
     <div class="d-md-flex align-items-md-center justify-content-between">
         <div class="media m-v-10 align-items-center">
@@ -103,16 +107,14 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div style="float:left;" class="col-md-6">
-
-                                        <select class="custom-select" id="productStatus">
-                                            <option value="1" selected="">Durum Seçin</option>
-                                            <option value="2">Ödendi</option>
-                                            <option value="3">Ödenmedi</option>
-                                            <option value="3">Bizden VİP</option>
+                                        <select class="custom-select" id="cash-status">
+                                            <option value="1">Ödendi</option>
+                                            <option value="0">Ödenmedi</option>
+                                            <option value="2">İkram</option>
                                         </select>
                                     </div>
                                     <div style="float:right;" class="col-md-6">
-                                        <button class="btn btn-primary">Kapat</button>
+                                        <button class="btn btn-primary" id="save-payment">Kaydet</button>
                                     </div>
                                 </div>
                             </div>

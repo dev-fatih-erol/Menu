@@ -340,6 +340,14 @@ namespace Menu.Service
                            .FirstOrDefault();
         }
 
+        public List<OrderTable> GetByTableId(int tableId, bool isClosed)
+        {
+            return _context.OrderTables
+                           .Where(o => o.TableId == tableId &&
+                                       o.IsClosed == isClosed)
+                           .ToList();
+        }
+
         public void Create(OrderTable orderTable)
         {
             _context.OrderTables.Add(orderTable);
