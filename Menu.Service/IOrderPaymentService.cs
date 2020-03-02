@@ -7,6 +7,8 @@ namespace Menu.Service
     {
         List<OrderPayment> GetByIsClosedAndTableId(int tableId, bool isClosed);
 
+        OrderPayment GetByOrderTableId(int orderTableId);
+
         void Create(OrderPayment orderPayment);
 
         void SaveChanges();

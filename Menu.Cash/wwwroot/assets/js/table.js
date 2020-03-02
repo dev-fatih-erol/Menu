@@ -20,9 +20,26 @@ $(document).ready(function () {
         return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
     });
 
-    $(document).on('show.bs.modal', '#side-modal-right', function (e) {
-        $.get(host + "/ajax/user/" + "1" + "/orders", function (data) {
+    $(document).on('click', '.show-modal-btn', function (e) {
+        const userId = $(this).data("userid");
+        $.get(host + "/ajax/user/" + userId + "/orders", function (data) {
             console.log(data)
+            $("#total-price").val(data.result.totalPrice)
+            $("#point").val(data.result.tlPoint)
+            $("#used-point").val(data.result.usedPoint)
+            $("#tip").val(data.result.tip)
+            $("#real-price").text(data.result.realPrice)
+            $('#payment-method').children().remove();
+            $.each(data.result.paymentMethods, function (i, item) {
+
+                $('#payment-method')
+                    .append($('<option>', {
+                        value: item.id,
+                        text: item.text
+                    }));
+            });
+
+            $('#payment-method option[value="' + data.result.orderPaymentMethod + '"]').prop("selected", true);
         });
     });
 });

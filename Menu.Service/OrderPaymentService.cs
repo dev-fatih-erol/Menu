@@ -57,6 +57,19 @@ namespace Menu.Service
                                        }).ToList();
         }
 
+        public OrderPayment GetByOrderTableId(int orderTableId)
+        {
+            return _context.OrderPayments
+                           .Where(o => o.OrderTableId == orderTableId)
+                           .Select(x => new OrderPayment
+                           {
+                               VenuePaymentMethod = new VenuePaymentMethod
+                               {
+                                   PaymentMethod = x.VenuePaymentMethod.PaymentMethod
+                               }
+                           }).FirstOrDefault();
+        }
+
         public void Create(OrderPayment orderPayment)
         {
             _context.OrderPayments.Add(orderPayment);

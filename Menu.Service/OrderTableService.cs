@@ -47,6 +47,7 @@ namespace Menu.Service
                                        PaymentMethodId = o.OrderPayment.VenuePaymentMethod.PaymentMethodId,
                                        PaymentMethod = new PaymentMethod
                                        {
+                                           Id = o.OrderPayment.VenuePaymentMethod.PaymentMethod.Id,
                                            Text = o.OrderPayment.VenuePaymentMethod.PaymentMethod.Text,
                                        },
                                    },

@@ -51,6 +51,8 @@ namespace Menu.Cash
 
             services.AddScoped<IOrderCashService, OrderCashService>();
 
+            services.AddScoped<IOrderPaymentService, OrderPaymentService>();
+
             services.AddScoped<IUserService, UserService>();
 
             services.AddScoped<IVenueService, VenueService>();

@@ -3,7 +3,7 @@
 $(document).ready(function () {
     loadData();
 
-    setInterval(function () { loadData(); }, 60000);
+    setInterval(function () { loadData(); }, 30000);
 
     $(document).on("click", ".order-action", function () {
         var id = $(this).data('id');

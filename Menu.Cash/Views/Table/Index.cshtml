@@ -51,18 +51,17 @@
                             </div>
                             <div style="background:gainsboro;" class="card">
                                 <div class="card-body">
-                                    <h3 style="text-align:center; font-weight:700;">Ümit Çubukçuoğlu</h3>
                                     <div class="form-group">
                                         <div class="form-group row">
                                             <label for="inputPassword3" class="col-sm-4 col-form-label">Toplam</label>
                                             <div class="col-sm-8">
-                                                <input type="text" class="form-control" disabled id="productName" placeholder="Product Name" value="₺ 35,50 ">
+                                                <input type="text" class="form-control" disabled id="total-price">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label for="inputPassword3" class="col-sm-4 col-form-label">Puanı</label>
                                             <div class="col-sm-8">
-                                                <input type="text" class="form-control" disabled id="productName" placeholder="Product Name" value="₺ 15 ">
+                                                <input type="text" class="form-control" disabled id="point">
                                             </div>
                                         </div>
                                     </div>
@@ -74,34 +73,20 @@
                                         <div class="form-group row">
                                             <label for="inputPassword3" class="col-sm-4 col-form-label">Puan Kullanımı</label>
                                             <div class="col-sm-8">
-                                                <select class="custom-select" id="productCategory">
-                                                    <option value="1">0 ₺</option>
-                                                    <option value="2">5 ₺</option>
-                                                    <option value="3" selected="">10 ₺</option>
-                                                    <option value="4">15 ₺</option>
-                                                    <option value="5">20 ₺</option>
-                                                </select>
+                                                <input type="text" class="form-control" disabled id="used-point">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="inputPassword3" class="col-sm-4 col-form-label">Bahşiş Kullanımı</label>
+
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control" disabled id="tip">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label for="inputPassword3" class="col-sm-4 col-form-label">Ödeme Tipi</label>
                                             <div class="col-sm-8">
-                                                <select class="custom-select" id="productStatus">
-                                                    <option value="1" selected="">Nakit</option>
-                                                    <option value="2">Kredi Kartı</option>
-                                                    <option value="3">Sodexo</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label for="inputPassword3" class="col-sm-4 col-form-label">Bahşiş</label>
-                                            <div class="col-sm-8">
-                                                <select class="custom-select" id="productCategory">
-                                                    <option value="1" selected="">0 ₺</option>
-                                                    <option value="2">5 ₺</option>
-                                                    <option value="3">10 ₺</option>
-                                                    <option value="4">15 ₺</option>
-                                                    <option value="5">20 ₺</option>
+                                                <select class="custom-select" id="payment-method">
                                                 </select>
                                             </div>
                                         </div>
@@ -111,7 +96,7 @@
                                     <div class="col-sm-12">
                                         <div class="m-l-15">
                                             <span class="m-b-0 tyte">
-                                                Toplam : <span class="byte">₺ 5,25</span>
+                                                Toplam : <span class="byte" id="real-price"></span>
                                             </span>
                                         </div>
                                     </div>
@@ -181,7 +166,7 @@
                 </div>
                 <div class="m-t-20">
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#bd-example-modal-xl-{{id}}">Siparişleri Görüntüle</button>
-                    <button data-toggle="modal" data-target="#side-modal-right" class="btn btn-primary">Hesabı Al</button>
+                    <button data-toggle="modal" data-target="#side-modal-right" data-userid="{{userId}}" class="btn btn-primary show-modal-btn">Hesabı Al</button>
                 </div>
                 <div class="modal fade" id="bd-example-modal-xl-{{id}}">
                     <div class="modal-dialog modal-xl">
@@ -291,6 +276,7 @@
 </script>
 @section Styles {
     <style>
+
 
 
 
@@ -445,6 +431,10 @@
             font-size: 18px;
             font-weight: 700;
             text-align: center;
+        }
+
+        .modal-right .modal-dialog .modal-content, .modal-left .modal-dialog .modal-content {
+            height: auto !important;
         }
     </style>
 }

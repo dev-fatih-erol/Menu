@@ -47,6 +47,36 @@ namespace Menu.Api.Controllers
             _tableWaiterService = tableWaiterService;
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Waiter")]
+        [Route("Waiter/Id/{id:int}")]
+        public IActionResult GetById(int id)
+        {
+            var waiter = _waiterService.GetById(id);
+
+            if (waiter != null)
+            {
+                return Ok(new
+                {
+                    Success = true,
+                    StatusCode = (int)HttpStatusCode.OK,
+                    Result = new
+                    {
+                        waiter.Id,
+                        waiter.Name,
+                        waiter.Surname
+                    }
+                });
+            }
+
+            return NotFound(new
+            {
+                Success = false,
+                StatusCode = (int)HttpStatusCode.NotFound,
+                Message = "Garson bulunamadı"
+            });
+        }
+
         // GET: waiter/tables
         [HttpGet]
         [Authorize(Roles = "Waiter")]

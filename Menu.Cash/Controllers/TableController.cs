@@ -27,6 +27,8 @@ namespace Menu.Cash.Controllers
 
         private readonly IOrderCashService _orderCashService;
 
+        private readonly IOrderPaymentService _orderPaymentService;
+
         private readonly IVenuePaymentMethodService _venuePaymentMethodService;
 
         public TableController(ITableService tableService,
@@ -36,7 +38,8 @@ namespace Menu.Cash.Controllers
             IUserService userService,
             IVenueService venueService,
             IVenuePaymentMethodService venuePaymentMethodService,
-            IOrderCashService orderCashService)
+            IOrderCashService orderCashService,
+            IOrderPaymentService orderPaymentService)
         {
             _tableService = tableService;
 
@@ -53,6 +56,8 @@ namespace Menu.Cash.Controllers
             _venuePaymentMethodService = venuePaymentMethodService;
 
             _orderCashService = orderCashService;
+
+            _orderPaymentService = orderPaymentService;
         }
 
         [HttpPost]
@@ -223,8 +228,6 @@ namespace Menu.Cash.Controllers
                     normalmusteri = normalMusteri,
                 }
             });
-
-
         }
 
         [HttpGet]
@@ -333,8 +336,37 @@ namespace Menu.Cash.Controllers
                                  .Select(o => o.OrderDetail
                                  .Sum(o => o.Price * o.Quantity)).Sum();
 
-                var user = _userService.GetById(User.Identity.GetId());
+                var user = _userService.GetById(id);
 
+                int orderPaymentMethod;
+                string realPrice = string.Empty;
+                string usedPoint = string.Empty;
+                string tip = string.Empty;
+                if (orderTable.OrderPayment != null)
+                {
+                    orderPaymentMethod =
+                         _orderPaymentService.GetByOrderTableId(orderTable.Id)
+                         .VenuePaymentMethod.PaymentMethod.Id;
+
+                    var tlPoint =  Convert.ToInt32(orderTable.OrderPayment.UsedPoint * 0.001);
+
+                    realPrice = string.Format("{0:N2}", (totalPrice + orderTable.OrderPayment.Tip) - tlPoint);
+
+                    usedPoint = string.Format("{0:N2}", Convert.ToInt32(orderTable.OrderPayment.UsedPoint * 0.001));
+
+                    tip = string.Format("{0:N2}", orderTable.OrderPayment.Tip);
+                }
+                else
+                {
+                    orderPaymentMethod = venue.VenuePaymentMethod.FirstOrDefault().PaymentMethod.Id;
+
+                    realPrice = string.Format("{0:N2}", totalPrice);
+
+                    usedPoint = string.Format("{0:N2}", 0);
+
+                    tip = string.Format("{0:N2}", 0);
+                }
+                
                 return Ok(new
                 {
                     Success = true,
@@ -346,9 +378,12 @@ namespace Menu.Cash.Controllers
                             v.PaymentMethod.Id,
                             v.PaymentMethod.Text
                         }),
-                        user.Point,
-                        TLPoint = user.Point * 0.001,
-                        TotalPrice = string.Format("{0:N2}", totalPrice)
+                        OrderPaymentMethod = orderPaymentMethod,
+                        UsedPoint = usedPoint,
+                        Tip = tip,
+                        TLPoint = string.Format("{0:N2}", user.Point * 0.001),
+                        TotalPrice = string.Format("{0:N2}", totalPrice),
+                        RealPrice = realPrice
                     }
                 });
             }
@@ -376,6 +411,7 @@ namespace Menu.Cash.Controllers
                 orderTable.Id,
                 orderTable.IsClosed,
                 createdDate = orderTable.CreatedDate.ToString("HH:mm"),
+                userId = orderTable.User.Id,
                 orderTable.User.Name,
                 orderTable.User.Surname,
                 Orders = orderTable.Order.Where(o => o.OrderStatus != OrderStatus.Pending).Select(o => new
