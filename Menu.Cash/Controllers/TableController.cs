@@ -1,7 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 using Menu.Cash.Extensions;
 using Menu.Core.Enums;
@@ -24,6 +27,8 @@ namespace Menu.Cash.Controllers
 
         private readonly IUserService _userService;
 
+        private readonly IUserTokenService _userTokenService;
+
         private readonly IVenueService _venueService;
 
         private readonly IOrderCashService _orderCashService;
@@ -31,6 +36,8 @@ namespace Menu.Cash.Controllers
         private readonly IOrderPaymentService _orderPaymentService;
 
         private readonly IVenuePaymentMethodService _venuePaymentMethodService;
+
+        private readonly string _key = "key=AAAA7Tr-w-A:APA91bFkdAPrjKgsrKdzqFpR1EXzmie3oUk6KaVgaPmdCyNdOsik_zyMJZHo2MgAAXYShzwJjj1dnlPpn-DvhW5JnYyzwDyahdVV9FyoHYV4K6XUggKJTm0uXRLxVhodorwKEzThBkqc";
 
         public TableController(ITableService tableService,
             ICashService cashService,
@@ -40,7 +47,8 @@ namespace Menu.Cash.Controllers
             IVenueService venueService,
             IVenuePaymentMethodService venuePaymentMethodService,
             IOrderCashService orderCashService,
-            IOrderPaymentService orderPaymentService)
+            IOrderPaymentService orderPaymentService,
+            IUserTokenService userTokenService)
         {
             _tableService = tableService;
 
@@ -59,12 +67,14 @@ namespace Menu.Cash.Controllers
             _orderCashService = orderCashService;
 
             _orderPaymentService = orderPaymentService;
+
+            _userTokenService = userTokenService;
         }
 
         [HttpPost]
         [Authorize]
         [Route("Ajax/User/{id:int}/Orders")]
-        public IActionResult UserCheckOut(int id, int paymentMethod, int cashStatus, int cashId)
+        public async Task<IActionResult> UserCheckOut(int id, int paymentMethod, int cashStatus, int cashId)
         {
             var orderTable = _orderTableService.GetByUserId(id, false);
 
@@ -128,6 +138,36 @@ namespace Menu.Cash.Controllers
                         _tableService.SaveChanges();
                     }
 
+                    var userToken1 = _userTokenService.GetByUserId(id);
+
+                    if (userToken1 != null)
+                    {
+                        var orderCash = (OrderCashStatus)cashStatus;
+                        string[] test = new string[1];
+                        test[0] = userToken1.Token;
+                        dynamic foo = new ExpandoObject();
+                        foo.registration_ids = test;
+                        foo.notification = new
+                        {
+                            title = "Hesap Bilgisi",
+                            body = "Hesabınız " + orderCash.ToOrderCashStatus() + ". Bu mekanı değerlendirebilirsiniz.",
+                            data = new { orderTable.Id }
+                        };
+
+                        string json = Newtonsoft.Json.JsonConvert.SerializeObject(foo);
+
+                        var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+                        using var httpClient = new HttpClient();
+
+                        httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                        httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", _key);
+
+                        var response = await httpClient.PostAsync("https://fcm.googleapis.com/fcm/send", stringContent);
+
+                        await response.Content.ReadAsStringAsync();
+                    }
                     return Ok(new
                     {
                         Success = true,
@@ -177,6 +217,37 @@ namespace Menu.Cash.Controllers
                     table.TableStatus = TableStatus.Closed;
 
                     _tableService.SaveChanges();
+                }
+
+                var userToken = _userTokenService.GetByUserId(id);
+
+                if (userToken != null)
+                {
+                    var orderCash = (OrderCashStatus)cashStatus;
+                    string[] test = new string[1];
+                    test[0] = userToken.Token;
+                    dynamic foo = new ExpandoObject();
+                    foo.registration_ids = test;
+                    foo.notification = new
+                    {
+                        title = "Hesap Bilgisi",
+                        body = "Hesabınız " + orderCash.ToOrderCashStatus() + ". Bu mekanı değerlendirebilirsiniz.",
+                        data = new { orderTable.Id }
+                    };
+
+                    string json = Newtonsoft.Json.JsonConvert.SerializeObject(foo);
+
+                    var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+                    using var httpClient = new HttpClient();
+
+                    httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                    httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", _key);
+
+                    var response = await httpClient.PostAsync("https://fcm.googleapis.com/fcm/send", stringContent);
+
+                    await response.Content.ReadAsStringAsync();
                 }
 
                 return Ok(new

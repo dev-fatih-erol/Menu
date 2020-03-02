@@ -36,5 +36,8 @@ namespace Menu.Core.Models
 
 
         public virtual List<Favorite> Favorite { get; set; }
+
+
+        public virtual UserToken UserToken { get; set; }
     }
 }

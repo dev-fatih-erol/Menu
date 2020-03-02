@@ -22,6 +22,8 @@ namespace Menu.Data
 
         public DbSet<Cash> Cashes { get; set; }
 
+        public DbSet<UserToken> UserTokens { get; set; }
+
         public DbSet<Kitchen> Kitchens { get; set; }
 
         public DbSet<Waiter> Waiters { get; set; }
@@ -111,6 +113,9 @@ namespace Menu.Data
 
             modelBuilder.Entity<OptionItem>()
                 .ToTable("OptionItem");
+
+            modelBuilder.Entity<UserToken>()
+                .ToTable("UserToken");
 
             modelBuilder.Entity<OrderTable>()
                 .ToTable("OrderTable");

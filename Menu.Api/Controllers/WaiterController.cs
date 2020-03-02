@@ -49,10 +49,10 @@ namespace Menu.Api.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Waiter")]
-        [Route("Waiter/Id/{id:int}")]
-        public IActionResult GetById(int id)
+        [Route("Waiter/Get/Me")]
+        public IActionResult GetById()
         {
-            var waiter = _waiterService.GetById(id);
+            var waiter = _waiterService.GetById(User.Identity.GetId());
 
             if (waiter != null)
             {
