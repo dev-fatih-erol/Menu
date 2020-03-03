@@ -12,6 +12,7 @@ using Menu.Core.Models;
 using Menu.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Menu.Cash.Controllers
 {
@@ -37,6 +38,8 @@ namespace Menu.Cash.Controllers
 
         private readonly IVenuePaymentMethodService _venuePaymentMethodService;
 
+        private readonly IDayReportsService _dayReportsService;
+
         private readonly string _key = "key=AAAA7Tr-w-A:APA91bFkdAPrjKgsrKdzqFpR1EXzmie3oUk6KaVgaPmdCyNdOsik_zyMJZHo2MgAAXYShzwJjj1dnlPpn-DvhW5JnYyzwDyahdVV9FyoHYV4K6XUggKJTm0uXRLxVhodorwKEzThBkqc";
 
         public TableController(ITableService tableService,
@@ -48,7 +51,8 @@ namespace Menu.Cash.Controllers
             IVenuePaymentMethodService venuePaymentMethodService,
             IOrderCashService orderCashService,
             IOrderPaymentService orderPaymentService,
-            IUserTokenService userTokenService)
+            IUserTokenService userTokenService,
+            IDayReportsService dayReportsService)
         {
             _tableService = tableService;
 
@@ -69,6 +73,23 @@ namespace Menu.Cash.Controllers
             _orderPaymentService = orderPaymentService;
 
             _userTokenService = userTokenService;
+
+            _dayReportsService = dayReportsService;
+        }
+
+        [HttpPost]
+        [Authorize]
+        [Route("Table/DayReports")]
+        public IActionResult DayReport()
+        {
+
+            var cash = _cashService.GetById(User.Identity.GetId());
+
+            _dayReportsService.Create(new DayReports
+            { VenueId = cash.VenueId, CreatedDate = DateTime.Now });
+            _dayReportsService.SaveChanges();
+
+            return Ok(true);
         }
 
         [HttpPost]
@@ -288,127 +309,123 @@ namespace Menu.Cash.Controllers
         [Route("Table/Reports")]
         public IActionResult Reports()
         {
+            var cash = _cashService.GetById(User.Identity.GetId());
+
+            var dayreport = _dayReportsService.GetByAllReport(cash.Venue.Id);
+
+            ViewBag.Dates = dayreport.Select(x => new SelectListItem
+            {
+                Text = x.CreatedDate.ToString(),
+                Value = x.CreatedDate.ToString()
+            });
+
+
+            ViewBag.Now = DateTime.Now;
+
             return View();
         }
+
 
         [HttpGet]
         [Authorize]
         [Route("Ajax/Table/Reports")]
-        public IActionResult AllReports()
+        public IActionResult AllReports(string date, string endDate)
         {
+            var dt = DateTime.Parse(date);
+
+            var endDt = DateTime.Parse(endDate);
+
             var cash = _cashService.GetById(User.Identity.GetId());
 
             var orderTables = _orderTableService.GetByReports(cash.Venue.Id, true);
 
-            var TotalPriceSum = string.Format("{0:N2}", orderTables.Where(x =>
-            x.OrderCash.OrderCashStatus == OrderCashStatus.PaymentCompleted)
-            .Sum(x => x.Order.Where(x => x.Id == x.Id &&
+            var TotalPriceSum = string.Format("{0:N2}", orderTables.Where(x => x.OrderCash.OrderCashStatus == OrderCashStatus.PaymentCompleted && x.OrderCash.CreatedDate > dt && x.OrderCash.CreatedDate < endDt)
+                .Select(x => x.Order.Where(x =>
                                     x.OrderStatus != OrderStatus.Cancel &&
                                     x.OrderStatus != OrderStatus.Pending &&
-                                    x.OrderStatus != OrderStatus.Denied)
-                                                 .Select(or => or.OrderDetail
-                                                 .Sum(or => or.Price * or.Quantity)).Sum()));
+                                    x.OrderStatus != OrderStatus.Denied).Select(y => y.OrderDetail.Sum(or => or.Price * or.Quantity)).Sum()).Sum());
 
-            var vipmisafirpriceSum = string.Format("{0:N2}", orderTables.Where(x =>
-             x.OrderCash.OrderCashStatus == OrderCashStatus.Treat)
-             .Sum(x => x.Order.Where(x => x.Id == x.Id &&
-                                    x.OrderStatus != OrderStatus.Cancel &&
-                                    x.OrderStatus != OrderStatus.Pending &&
-                                    x.OrderStatus != OrderStatus.Denied)
-                                                  .Select(or => or.OrderDetail
-                                                  .Sum(or => or.Price * or.Quantity)).Sum()));
-
-            var nakitSum = string.Format("{0:N2}", orderTables.Where(x =>
-            x.OrderCash.OrderCashStatus == OrderCashStatus.PaymentCompleted &&
-            x.OrderPayment.VenuePaymentMethod.PaymentMethod.Text == "Nakit")
-            .Sum(x => x.Order.Where(x => x.Id == x.Id &&
-                                    x.OrderStatus != OrderStatus.Cancel &&
-                                    x.OrderStatus != OrderStatus.Pending &&
-                                    x.OrderStatus != OrderStatus.Denied)
-                                                 .Select(or => or.OrderDetail
-                                                 .Sum(or => or.Price * or.Quantity)).Sum()));
-            var KrediKartıSum = string.Format("{0:N2}", orderTables.Where(x =>
-            x.OrderCash.OrderCashStatus == OrderCashStatus.PaymentCompleted &&
-            x.OrderPayment.VenuePaymentMethod.PaymentMethod.Text == "Kredi Kartı")
-                .Sum(x => x.Order.Where(x => x.Id == x.Id &&
-                                    x.OrderStatus != OrderStatus.Cancel &&
-                                    x.OrderStatus != OrderStatus.Pending &&
-                                    x.OrderStatus != OrderStatus.Denied)
-                                          .Select(or => or.OrderDetail
-                                          .Sum(or => or.Price * or.Quantity)).Sum()));
-
-            var MultinetSum = string.Format("{0:N2}", orderTables.Where(x =>
-            x.OrderCash.OrderCashStatus == OrderCashStatus.PaymentCompleted &&
-            x.OrderPayment.VenuePaymentMethod.PaymentMethod.Text == "Multinet")
-                .Sum(x => x.Order.Where(x => x.Id == x.Id &&
-                                    x.OrderStatus != OrderStatus.Cancel &&
-                                    x.OrderStatus != OrderStatus.Pending &&
-                                    x.OrderStatus != OrderStatus.Denied)
-                                         .Select(or => or.OrderDetail
-                                         .Sum(or => or.Price * or.Quantity)).Sum()));
-            var SodexoSum = string.Format("{0:N2}", orderTables.Where(x =>
-            x.OrderCash.OrderCashStatus == OrderCashStatus.PaymentCompleted &&
-            x.OrderPayment.VenuePaymentMethod.PaymentMethod.Text == "Sodexo")
-                .Sum(x => x.Order.Where(x => x.Id == x.Id &&
-                                    x.OrderStatus != OrderStatus.Cancel &&
-                                    x.OrderStatus != OrderStatus.Pending &&
-                                    x.OrderStatus != OrderStatus.Denied)
-                                          .Select(or => or.OrderDetail
-                                          .Sum(or => or.Price * or.Quantity)).Sum()));
-            var TicketRestaurantSum = string.Format("{0:N2}", orderTables.Where(x =>
-            x.OrderCash.OrderCashStatus == OrderCashStatus.PaymentCompleted &&
-            x.OrderPayment.VenuePaymentMethod.PaymentMethod.Text == "Ticket Restaurant")
-                .Sum(x => x.Order.Where(x => x.Id == x.Id &&
+            var vipmisafirpriceSum = string.Format("{0:N2}", orderTables.Where(x => x.OrderCash.OrderCashStatus == OrderCashStatus.Treat && x.OrderCash.CreatedDate > dt && x.OrderCash.CreatedDate < endDt)
+                .Select(x => x.Order.Where(x =>
                                      x.OrderStatus != OrderStatus.Cancel &&
                                      x.OrderStatus != OrderStatus.Pending &&
-                                     x.OrderStatus != OrderStatus.Denied)
-                                          .Select(or => or.OrderDetail
-                                          .Sum(or => or.Price * or.Quantity)).Sum()));
-            var SetCardSum = string.Format("{0:N2}", orderTables.Where(x =>
-            x.OrderCash.OrderCashStatus == OrderCashStatus.PaymentCompleted &&
-            x.OrderPayment.VenuePaymentMethod.PaymentMethod.Text == "SetCard")
-                .Sum(x => x.Order.Where(x => x.Id == x.Id &&
-                                     x.OrderStatus != OrderStatus.Cancel &&
-                                     x.OrderStatus != OrderStatus.Pending &&
-                                     x.OrderStatus != OrderStatus.Denied)
-                                          .Select(or => or.OrderDetail
-                                          .Sum(or => or.Price * or.Quantity)).Sum()));
-            var WinwinSum = string.Format("{0:N2}", orderTables.Where(x =>
-            x.OrderCash.OrderCashStatus == OrderCashStatus.PaymentCompleted &&
-            x.OrderPayment.VenuePaymentMethod.PaymentMethod.Text == "Winwin")
-                .Sum(x => x.Order.Where(x => x.Id == x.Id &&
-                                    x.OrderStatus != OrderStatus.Cancel &&
-                                    x.OrderStatus != OrderStatus.Pending &&
-                                    x.OrderStatus != OrderStatus.Denied)
-                                           .Select(or => or.OrderDetail
-                                           .Sum(or => or.Price * or.Quantity)).Sum()));
-            var MetropolSum = string.Format("{0:N2}", orderTables.Where(x =>
-            x.OrderCash.OrderCashStatus == OrderCashStatus.PaymentCompleted &&
-            x.OrderPayment.VenuePaymentMethod.PaymentMethod.Text == "Metropol")
-                .Sum(x => x.Order.Where(x => x.Id == x.Id &&
-                                     x.OrderStatus != OrderStatus.Cancel &&
-                                     x.OrderStatus != OrderStatus.Pending &&
-                                     x.OrderStatus != OrderStatus.Denied)
-                                            .Select(or => or.OrderDetail
-                                            .Sum(or => or.Price * or.Quantity)).Sum()));
-            var KacakSum = string.Format("{0:N2}", orderTables.Where(x =>
-            x.OrderCash.OrderCashStatus == OrderCashStatus.NoPayment)
-                .Sum(x => x.Order.Where(x => x.Id == x.Id &&
-                                    x.OrderStatus != OrderStatus.Cancel &&
-                                    x.OrderStatus != OrderStatus.Pending &&
-                                    x.OrderStatus != OrderStatus.Denied)
-                                             .Select(or => or.OrderDetail
-                                             .Sum(or => or.Price * or.Quantity)).Sum()));
+                                     x.OrderStatus != OrderStatus.Denied).Select(y => y.OrderDetail.Sum(or => or.Price * or.Quantity)).Sum()).Sum());
 
-            var KacakSayisi = orderTables.Where(x => x.OrderCash.OrderCashStatus == OrderCashStatus.NoPayment).Count();
+            var nakitSum = string.Format("{0:N2}", orderTables.Where(x => x.OrderCash.OrderCashStatus == OrderCashStatus.PaymentCompleted && x.OrderCash.CreatedDate > dt && x.OrderCash.CreatedDate < endDt
+            && x.OrderPayment.VenuePaymentMethod.PaymentMethod.Text == "Nakit")
+             .Select(x => x.Order.Where(x =>
+                                  x.OrderStatus != OrderStatus.Cancel &&
+                                  x.OrderStatus != OrderStatus.Pending &&
+                                  x.OrderStatus != OrderStatus.Denied).Select(y => y.OrderDetail.Sum(or => or.Price * or.Quantity)).Sum()).Sum());
 
-            var VipSayisi = orderTables.Where(x => x.OrderCash.OrderCashStatus == OrderCashStatus.Treat).Count();
 
-            var Toplammusteri = orderTables.Count();
 
-            var onlineMusteri = orderTables.Where(x => x.User.IsGuest == false).Count();
+            var KrediKartıSum = string.Format("{0:N2}", orderTables.Where(x => x.OrderCash.OrderCashStatus == OrderCashStatus.PaymentCompleted && x.OrderCash.CreatedDate > dt && x.OrderCash.CreatedDate < endDt
+            && x.OrderPayment.VenuePaymentMethod.PaymentMethod.Text == "Kredi Kartı")
+             .Select(x => x.Order.Where(x =>
+                                  x.OrderStatus != OrderStatus.Cancel &&
+                                  x.OrderStatus != OrderStatus.Pending &&
+                                  x.OrderStatus != OrderStatus.Denied).Select(y => y.OrderDetail.Sum(or => or.Price * or.Quantity)).Sum()).Sum());
+            var MultinetSum = string.Format("{0:N2}", orderTables.Where(x => x.OrderCash.OrderCashStatus == OrderCashStatus.PaymentCompleted && x.OrderCash.CreatedDate > dt && x.OrderCash.CreatedDate < endDt
+           && x.OrderPayment.VenuePaymentMethod.PaymentMethod.Text == "Multinet")
+            .Select(x => x.Order.Where(x =>
+                                 x.OrderStatus != OrderStatus.Cancel &&
+                                 x.OrderStatus != OrderStatus.Pending &&
+                                 x.OrderStatus != OrderStatus.Denied).Select(y => y.OrderDetail.Sum(or => or.Price * or.Quantity)).Sum()).Sum());
 
-            var normalMusteri = orderTables.Where(x => x.User.IsGuest == true).Count();
+            var SodexoSum = string.Format("{0:N2}", orderTables.Where(x => x.OrderCash.OrderCashStatus == OrderCashStatus.PaymentCompleted && x.OrderCash.CreatedDate > dt && x.OrderCash.CreatedDate < endDt
+          && x.OrderPayment.VenuePaymentMethod.PaymentMethod.Text == "Sodexo")
+           .Select(x => x.Order.Where(x =>
+                                x.OrderStatus != OrderStatus.Cancel &&
+                                x.OrderStatus != OrderStatus.Pending &&
+                                x.OrderStatus != OrderStatus.Denied).Select(y => y.OrderDetail.Sum(or => or.Price * or.Quantity)).Sum()).Sum());
+            var TicketRestaurantSum = string.Format("{0:N2}", orderTables.Where(x => x.OrderCash.OrderCashStatus == OrderCashStatus.PaymentCompleted && x.OrderCash.CreatedDate > dt && x.OrderCash.CreatedDate < endDt
+          && x.OrderPayment.VenuePaymentMethod.PaymentMethod.Text == "Ticket Restaurant")
+           .Select(x => x.Order.Where(x =>
+                                x.OrderStatus != OrderStatus.Cancel &&
+                                x.OrderStatus != OrderStatus.Pending &&
+                                x.OrderStatus != OrderStatus.Denied).Select(y => y.OrderDetail.Sum(or => or.Price * or.Quantity)).Sum()).Sum());
+            var SetCardSum = string.Format("{0:N2}", orderTables.Where(x => x.OrderCash.OrderCashStatus == OrderCashStatus.PaymentCompleted && x.OrderCash.CreatedDate > dt && x.OrderCash.CreatedDate < endDt
+         && x.OrderPayment.VenuePaymentMethod.PaymentMethod.Text == "SetCard")
+          .Select(x => x.Order.Where(x =>
+                               x.OrderStatus != OrderStatus.Cancel &&
+                               x.OrderStatus != OrderStatus.Pending &&
+                               x.OrderStatus != OrderStatus.Denied).Select(y => y.OrderDetail.Sum(or => or.Price * or.Quantity)).Sum()).Sum());
+            var WinwinSum = string.Format("{0:N2}", orderTables.Where(x => x.OrderCash.OrderCashStatus == OrderCashStatus.PaymentCompleted && x.OrderCash.CreatedDate > dt && x.OrderCash.CreatedDate < endDt
+         && x.OrderPayment.VenuePaymentMethod.PaymentMethod.Text == "Winwin")
+          .Select(x => x.Order.Where(x =>
+                               x.OrderStatus != OrderStatus.Cancel &&
+                               x.OrderStatus != OrderStatus.Pending &&
+                               x.OrderStatus != OrderStatus.Denied).Select(y => y.OrderDetail.Sum(or => or.Price * or.Quantity)).Sum()).Sum());
+            var MetropolSum = string.Format("{0:N2}", orderTables.Where(x => x.OrderCash.OrderCashStatus == OrderCashStatus.PaymentCompleted && x.OrderCash.CreatedDate > dt && x.OrderCash.CreatedDate < endDt
+         && x.OrderPayment.VenuePaymentMethod.PaymentMethod.Text == "Metropol")
+          .Select(x => x.Order.Where(x =>
+                               x.OrderStatus != OrderStatus.Cancel &&
+                               x.OrderStatus != OrderStatus.Pending &&
+                               x.OrderStatus != OrderStatus.Denied).Select(y => y.OrderDetail.Sum(or => or.Price * or.Quantity)).Sum()).Sum());
+            var KacakSum = string.Format("{0:N2}", orderTables.Where(x => x.OrderCash.OrderCashStatus == OrderCashStatus.NoPayment && x.OrderCash.CreatedDate > dt && x.OrderCash.CreatedDate < endDt)
+         .Select(x => x.Order.Where(x =>
+                              x.OrderStatus != OrderStatus.Cancel &&
+                              x.OrderStatus != OrderStatus.Pending &&
+                              x.OrderStatus != OrderStatus.Denied).Select(y => y.OrderDetail.Sum(or => or.Price * or.Quantity)).Sum()).Sum());
+
+
+
+
+            var KacakSayisi = orderTables.Where(x => x.OrderCash.OrderCashStatus == OrderCashStatus.NoPayment &&
+                                    x.OrderCash.CreatedDate > dt && x.OrderCash.CreatedDate < endDt).Count();
+
+            var VipSayisi = orderTables.Where(x => x.OrderCash.OrderCashStatus == OrderCashStatus.Treat &&
+                                    x.OrderCash.CreatedDate > dt && x.OrderCash.CreatedDate < endDt).Count();
+
+            var Toplammusteri = orderTables.Where(x =>
+                                    x.OrderCash.CreatedDate > dt && x.OrderCash.CreatedDate < endDt).Count();
+
+            var onlineMusteri = orderTables.Where(x => x.User.IsGuest == false &&
+                                    x.OrderCash.CreatedDate > dt && x.OrderCash.CreatedDate < endDt).Count();
+
+            var normalMusteri = orderTables.Where(x => x.User.IsGuest == true &&
+                                    x.OrderCash.CreatedDate > dt && x.OrderCash.CreatedDate < endDt).Count();
 
             return Ok(new
             {
@@ -609,7 +626,7 @@ namespace Menu.Cash.Controllers
         {
             var cash = _cashService.GetById(User.Identity.GetId());
 
-            var orderTables = _orderTableService.GetByTableId(cash.Venue.Id,tableId, false)
+            var orderTables = _orderTableService.GetByTableId(cash.Venue.Id, tableId, false)
                                            .Where(o => o.Order.Any(o => o.OrderStatus != OrderStatus.Pending)).ToList();
 
             return Ok(orderTables.Select(orderTable => new

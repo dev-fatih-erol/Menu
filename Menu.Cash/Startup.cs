@@ -59,6 +59,8 @@ namespace Menu.Cash
 
             services.AddScoped<IVenueService, VenueService>();
 
+            services.AddScoped<IDayReportsService, DayReportsService>();
+
             services.AddScoped<IVenuePaymentMethodService, VenuePaymentMethodService>();
 
             services.AddRouting(options => options.LowercaseUrls = true);

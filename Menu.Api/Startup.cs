@@ -108,6 +108,8 @@ namespace Menu.Api
 
             services.AddScoped<IWaiterTokenService, WaiterTokenService>();
 
+            services.AddScoped<IUserTokenService, UserTokenService>();
+
             services.AddScoped<ICashService, CashService>();
 
             services.AddTransient<ISmsSender, SmsSender>();

@@ -70,6 +70,8 @@ namespace Menu.Data
 
         public DbSet<WaiterToken> WaiterTokens { get; set; }
 
+        public DbSet<DayReports> DayReportss { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<AppAbout>()
@@ -158,6 +160,9 @@ namespace Menu.Data
 
             modelBuilder.Entity<WaiterToken>()
                 .ToTable("WaiterToken");
+
+            modelBuilder.Entity<DayReports>()
+                .ToTable("DayReports");
 
             modelBuilder.Entity<Venue>()
                 .Property(v => v.VenueType)

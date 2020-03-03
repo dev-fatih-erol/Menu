@@ -3,6 +3,8 @@
 }
 
 <div class="main-content">
+    <input type="hidden" value="@ViewBag.Now" id="hdnNow" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <div class="page-header no-gutters">
         <div class="d-md-flex align-items-md-center justify-content-between">
 
@@ -15,6 +17,11 @@
                     <span class="text-gray">Project Manager</span>
                 </div>
             </div>
+            <div class="form-group col-md-4">
+                <label for="inputState">Geçmiş Dönem Gün Sonu Raporları </label>
+                <select class="form-control" id="slct" asp-items="@ViewBag.Dates">
+                </select>
+            </div>
             <div class="col-md-2 col-lg-2">
                 <div class="card">
                     <div class="card-body">
@@ -22,8 +29,28 @@
                             <div class="avatar avatar-icon avatar-lg avatar-blue">
                                 <i class="text-primary anticon anticon-profile"></i>
                             </div>
-                            <div>
-                                <button type="button" class="btn btn-secondary btn-tone m-r-5">  Gün Sonu Al</button>
+                            <button type="button" class="btn btn-secondary btn-tone m-r-5" data-toggle="modal" data-target="#exampleModal">
+                                Gün Sonu Al
+                            </button>
+                            <!-- Modal -->
+                            <div class="modal fade" id="exampleModal">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Emin misin ?</h5>
+                                            <button type="button" class="close" data-dismiss="modal">
+                                                <i class="anticon anticon-close"></i>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            Bu işlemi lütfen sadece gün sonu alırken yapın. Bu işlemin geriye dönüşü olmayacaktır.
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Vazgeç</button>
+                                            <button id="btndayreport" type="button" class="btn btn-primary">Gün Sonu Al</button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -32,11 +59,8 @@
 
         </div>
     </div>
-    <div class="reports row ">
-
-
+    <div class="reports row">
     </div>
-
 </div>
 
 
@@ -109,7 +133,7 @@
                     <div>
                         <p class="m-b-0">Kredi Kartı</p>
                         <h2 class="m-b-0">
-                            <span>₺ {{cashprice}}</span>
+                            <span>₺ {{creditcardprice}}</span>
                         </h2>
                     </div>
                     <div class="avatar avatar-icon avatar-lg avatar-cyan">
@@ -291,6 +315,7 @@
 
 @section Styles {
     <style>
+
 
         .statustrue {
             background-color: green;
