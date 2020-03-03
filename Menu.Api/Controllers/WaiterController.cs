@@ -64,7 +64,8 @@ namespace Menu.Api.Controllers
                     {
                         waiter.Id,
                         waiter.Name,
-                        waiter.Surname
+                        waiter.Surname,
+                        waiter.VenueId
                     }
                 });
             }
