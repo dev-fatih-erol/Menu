@@ -64,7 +64,7 @@ namespace Menu.Business.Controllers
 
             ModelState.AddModelError(string.Empty, "Girdiğin kullanıcı adı veya şifre hiçbir hesapla eşleşmiyor. Hesap bilgilerinizi unuttuysanız lütfen bizimle iletişime geçin.");
 
-            return RedirectToAction("Index", "Home");
+            return View(model);
         }
     }
 }
