@@ -1,4 +1,9 @@
-﻿using System.Linq;
+﻿using System.Dynamic;
+using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Threading.Tasks;
 using Menu.Core.Enums;
 using Menu.Kitchen.Extensions;
 using Menu.Service;
@@ -13,23 +18,108 @@ namespace Menu.Kitchen.Controllers
 
         private readonly IKitchenService _kitchenService;
 
+        private readonly ITableWaiterService _tableWaiterService;
+
+        private readonly ITableService _tableService;
+
+        private readonly IUserTokenService _userTokenService;
+
+        private readonly string _key = "key=AAAA7Tr-w-A:APA91bFkdAPrjKgsrKdzqFpR1EXzmie3oUk6KaVgaPmdCyNdOsik_zyMJZHo2MgAAXYShzwJjj1dnlPpn-DvhW5JnYyzwDyahdVV9FyoHYV4K6XUggKJTm0uXRLxVhodorwKEzThBkqc";
+
         public DashboardController(IOrderService orderService,
-            IKitchenService kitchenService)
+            IKitchenService kitchenService,
+            ITableWaiterService tableWaiterService,
+            ITableService tableService,
+            IUserTokenService userTokenService)
         {
             _orderService = orderService;
 
             _kitchenService = kitchenService;
+
+            _tableWaiterService = tableWaiterService;
+
+            _tableService = tableService;
+
+            _userTokenService = userTokenService;
         }
 
         [HttpPost]
         [Authorize]
         [Route("Order/{id:int}")]
-        public IActionResult UpdateOrderStatus(int id, OrderStatus orderStatus)
+        public async Task<IActionResult> UpdateOrderStatus(int id, OrderStatus orderStatus, int tableId, int orderTableId, int userId)
         {
             var order = _orderService.GetById(id);
 
             if (order != null)
             {
+                if (orderStatus == OrderStatus.Prepared)
+                {
+                    var waiters = _tableWaiterService.GetByTableId(tableId);
+
+                    var tokens = waiters.Select(s => s.Waiter.WaiterToken.Token).ToList();
+
+                    if (tokens.Count() > 0 || tokens != null)
+                    {
+                        var table = _tableService.GetById(tableId);
+
+                        dynamic foo = new ExpandoObject();
+                        foo.registration_ids = tokens;
+                        foo.notification = new
+                        {
+                            title = "Sipariş Durumu",
+                            body = table.Name + " isimli masanın siparişi hazır, Mutfaktan gelip alabilirsiniz.",
+                            data = new { table.Id }
+                        };
+
+                        string json = Newtonsoft.Json.JsonConvert.SerializeObject(foo);
+
+                        var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+                        using var httpClient = new HttpClient();
+
+                        httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                        httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", _key);
+
+                        var response = await httpClient.PostAsync("https://fcm.googleapis.com/fcm/send", stringContent);
+
+                        await response.Content.ReadAsStringAsync();
+                    }
+                }
+                else if (orderStatus == OrderStatus.Closed)
+                {
+
+                    var userToken1 = _userTokenService.GetByUserId(userId);
+
+                    if (userToken1 != null)
+                    {
+                        string[] test = new string[1];
+                        test[0] = userToken1.Token;
+                        dynamic foo = new ExpandoObject();
+                        foo.registration_ids = test;
+                        foo.notification = new
+                        {
+                            title = "Sipariş Durumu",
+                            body = "Siparişiniz geliyor, Afiyet olsun.",
+                            data = new { orderTableId}
+                        };
+
+                        string json = Newtonsoft.Json.JsonConvert.SerializeObject(foo);
+
+                        var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+                        using var httpClient = new HttpClient();
+
+                        httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                        httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", _key);
+
+                        var response = await httpClient.PostAsync("https://fcm.googleapis.com/fcm/send", stringContent);
+
+                        await response.Content.ReadAsStringAsync();
+                    }
+                }
+
                 order.OrderStatus = orderStatus;
 
                 _orderService.SaveChanges();
@@ -81,10 +171,12 @@ namespace Menu.Kitchen.Controllers
                         }),
                         Table = new
                         {
+                            order.OrderTable.Table.Id,
                             order.OrderTable.Table.Name,
                         },
                         User = new
                         {
+                            order.OrderTable.User.Id,
                             order.OrderTable.User.Name,
                             order.OrderTable.User.Surname,
                             order.OrderTable.User.Photo
@@ -93,6 +185,9 @@ namespace Menu.Kitchen.Controllers
                         {
                             order.OrderWaiter.Waiter.Name,
                             order.OrderWaiter.Waiter.Surname
+                        },
+                        OrderTable = new {
+                            order.OrderTable.Id
                         }
                     }));
                 }

@@ -55,7 +55,7 @@
                             <i class="anticon anticon-ellipsis"></i>
                         </a>
                         <div class="dropdown-menu">
-                            <button data-id="{{id}}" data-status="3" class="dropdown-item order-action" type="button">
+                            <button data-id="{{id}}" data-status="3" data-table="{{table.id}}" data-ordertable="{{orderTable.id}}" data-userid="{{user.id}}" class="dropdown-item order-action" type="button">
                                 <i class="anticon anticon-eye"></i>
                                 <span class="m-l-10">Hazırlanıyor (Sonraki işlem)</span>
                             </button>
@@ -213,7 +213,7 @@
                                 <i class="anticon anticon-eye"></i>
                                 <span class="m-l-10">Onaylandı (Önceki işlem)</span>
                             </button>
-                            <button data-id="{{id}}" data-status="5" class="dropdown-item order-action" type="button">
+                            <button data-id="{{id}}" data-status="5" data-table="{{table.id}}" data-ordertable="{{orderTable.id}}" data-userid="{{user.id}}" class="dropdown-item order-action" type="button">
                                 <i class="anticon anticon-edit"></i>
                                 <span class="m-l-10">Hazırlandı (Sonraki işlem)</span>
                             </button>
@@ -371,7 +371,7 @@
                                 <i class="anticon anticon-eye"></i>
                                 <span class="m-l-10">Hazırlanıyor (Önceki işlem)</span>
                             </button>
-                            <button data-id="{{id}}" data-status="6" class="dropdown-item order-action" type="button">
+                            <button data-id="{{id}}" data-status="6" data-table="{{table.id}}" data-ordertable="{{orderTable.id}}" data-userid="{{user.id}}" class="dropdown-item order-action" type="button">
                                 <i class="anticon anticon-edit"></i>
                                 <span class="m-l-10">Teslim Edildi (Sonraki işlem)</span>
                             </button>

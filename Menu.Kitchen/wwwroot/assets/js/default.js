@@ -8,7 +8,10 @@ $(document).ready(function () {
     $(document).on("click", ".order-action", function () {
         var id = $(this).data('id');
         var orderStatus = $(this).data('status');
-        var url = host + '/order/' + id + '?orderStatus=' + orderStatus;
+        var table = $(this).data('table');
+        var orderTableId = $(this).data('ordertable');
+        var userId = $(this).data('userid');
+        var url = host + '/order/' + id + '?orderStatus=' + orderStatus + '&tableId=' + table + '&orderTableId=' + orderTableId + '&userId=' + userId;
         $.post(url, function () {
             loadData(); 
         });
