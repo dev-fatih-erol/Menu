@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Menu.Kitchen", "Menu.Kitche
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Menu.Cash", "Menu.Cash\Menu.Cash.csproj", "{AA0C784B-57E6-4DA2-813B-4E8C439B82D7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Menu.Business", "Menu.Business\Menu.Business.csproj", "{D18FD50F-C203-4388-BBF1-D4880855D5E3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,5 +45,9 @@ Global
 		{AA0C784B-57E6-4DA2-813B-4E8C439B82D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AA0C784B-57E6-4DA2-813B-4E8C439B82D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AA0C784B-57E6-4DA2-813B-4E8C439B82D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D18FD50F-C203-4388-BBF1-D4880855D5E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D18FD50F-C203-4388-BBF1-D4880855D5E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D18FD50F-C203-4388-BBF1-D4880855D5E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D18FD50F-C203-4388-BBF1-D4880855D5E3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
