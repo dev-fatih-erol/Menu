@@ -18,6 +18,8 @@ namespace Menu.Data
 
         public DbSet<City> Cities { get; set; }
 
+        public DbSet<Manager> Managers { get; set; }
+
         public DbSet<Venue> Venues { get; set; }
 
         public DbSet<Cash> Cashes { get; set; }
@@ -82,6 +84,9 @@ namespace Menu.Data
 
             modelBuilder.Entity<City>()
                 .ToTable("City");
+
+            modelBuilder.Entity<Manager>()
+               .ToTable("Manager");
 
             modelBuilder.Entity<Venue>()
                 .ToTable("Venue");

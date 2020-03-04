@@ -1,0 +1,45 @@
+﻿@{
+    Layout = "";
+}
+
+@model IndexViewModel
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>Oturum Aç</title>
+</head>
+<body class="app_theme_h login_page">
+    <div class="login_page_wrapper">
+        <div class="md-card">
+            <div class="md-card-content large-padding">
+                <div class="login_heading">
+                    <div class="user_avatar"></div>
+                </div>
+                <form asp-action="Index" asp-controller="Home" method="post">
+                    <div asp-validation-summary="ModelOnly" class="uk-alert" data-uk-alert></div>
+                    <div class="uk-form-row">
+                        <label asp-for="Username">Kullanıcı Adı</label>
+                        <input asp-for="Username" class="md-input" type="text" autocomplete="off" />
+                        <span asp-validation-for="Username"></span>
+                    </div>
+                    <div class="uk-form-row">
+                        <label asp-for="Password">Şifre</label>
+                        <input asp-for="Password" class="md-input" type="password" />
+                        <span asp-validation-for="Password"></span>
+                    </div>
+                    <div class="uk-margin-medium-top">
+                        <input type="submit" value="Giriş Yap" class="md-btn md-btn-primary md-btn-block md-btn-large" />
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="uk-margin-top uk-text-center">
+            <span class="uk-text-small">Copyright © @DateTime.Now.Year Bimenu.com</span>
+        </div>
+    </div>
+    <partial name="_ValidationScriptsPartial" />
+</body>
+</html>
