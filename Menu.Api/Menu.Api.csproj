@@ -28,5 +28,6 @@
     <Folder Include="Services\" />
     <Folder Include="Extensions\" />
     <Folder Include="Helpers\" />
+    <Folder Include="Attributes\" />
   </ItemGroup>
 </Project>

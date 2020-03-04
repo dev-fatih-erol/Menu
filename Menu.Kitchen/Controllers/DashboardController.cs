@@ -88,7 +88,6 @@ namespace Menu.Kitchen.Controllers
                 }
                 else if (orderStatus == OrderStatus.Closed)
                 {
-
                     var userToken1 = _userTokenService.GetByUserId(userId);
 
                     if (userToken1 != null)

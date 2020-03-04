@@ -8,9 +8,41 @@ namespace Menu.Api.Controllers
     {
         private readonly IWaiterTokenService _waiterTokenService;
 
-        public TokenController(IWaiterTokenService waiterTokenService)
+        private readonly IUserTokenService _userTokenService;
+
+        public TokenController(IWaiterTokenService waiterTokenService,
+            IUserTokenService userTokenService)
         {
             _waiterTokenService = waiterTokenService;
+
+            _userTokenService = userTokenService;
+        }
+
+        [HttpGet]
+        [Route("Token/User")]
+        public IActionResult CreateOrUpdateUserToken(int userId, string token)
+        {
+            var userToken = _userTokenService.GetByUserId(userId);
+
+            if (userToken != null)
+            {
+                userToken.Token = token;
+
+                _userTokenService.SaveChanges();
+
+                return Ok(true);
+            }
+
+            var newUserToken = new UserToken
+            {
+                Token = token,
+                UserId = userId
+            };
+
+            _userTokenService.Create(newUserToken);
+            _userTokenService.SaveChanges();
+
+            return Ok(true);
         }
 
         [HttpGet]
