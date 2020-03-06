@@ -58,6 +58,7 @@ $(document).ready(function () {
                 cashId : cashId
             },
             function (data, status) {
+                location.reload();
         });
     });
 });

@@ -65,6 +65,7 @@ namespace Menu.Service
                            {
                                VenuePaymentMethod = new VenuePaymentMethod
                                {
+                                   Id = x.VenuePaymentMethod.Id,
                                    PaymentMethod = x.VenuePaymentMethod.PaymentMethod
                                }
                            }).FirstOrDefault();

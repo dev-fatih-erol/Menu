@@ -569,7 +569,7 @@ namespace Menu.Cash.Controllers
                 {
                     orderPaymentMethod =
                          _orderPaymentService.GetByOrderTableId(orderTable.Id)
-                         .VenuePaymentMethod.PaymentMethod.Id;
+                         .VenuePaymentMethod.Id;
 
                     var tlPoint =  Convert.ToInt32(orderTable.OrderPayment.UsedPoint * 0.001);
 
@@ -581,7 +581,7 @@ namespace Menu.Cash.Controllers
                 }
                 else
                 {
-                    orderPaymentMethod = venue.VenuePaymentMethod.FirstOrDefault().PaymentMethod.Id;
+                    orderPaymentMethod = venue.VenuePaymentMethod.FirstOrDefault().Id;
 
                     realPrice = string.Format("{0:N2}", totalPrice);
 
@@ -598,7 +598,7 @@ namespace Menu.Cash.Controllers
                     {
                         PaymentMethods = venue.VenuePaymentMethod.Select(v => new
                         {
-                            v.PaymentMethod.Id,
+                            v.Id,
                             v.PaymentMethod.Text
                         }),
                         OrderPaymentMethod = orderPaymentMethod,
