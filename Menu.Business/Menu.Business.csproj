@@ -13,6 +13,7 @@
     <Folder Include="Extensions\" />
     <Folder Include="Views\Home\" />
     <Folder Include="Views\Shared\" />
+    <Folder Include="wwwroot\assets\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Menu.Core\Menu.Core.csproj">
