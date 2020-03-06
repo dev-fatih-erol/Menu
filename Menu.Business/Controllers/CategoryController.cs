@@ -50,6 +50,11 @@ namespace Menu.Business.Controllers
         [Route("Category/Create")]
         public IActionResult Create(CreateViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
             var categories = _categoryService.GetByVenueId(User.Identity.GetVenueId());
 
             var displayOrder = categories.OrderByDescending(x => x.DisplayOrder).FirstOrDefault().DisplayOrder;

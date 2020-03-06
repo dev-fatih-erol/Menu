@@ -42,7 +42,7 @@ namespace Menu.Business.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return RedirectToAction("Index", "Home");
+                return View(model);
             }
 
             var manager = _managerService.GetByUsernameAndPassword(model.Username, model.Password.ToMD5());

@@ -4,7 +4,7 @@ namespace Menu.Business.Models.CategoryViewModels
 {
     public class CreateViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "Kategori adı boş olamaz")]
         public string Name { get; set; }
     }
 }
