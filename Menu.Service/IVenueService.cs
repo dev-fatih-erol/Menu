@@ -6,6 +6,8 @@ namespace Menu.Service
 {
     public interface IVenueService
     {
+        Venue GetByManagerId(int managerId);
+
         Venue GetPaymentMethodById(int id);
 
         List<Venue> GetByCriteria(string name);

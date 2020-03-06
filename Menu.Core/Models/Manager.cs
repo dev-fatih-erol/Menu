@@ -14,5 +14,8 @@ namespace Menu.Core.Models
         public string Password { get; set; }
 
         public DateTime CreatedDate { get; set; }
+
+
+        public virtual Venue Venue { get; set; }
     }
 }

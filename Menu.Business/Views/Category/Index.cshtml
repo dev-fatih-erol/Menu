@@ -1,0 +1,11 @@
+﻿@model IEnumerable<Menu.Business.Models.CategoryViewModels.IndexViewModel>
+@{
+    ViewData["Title"] = "Kategoriler";
+}
+
+@foreach (var item in Model)
+{
+    @item.Id
+    @item.Name
+    @item.DisplayOrder
+}

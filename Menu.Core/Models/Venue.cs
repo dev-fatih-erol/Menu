@@ -55,5 +55,10 @@ namespace Menu.Core.Models
 
 
         public virtual List<VenueFeature> VenueFeature { get; set; }
+
+
+        public int ManagerId { get; set; }
+
+        public virtual Manager Manager { get; set; }
     }
 }

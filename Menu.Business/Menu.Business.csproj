@@ -14,6 +14,9 @@
     <Folder Include="Views\Home\" />
     <Folder Include="Views\Shared\" />
     <Folder Include="wwwroot\assets\" />
+    <Folder Include="Models\CategoryViewModels\" />
+    <Folder Include="Views\Category\" />
+    <Folder Include="Views\Dashboard\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Menu.Core\Menu.Core.csproj">

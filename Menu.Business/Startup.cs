@@ -4,9 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Menu.Data;
 using Menu.Service;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,7 +29,25 @@ namespace Menu.Business
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                options.DefaultRequestCulture = new RequestCulture("tr-TR", "tr-TR");
+            });
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+        .AddCookie(options =>
+        {
+            options.Cookie.Name = "business";
+            options.LoginPath = "/";
+            options.LogoutPath = "/";
+            options.AccessDeniedPath = "/";
+        });
+
             services.AddScoped<IManagerService, ManagerService>();
+
+            services.AddScoped<ICategoryService, CategoryService>();
+
+            services.AddScoped<IVenueService, VenueService>();
 
             services.AddDbContext<MenuContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
@@ -51,6 +71,10 @@ namespace Menu.Business
             app.UseHttpsRedirection();
 
             app.UseStaticFiles();
+
+            app.UseAuthentication();
+
+            app.UseRequestLocalization();
 
             app.UseRouting();
 

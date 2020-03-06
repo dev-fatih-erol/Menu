@@ -1,0 +1,22 @@
+﻿@model Menu.Business.Models.CategoryViewModels.CreateViewModel
+
+@{
+    ViewData["Title"] = "Kategori Ekle";
+}
+
+<form asp-action="Create" asp-controller="Category" method="post">
+    <div asp-validation-summary="ModelOnly"></div>
+    <div class="form-group">
+        <label asp-for="Name" class="font-weight-semibold">Kullanıcı Adı</label>
+        <div class="input-affix">
+            <i class="prefix-icon anticon anticon-user"></i>
+            <input asp-for="Name" type="text" class="form-control" autocomplete="off" placeholder="Kategori Adı" />
+        </div>
+        <span asp-validation-for="Name"></span>
+    </div>
+    <div class="form-group">
+        <div class="d-flex align-items-center justify-content-between">
+            <input type="submit" value="Kategori Ekle" class="btn btn-primary" />
+        </div>
+    </div>
+</form>

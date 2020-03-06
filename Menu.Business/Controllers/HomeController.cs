@@ -16,9 +16,14 @@ namespace Menu.Business.Controllers
     {
         private readonly IManagerService _managerService;
 
-        public HomeController(IManagerService managerService)
+        private readonly IVenueService _venueService;
+
+        public HomeController(IManagerService managerService,
+            IVenueService venueService)
         {
             _managerService = managerService;
+
+            _venueService = venueService;
         }
 
         [HttpGet]
@@ -44,9 +49,11 @@ namespace Menu.Business.Controllers
 
             if (manager != null)
             {
+                var venueId = _venueService.GetByManagerId(manager.Id).Id;
                 var claims = new List<Claim>
                     {
-                        new Claim(ClaimTypes.NameIdentifier, manager.Id.ToString())
+                        new Claim(ClaimTypes.NameIdentifier, manager.Id.ToString()),
+                        new Claim("VenueId", venueId.ToString())
                     };
 
                 var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

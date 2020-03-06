@@ -93,6 +93,13 @@ namespace Menu.Service
                            }).FirstOrDefault();
         }
 
+        public Venue GetByManagerId(int managerId)
+        {
+            return _context.Venues
+                           .Where(v => v.ManagerId == managerId)
+                           .FirstOrDefault();
+        }
+
         public Venue GetById(int id)
         {
             return _context.Venues
