@@ -37,6 +37,33 @@ namespace Menu.Business.Controllers
             return View(model);
         }
 
+        [HttpPost]
+        [Authorize]
+        [Route("Category/Order")]
+        public IActionResult Order(int[] orders, int[] ids)
+        {
+            for (int i = 0; i < ids.Length; i++)
+            {
+                var category = _categoryService.GetById(ids[i]);
+
+                if (category != null)
+                {
+                    var aa = ids[i];
+                    var bb = orders[i];
+                    category.DisplayOrder = orders[i];
+
+                    _categoryService.SaveChanges();
+
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+
+            return Ok();
+        }
+
         [HttpGet]
         [Authorize]
         [Route("Category/Create")]
