@@ -122,7 +122,7 @@ namespace Menu.Api.Controllers
                     Result = orderPayments.Select(orderPayment => new {
                         orderPayment.Id,
                         orderPayment.Tip,
-                        TLPoint = orderPayment.EarnedPoint * 0.001,
+                        TLPoint = orderPayment.UsedPoint * 0.001,
                         orderPayment.CreatedDate,
                         orderPayment.OrderTable.User.Name,
                         orderPayment.OrderTable.User.Surname,
@@ -134,7 +134,7 @@ namespace Menu.Api.Controllers
                         TotalPrice = string.Format("{0:N2}", Convert.ToInt32(orderPayment.OrderTable.Order.Where(o => o.OrderStatus != OrderStatus.Cancel &&
                                                                                                       o.OrderStatus != OrderStatus.Denied)
                                                      .Select(or => or.OrderDetail
-                                                     .Sum(or => or.Price * or.Quantity)).Sum() + orderPayment.Tip) - (orderPayment.EarnedPoint * 0.001))
+                                                     .Sum(or => or.Price * or.Quantity)).Sum() + orderPayment.Tip) - (orderPayment.UsedPoint * 0.001))
                     })
                 });
             }

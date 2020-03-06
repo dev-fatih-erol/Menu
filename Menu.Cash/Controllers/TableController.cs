@@ -225,6 +225,8 @@ namespace Menu.Cash.Controllers
 
                 var point = OrderCashStatus.NoPayment == (OrderCashStatus)cashStatus ? 0 : Convert.ToInt32(totalPrice) * 10;
 
+                user.Point -= orderPayment.UsedPoint;
+
                 user.Point += point;
 
                 _userService.SaveChanges();
