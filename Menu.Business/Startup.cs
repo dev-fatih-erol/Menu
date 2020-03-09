@@ -53,6 +53,8 @@ namespace Menu.Business
 
             services.AddScoped<ITableWaiterService, TableWaiterService>();
 
+            services.AddScoped<ITableService, TableService>();
+
             services.AddDbContext<MenuContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddControllersWithViews();

@@ -1,0 +1,97 @@
+﻿@model Menu.Business.Models.WaiterViewModels.CreateViewModel
+
+@{
+    ViewData["Title"] = "Garson Ekle";
+}
+
+<div class="main-content">
+    <div class="page-header no-gutters has-tab">
+        <h2 class="font-weight-normal">Garson Ekle</h2>
+
+    </div>
+    <div class="container">
+        <div class="tab-content m-t-15">
+            <div class="tab-pane fade show active">
+                <div class="card">
+                    <form asp-action="Create" asp-controller="Waiter" method="post">
+                        <div class="card-header">
+                            <div asp-validation-summary="ModelOnly"></div>
+                            <h4 class="card-title">Sorumlu Olduğu Masaları Seç</h4>
+                            <hr class="m-v-25">
+                            <div class="form-row">
+                                @for (int i = 0; i < Model.TableViewModels.Length; i++)
+                                {
+                                    <div class="form-group col-md-3">
+                                        <div class="checkbox">
+                                            <input type="checkbox" asp-for="@Model.TableViewModels[i].Selected" />
+                                            <label asp-for="@Model.TableViewModels[i].Selected">@Model.TableViewModels[i].Name</label>
+                                            <input type="hidden" asp-for="@Model.TableViewModels[i].Id" />
+                                            <input type="hidden" asp-for="@Model.TableViewModels[i].Name" />
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label class="font-weight-semibold" asp-for="Username">Kullanıcı Adı:</label>
+                                    <input type="text" class="form-control" asp-for="Username" placeholder="Kullanıcı Adı">
+                                    <span asp-validation-for="Username"></span>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label class="font-weight-semibold" asp-for="Password">Şifre:</label>
+                                    <input type="password" class="form-control" asp-for="Password" placeholder="Şifre">
+                                    <span asp-validation-for="Password"></span>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label class="font-weight-semibold" asp-for="Name">Adı:</label>
+                                    <input type="text" class="form-control" asp-for="Name" placeholder="Adı">
+                                    <span asp-validation-for="Name"></span>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label class="font-weight-semibold" asp-for="Surname">Soyadı:</label>
+                                    <input type="text" class="form-control" asp-for="Surname" placeholder="Soyadı">
+                                    <span asp-validation-for="Surname"></span>
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <div class="form-group col-md-3">
+                            <input type="submit" value="Garson Ekle" class="btn btn-primary" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Styles {
+    <style>
+
+
+        .field-validation-error {
+            color: #e80c4d;
+        }
+
+        .field-validation-valid {
+            display: none;
+        }
+
+        input.input-validation-error {
+            border: 1px solid #e80c4d;
+        }
+
+        .validation-summary-errors {
+            color: #e80c4d;
+            font-size: 1.1em;
+        }
+
+        .validation-summary-valid {
+            display: none;
+        }
+    </style>
+}

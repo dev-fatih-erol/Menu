@@ -29,15 +29,18 @@ namespace Menu.Business.Controllers
             {
                 var category = _categoryService.GetById(id);
 
-                if (category.VenueId == User.Identity.GetVenueId())
+                if (category != null)
                 {
-                    if (category != null)
+                    if (category.VenueId == User.Identity.GetVenueId())
                     {
-                        category.Name = model.Name;
+                        if (category != null)
+                        {
+                            category.Name = model.Name;
 
-                        _categoryService.SaveChanges();
+                            _categoryService.SaveChanges();
 
-                        return RedirectToAction("Index");
+                            return RedirectToAction("Index");
+                        }
                     }
                 }
 
