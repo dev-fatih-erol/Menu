@@ -45,7 +45,7 @@
                             <ul id="sortable" class="list-group">
                                 @foreach (var item in Model)
                                 {
-                                    <li id="@item.Id" data-order="@item.DisplayOrder" class="list-group-item"> @item.Name</li>
+                                    <li id="ids_@item.Id" class="list-group-item"> @item.Name</li>
                                 }
                             </ul>
                         </div>
@@ -58,32 +58,25 @@
 
 @section Styles {
     <style>
-   
+
     </style>
 }
 
 @section Scripts {
-   <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
-    <script>
-        let host = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port;
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+    <script>let host = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port;
         $(document).ready(function () {
             $("#sortable").sortable({
                 stop: function (event, ui) {
-                    alert($(this).sortable('serialize'));
+                    var ids = $(this).sortable('serialize').split("&ids[]=").join(",").substr(6);
+                    console.log(ids)
+                    $.post(host + "/category/order?ids=" + ids,
+                        function (data, status) {
+                            console.log(id + "-" + order);
+                        });
                 }
             });
             $("#sortable").disableSelection();
-        });//ready
+        });</script>
 
-
-          //$.post(host + "/category/order",
-                        //    {
-                        //        orders: orderList,
-                        //        ids: idList
-                        //    },
-                        //    function (data, status) {
-                        //        console.log(id + "-" + order);
-                        //    });
-    </script>
- 
 }

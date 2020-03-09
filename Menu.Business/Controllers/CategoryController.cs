@@ -40,17 +40,17 @@ namespace Menu.Business.Controllers
         [HttpPost]
         [Authorize]
         [Route("Category/Order")]
-        public IActionResult Order(int[] orders, int[] ids)
+        public IActionResult Order(string ids)
         {
-            for (int i = 0; i < ids.Length; i++)
+            int[] idsArray = ids.Split(',').Select(int.Parse).ToArray();
+
+            for (int i = 0; i < idsArray.Length; i++)
             {
-                var category = _categoryService.GetById(ids[i]);
+                var category = _categoryService.GetById(idsArray[i]);
 
                 if (category != null)
                 {
-                    var aa = ids[i];
-                    var bb = orders[i];
-                    category.DisplayOrder = orders[i];
+                    category.DisplayOrder = i + 1;
 
                     _categoryService.SaveChanges();
 
