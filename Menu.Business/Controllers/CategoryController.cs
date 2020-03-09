@@ -22,6 +22,56 @@ namespace Menu.Business.Controllers
             _categoryService = categoryService;
         }
 
+        [HttpPost]
+        [Authorize]
+        [Route("Category/Edit/{id:int}")]
+        public IActionResult Edit(int id, EditViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var category = _categoryService.GetById(id);
+
+                if (category.VenueId == User.Identity.GetVenueId())
+                {
+                    if (category != null)
+                    {
+                        category.Name = model.Name;
+
+                        _categoryService.SaveChanges();
+
+                        return RedirectToAction("Index");
+                    }
+                }
+
+                return NotFound();
+            }
+
+            return BadRequest();
+        }
+
+        [HttpGet]
+        [Authorize]
+        [Route("Category/Edit/{id:int}")]
+        public IActionResult Edit(int id)
+        {
+            var category = _categoryService.GetById(id);
+
+            if (category != null)
+            {
+                if (category.VenueId == User.Identity.GetVenueId())
+                {
+                    var model = new EditViewModel()
+                    {
+                        Name = category.Name
+                    };
+
+                    return View(model);
+                }
+            }
+
+            return NotFound();
+        }
+
         [HttpGet]
         [Authorize]
         [Route("Category")]

@@ -1,7 +1,7 @@
-﻿@model Menu.Business.Models.CategoryViewModels.CreateViewModel
+﻿@model Menu.Business.Models.CategoryViewModels.EditViewModel
 
 @{
-    ViewData["Title"] = "Kategori Ekle";
+    ViewData["Title"] = "Kategori Düzenle";
 }
 
 <div class="main-content">
@@ -9,7 +9,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
-                    <form asp-action="Create" asp-controller="Category" method="post">
+                    <form asp-action="Edit" asp-controller="Category" method="post">
                         <div asp-validation-summary="ModelOnly"></div>
                         <div class="form-group">
                             <label asp-for="Name" class="font-weight-semibold">Kategori Adı</label>
@@ -20,7 +20,7 @@
                         </div>
                         <div class="form-group">
                             <div class="d-flex align-items-center justify-content-between">
-                                <input type="submit" value="Kategori Ekle" class="btn btn-primary" />
+                                <input type="submit" value="Kategori Düzenle" class="btn btn-primary" />
                             </div>
                         </div>
                     </form>

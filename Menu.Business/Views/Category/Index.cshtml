@@ -45,7 +45,13 @@
                             <ul id="sortable" class="list-group">
                                 @foreach (var item in Model)
                                 {
-                                    <li id="ids_@item.Id" class="list-group-item"> @item.Name</li>
+                                <li id="ids_@item.Id" class="list-group-item">
+                                    @item.Name
+                                    <a style="float:right" class="btn btn-primary btn-sm m-r-5"
+                                       asp-controller="Category"
+                                       asp-action="Edit"
+                                       asp-route-id="@item.Id">Düzenle</a>
+                                </li>
                                 }
                             </ul>
                         </div>
