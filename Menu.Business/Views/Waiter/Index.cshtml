@@ -1,0 +1,109 @@
+﻿@model IEnumerable<Menu.Business.Models.WaiterViewModels.IndexViewModel>
+@{
+    ViewData["Title"] = "Garsonlar";
+}
+    <div class="main-content">
+        <div class="page-header no-gutters">
+            <div class="row align-items-md-center">
+                <div class="col-md-6">
+                    <div class="media m-v-10">
+                        <div class="avatar avatar-cyan avatar-icon avatar-square">
+                            <i class="anticon anticon-star"></i>
+                        </div>
+                        <div class="media-body m-l-15">
+                            <h6 class="mb-0">Tüm Garsonlar</h6>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <a href="#">
+
+                        <div class="text-md-right m-v-10">
+
+                            <div class="btn btn-primary">
+                                <i class="anticon anticon-plus"></i>
+                                <span class="m-l-5">Garson Ekle</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-11 mx-auto">
+                <!-- Card View -->
+                <div class="row">
+                    @foreach (var item in Model)
+                    {
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="m-t-20 text-center">
+                                        <div class="avatar avatar-image" style="height: 100px; width: 100px;">
+                                            <img src="https://cdn4.iconfinder.com/data/icons/people-40/48/waiter_male-512.png" alt="">
+                                        </div>
+                                        <h4 class="m-t-30">@item.Name @item.Surname</h4>
+                                        <b>Kullanıcı Adı: @item.Username</b>
+                                    </div>
+                                    <div class="text-center m-t-15">
+                                        <p style="color:red;">01.01.2020 10:30</p>
+                                        <p>Bu Tarihte Oluşturuldu.</p>
+                                    </div>
+                                    <div class="text-center m-t-30">
+                                        <a href="profile.html" class="btn btn-primary btn-tone">
+
+                                            <span class="m-l-5">Güncelle</span>
+                                        </a>
+                                        <button class="btn btn-primary btn-tone" data-toggle="modal" data-target=".bd-example-modal-lg-@item.Id">
+                                            <span class="m-l-5">Masaları</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal fade bd-example-modal-lg-@item.Id">
+                                        <div class="modal-dialog modal-lg">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title h4">@item.Name @item.Surname Sorumlu Olduğu Masalar</h5>
+                                                    <button type="button" class="close" data-dismiss="modal">
+                                                        <i class="anticon anticon-close"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="row">
+                                                        @foreach (var table in item.Tables)
+                                                        {
+                                                            <div class="col-md-3">
+                                                                <div class="card">
+                                                                    <div style="background:Green;" class="card-body">
+                                                                        <div class="d-flex justify-content-between align-items-center">
+                                                                            <div>
+                                                                                <h2 style="font-weight:700;color:white;" class="m-b-0">@table</h2>
+                                                                            </div>
+
+                                                                        </div>
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+    </div>
+@section Styles {
+
+}
+
+@section Scripts {
+
+}

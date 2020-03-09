@@ -17,6 +17,8 @@
     <Folder Include="Models\CategoryViewModels\" />
     <Folder Include="Views\Category\" />
     <Folder Include="Views\Dashboard\" />
+    <Folder Include="Models\WaiterViewModels\" />
+    <Folder Include="Views\Waiter\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Menu.Core\Menu.Core.csproj">
