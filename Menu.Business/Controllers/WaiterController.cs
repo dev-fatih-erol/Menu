@@ -17,15 +17,20 @@ namespace Menu.Business.Controllers
 
         private readonly ITableService _tableService;
 
+        private readonly IWaiterTokenService _waiterTokenService;
+
         public WaiterController(IWaiterService waiterService,
            ITableWaiterService tableWaiterService,
-           ITableService tableService)
+           ITableService tableService,
+           IWaiterTokenService waiterTokenService)
         {
             _waiterService = waiterService;
 
             _tableWaiterService = tableWaiterService;
 
             _tableService = tableService;
+
+            _waiterTokenService = waiterTokenService;
         }
 
         [HttpGet]
@@ -77,7 +82,7 @@ namespace Menu.Business.Controllers
                         {
                             TableId = table.Id,
                             WaiterId = newWaiter.Id,
-                            CreatedDate = DateTime.Now,
+                            CreatedDate = DateTime.Now
                         };
 
                         _tableWaiterService.Create(newTableWaiter);
@@ -85,6 +90,14 @@ namespace Menu.Business.Controllers
                         _tableWaiterService.SaveChanges();
                     }
                 }
+
+                _waiterTokenService.Create(new WaiterToken
+                {
+                    Token = "0",
+                    WaiterId = newWaiter.Id
+                });
+
+                _waiterTokenService.SaveChanges();
 
                 return RedirectToAction("Index");
             }

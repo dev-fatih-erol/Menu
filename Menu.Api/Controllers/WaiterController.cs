@@ -68,7 +68,8 @@ namespace Menu.Api.Controllers
                 {
                     title = "Çağrı var",
                     body = waiters.Select(x => x.Table.Name).FirstOrDefault() + " isimli masadan çağrı var",
-                    data = new { tableId }
+                    data = new { tableId },
+                    Type = "Call"
                 };
 
                 string json = Newtonsoft.Json.JsonConvert.SerializeObject(foo);
@@ -85,7 +86,12 @@ namespace Menu.Api.Controllers
 
                 await response.Content.ReadAsStringAsync();
 
-                return Ok(true);
+                return Ok(new
+                {
+                    Success = true,
+                    StatusCode = (int)HttpStatusCode.OK,
+                    Message = " Garson Çağırdınız , Birazdan Masanızda Olacaktır."
+                });
             }
 
             return Ok(false);
