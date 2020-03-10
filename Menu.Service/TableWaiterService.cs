@@ -54,6 +54,11 @@ namespace Menu.Service
                            .FirstOrDefault();
         }
 
+        public void Delete(TableWaiter tableWaiter)
+        {
+            _context.TableWaiters.Remove(tableWaiter);
+        }
+
         public void Create(TableWaiter tableWaiter)
         {
             _context.TableWaiters.Add(tableWaiter);

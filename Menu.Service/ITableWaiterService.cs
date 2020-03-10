@@ -5,6 +5,8 @@ namespace Menu.Service
 {
     public interface ITableWaiterService
     {
+        void Delete(TableWaiter tableWaiter);
+
         List<TableWaiter> GetByTableId(int tableId);
 
         List<TableWaiter> GetByWaiterId(int waiterId);

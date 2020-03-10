@@ -33,14 +33,11 @@ namespace Menu.Business.Controllers
                 {
                     if (category.VenueId == User.Identity.GetVenueId())
                     {
-                        if (category != null)
-                        {
-                            category.Name = model.Name;
+                        category.Name = model.Name;
 
-                            _categoryService.SaveChanges();
+                        _categoryService.SaveChanges();
 
-                            return RedirectToAction("Index");
-                        }
+                        return RedirectToAction("Index");
                     }
                 }
 
