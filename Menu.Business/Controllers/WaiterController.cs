@@ -35,6 +35,40 @@ namespace Menu.Business.Controllers
 
         [HttpGet]
         [Authorize]
+        [Route("Waiter/Edit/{id:int}")]
+        public IActionResult Edit(int id)
+        {
+            var waiter = _waiterService.GetById(id);
+
+            if (waiter != null)
+            {
+                var tables = _tableWaiterService.GetByWaiterId(id);
+
+                if (waiter.VenueId == User.Identity.GetVenueId())
+                {
+                    var model = new EditViewModel()
+                    {
+                        Name = waiter.Name,
+                        Surname = waiter.Surname,
+                        Username = waiter.Username,
+                        Password = waiter.Password,
+                        TableViewModels = tables.Select(x => new TableViewModel
+                        {
+                            Id = x.Table.Id,
+                            Name = x.Table.Name,
+                            Selected = true
+                        }).ToArray()
+                    };
+
+                    return View(model);
+                }
+            }
+
+            return NotFound();
+        }
+
+        [HttpGet]
+        [Authorize]
         [Route("Waiter/Create")]
         public IActionResult Create()
         {

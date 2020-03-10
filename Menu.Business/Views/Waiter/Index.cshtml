@@ -48,7 +48,9 @@
                                         <p>Bu Tarihte Oluşturuldu.</p>
                                     </div>
                                     <div class="text-center m-t-30">
-                                        <a href="profile.html" class="btn btn-primary btn-tone">
+                                        <a asp-controller="Waiter"
+                                       asp-action="Edit"
+                                       asp-route-id="@item.Id" class="btn btn-primary btn-tone">
 
                                             <span class="m-l-5">Güncelle</span>
                                         </a>
