@@ -55,6 +55,8 @@ namespace Menu.Business
 
             services.AddScoped<ITableService, TableService>();
 
+            services.AddScoped<IKitchenService, KitchenService>();
+
             services.AddScoped<IWaiterTokenService, WaiterTokenService>();
 
             services.AddDbContext<MenuContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
