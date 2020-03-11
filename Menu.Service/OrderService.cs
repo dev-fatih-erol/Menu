@@ -15,6 +15,19 @@ namespace Menu.Service
             _context = context;
         }
 
+        public Order GetByTestId(int id)
+        {
+            return _context.Orders
+                           .Where(o => o.Id == id).Select(o => new Order
+                           {
+                               OrderTable = new OrderTable
+                               {
+                                   IsClosed = o.OrderTable.IsClosed,
+                               }
+                           })
+                           .FirstOrDefault();
+        }
+
         public List<Order> GetByVenueId(int venueId, OrderStatus orderStatus)
         {
             return _context.Orders

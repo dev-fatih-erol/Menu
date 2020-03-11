@@ -1,10 +1,12 @@
-﻿using System.Dynamic;
+﻿using System;
+using System.Dynamic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Menu.Core.Enums;
+using Menu.Core.Models;
 using Menu.Kitchen.Extensions;
 using Menu.Service;
 using Microsoft.AspNetCore.Authorization;
@@ -24,13 +26,19 @@ namespace Menu.Kitchen.Controllers
 
         private readonly IUserTokenService _userTokenService;
 
+        private readonly INotificationWaiterSubjectService _notificationWaiterSubjectService;
+
+        private readonly INotificationWaiterService _notificationWaiterService;
+
         private readonly string _key = "key=AAAA7Tr-w-A:APA91bFkdAPrjKgsrKdzqFpR1EXzmie3oUk6KaVgaPmdCyNdOsik_zyMJZHo2MgAAXYShzwJjj1dnlPpn-DvhW5JnYyzwDyahdVV9FyoHYV4K6XUggKJTm0uXRLxVhodorwKEzThBkqc";
 
         public DashboardController(IOrderService orderService,
             IKitchenService kitchenService,
             ITableWaiterService tableWaiterService,
             ITableService tableService,
-            IUserTokenService userTokenService)
+            IUserTokenService userTokenService,
+            INotificationWaiterSubjectService notificationWaiterSubjectService,
+            INotificationWaiterService notificationWaiterService)
         {
             _orderService = orderService;
 
@@ -41,6 +49,10 @@ namespace Menu.Kitchen.Controllers
             _tableService = tableService;
 
             _userTokenService = userTokenService;
+
+            _notificationWaiterSubjectService = notificationWaiterSubjectService;
+
+            _notificationWaiterService = notificationWaiterService;
         }
 
         [HttpPost]
@@ -48,6 +60,8 @@ namespace Menu.Kitchen.Controllers
         [Route("Order/{id:int}")]
         public async Task<IActionResult> UpdateOrderStatus(int id, OrderStatus orderStatus, int tableId, int orderTableId, int userId)
         {
+            var isClosed = _orderService.GetByTestId(id);
+
             var order = _orderService.GetById(id);
 
             if (order != null)
@@ -64,11 +78,15 @@ namespace Menu.Kitchen.Controllers
 
                         dynamic foo = new ExpandoObject();
                         foo.registration_ids = tokens;
+                        foo.data = new
+                        {
+                            TableId = table.Id,
+                            Type = "KitchenOrderReady"
+                        };
                         foo.notification = new
                         {
                             title = "Sipariş Durumu",
-                            body = table.Name + " isimli masanın siparişi hazır, Mutfaktan gelip alabilirsiniz.",
-                            data = new { table.Id }
+                            body = table.Name + " isimli masanın siparişi hazır, Mutfaktan gelip alabilirsiniz."
                         };
 
                         string json = Newtonsoft.Json.JsonConvert.SerializeObject(foo);
@@ -84,6 +102,29 @@ namespace Menu.Kitchen.Controllers
                         var response = await httpClient.PostAsync("https://fcm.googleapis.com/fcm/send", stringContent);
 
                         await response.Content.ReadAsStringAsync();
+
+
+                        var newNotifition = new NotificationWaiterSubject
+                        {
+                            Type = "OrderReady",
+                            Status = true,
+                            CreatedDate = DateTime.Now,
+                            TableId = table.Id,
+                            Title = "Sipariş Hazır",
+                            Body = table.Name + " isimli masanın siparişi hazır, Mutfaktan gelip alabilirsiniz.",
+                        };
+                        _notificationWaiterSubjectService.Create(newNotifition);
+                        _notificationWaiterSubjectService.SaveChanges();
+                        foreach (var item in waiters)
+                        {
+                            var Allwaiternotification = new NotificationWaiter
+                            {
+                                NotificationWaiterSubject = newNotifition,
+                                WaiterId = item.WaiterId
+                            };
+                            _notificationWaiterService.Create(Allwaiternotification);
+                        }
+                        _notificationWaiterService.SaveChanges();
                     }
                 }
                 else if (orderStatus == OrderStatus.Closed)
@@ -96,11 +137,17 @@ namespace Menu.Kitchen.Controllers
                         test[0] = userToken1.Token;
                         dynamic foo = new ExpandoObject();
                         foo.registration_ids = test;
+                        foo.data = new
+                        {
+                            order.OrderTableId,
+                            isClosed.OrderTable.IsClosed,
+                            Type = "KitcenOrderStatus"
+
+                        };
                         foo.notification = new
                         {
                             title = "Sipariş Durumu",
-                            body = "Siparişiniz geliyor, Afiyet olsun.",
-                            data = new { orderTableId}
+                            body = "Siparişiniz geliyor, Afiyet olsun."
                         };
 
                         string json = Newtonsoft.Json.JsonConvert.SerializeObject(foo);
