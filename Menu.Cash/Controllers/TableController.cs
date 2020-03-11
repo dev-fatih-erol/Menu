@@ -168,11 +168,17 @@ namespace Menu.Cash.Controllers
                         test[0] = userToken1.Token;
                         dynamic foo = new ExpandoObject();
                         foo.registration_ids = test;
+                        foo.data = new
+                        {
+                            OrderTableId = orderTable.Id,
+                            orderTable.IsClosed,
+                            Type = "Payment"
+
+                        };
                         foo.notification = new
                         {
                             title = "Hesap Bilgisi",
-                            body = "Hesabınız " + orderCash.ToOrderCashStatus() + ". Bu mekanı değerlendirebilirsiniz.",
-                            data = new { orderTable.Id }
+                            body = "Hesabınız " + orderCash.ToOrderCashStatus() + ". Bu mekanı değerlendirebilirsiniz."
                         };
 
                         string json = Newtonsoft.Json.JsonConvert.SerializeObject(foo);
@@ -189,6 +195,7 @@ namespace Menu.Cash.Controllers
 
                         await response.Content.ReadAsStringAsync();
                     }
+
                     return Ok(new
                     {
                         Success = true,
@@ -251,11 +258,16 @@ namespace Menu.Cash.Controllers
                     test[0] = userToken.Token;
                     dynamic foo = new ExpandoObject();
                     foo.registration_ids = test;
+                    foo.data = new
+                    {
+                        OrderTableId = orderTable.Id,
+                        orderTable.IsClosed,
+                        Type = "Payment"
+                    };
                     foo.notification = new
                     {
                         title = "Hesap Bilgisi",
-                        body = "Hesabınız " + orderCash.ToOrderCashStatus() + ". Bu mekanı değerlendirebilirsiniz.",
-                        data = new { orderTable.Id }
+                        body = "Hesabınız " + orderCash.ToOrderCashStatus() + ". Bu mekanı değerlendirebilirsiniz."
                     };
 
                     string json = Newtonsoft.Json.JsonConvert.SerializeObject(foo);

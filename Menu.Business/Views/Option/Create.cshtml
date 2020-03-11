@@ -1,0 +1,100 @@
+﻿@model Menu.Business.Models.OptionViewModels.CreateViewModel
+
+@{
+    ViewData["Title"] = "Seçenek Ekle";
+}
+
+<div class="main-content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <form asp-action="Create" asp-controller="Option" method="post">
+                        <table border="0" cellspacing="2">
+                            <tr>
+                                <td style="width:200px;" align="right">
+                                    Name
+                                    <input type="text" id="current Name" value="" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    @for (int i = 0; i < Model.OptionItems.Count(); i++)
+                                    {
+                                        <input type="text" asp-for="@Model.OptionItems[i].Name" />
+
+                                        <input type="text" asp-for="@Model.OptionItems[i].Price" />
+                                        <br />
+                                        <br />
+                                    }
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="button" id="add" value="Add" />
+                                    <input type="button" id="del" value="Del" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="height:3px" colspan="2"></td>
+                            </tr>
+                            <tr style="background-color: #383838">
+                                <td></td>
+                            </tr>
+                            <tr></tr>
+                            <tr>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <input type="submit" value="Save" />
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Styles {
+    <style>
+
+
+        .field-validation-error {
+            color: #e80c4d;
+        }
+
+        .field-validation-valid {
+            display: none;
+        }
+
+        input.input-validation-error {
+            border: 1px solid #e80c4d;
+        }
+
+        .validation-summary-errors {
+            color: #e80c4d;
+            font-size: 1.1em;
+        }
+
+        .validation-summary-valid {
+            display: none;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#add').click(function () {
+                var table = $(this).closest('table');
+                if (table.find('input:text').length < 20) {
+                    table.append('<tr><td style="width:200px;" align="right">Name <td> <input type="text" id="current Name" value="" /> </td></tr>');
+                }
+            });
+            $('#del').click(function () {
+                var table = $(this).closest('table');
+                if (table.find('input:text').length > 1) {
+                    table.find('input:text').last().closest('tr').remove();
+                }
+            });
+        });
+    </script>
+}

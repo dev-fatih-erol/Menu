@@ -74,6 +74,10 @@ namespace Menu.Data
 
         public DbSet<DayReports> DayReportss { get; set; }
 
+        public DbSet<NotificationWaiterSubject> NotificationWaiterSubjects { get; set; }
+
+        public DbSet<NotificationWaiter> NotificationWaiters { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<AppAbout>()
@@ -168,6 +172,12 @@ namespace Menu.Data
 
             modelBuilder.Entity<DayReports>()
                 .ToTable("DayReports");
+
+            modelBuilder.Entity<NotificationWaiterSubject>()
+                .ToTable("NotificationWaiterSubject");
+
+            modelBuilder.Entity<NotificationWaiter>()
+                .ToTable("NotificationWaiter");
 
             modelBuilder.Entity<Venue>()
                 .Property(v => v.VenueType)

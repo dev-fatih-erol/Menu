@@ -22,6 +22,8 @@
     <Folder Include="Models\ProductViewModels\" />
     <Folder Include="Views\Product\" />
     <Folder Include="wwwroot\images\" />
+    <Folder Include="Views\Option\" />
+    <Folder Include="Models\OptionViewModels\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Menu.Core\Menu.Core.csproj">

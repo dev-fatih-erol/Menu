@@ -53,6 +53,10 @@ namespace Menu.Api.Controllers
 
         private readonly IVenuePaymentMethodService _venuePaymentMethodService;
 
+        private readonly INotificationWaiterSubjectService _notificationWaiterSubjectService;
+
+        private readonly INotificationWaiterService _notificationWaiterService;
+
         private readonly string _key = "key=AAAA7Tr-w-A:APA91bFkdAPrjKgsrKdzqFpR1EXzmie3oUk6KaVgaPmdCyNdOsik_zyMJZHo2MgAAXYShzwJjj1dnlPpn-DvhW5JnYyzwDyahdVV9FyoHYV4K6XUggKJTm0uXRLxVhodorwKEzThBkqc";
 
         public OrderController(ILogger<OrderController> logger,
@@ -70,7 +74,9 @@ namespace Menu.Api.Controllers
             ITableWaiterService tableWaiterService,
             IOrderWaiterService orderWaiterService,
             IVenuePaymentMethodService venuePaymentMethodService,
-            ICashService cashService)
+            ICashService cashService,
+            INotificationWaiterSubjectService notificationWaiterSubjectService,
+            INotificationWaiterService notificationWaiterService)
         {
             _logger = logger;
 
@@ -103,6 +109,10 @@ namespace Menu.Api.Controllers
             _venuePaymentMethodService = venuePaymentMethodService;
 
             _cashService = cashService;
+
+            _notificationWaiterSubjectService = notificationWaiterSubjectService;
+
+            _notificationWaiterService = notificationWaiterService;
         }
 
         // Get waiter/table/5/order/checkout
@@ -505,11 +515,16 @@ namespace Menu.Api.Controllers
                 {
                     dynamic foo = new ExpandoObject();
                     foo.registration_ids = tokens;
+                    foo.data = new
+                    {
+                        orderTable.TableId,
+                        Type = "Payment"
+
+                    };
                     foo.notification = new
                     {
                         title = "Hesap İsteği",
                         body = waiters.Select(x => x.Table.Name).FirstOrDefault() + " isimli masa " + venuePaymentMethod.PaymentMethod.Text + " ile hesap istemiştir",
-                        data = new { tableId = orderTable.TableId }
                     };
 
                     string json = Newtonsoft.Json.JsonConvert.SerializeObject(foo);
@@ -525,6 +540,29 @@ namespace Menu.Api.Controllers
                     var response = await httpClient.PostAsync("https://fcm.googleapis.com/fcm/send", stringContent);
 
                     await response.Content.ReadAsStringAsync();
+
+
+                    var newNotifition = new NotificationWaiterSubject
+                    {
+                        Type = "Payment",
+                        Status = true,
+                        CreatedDate = DateTime.Now,
+                        TableId = orderTable.TableId,
+                        Title = "Hesap İsteği",
+                        Body = waiters.Select(x => x.Table.Name).FirstOrDefault() + " isimli masa " + venuePaymentMethod.PaymentMethod.Text + " ile hesap istemiştir",
+                    };
+                    _notificationWaiterSubjectService.Create(newNotifition);
+                    _notificationWaiterSubjectService.SaveChanges();
+                    foreach (var item in waiters)
+                    {
+                        var Allwaiternotification = new NotificationWaiter
+                        {
+                            NotificationWaiterSubject = newNotifition,
+                            WaiterId = item.WaiterId
+                        };
+                        _notificationWaiterService.Create(Allwaiternotification);
+                    }
+                    _notificationWaiterService.SaveChanges();
                 }
 
                 return Ok(new
@@ -1121,11 +1159,16 @@ namespace Menu.Api.Controllers
                     {
                         dynamic foo = new ExpandoObject();
                         foo.registration_ids = tokens1;
+                        foo.data = new
+                        {
+                            TableId = tableId,
+                            Type = "Order"
+
+                        };
                         foo.notification = new
                         {
                             title = "Sipariş var",
-                            body = table.Name + " isimli masadan sipariş gelmiştir",
-                            data = new { tableId }
+                            body = table.Name + " isimli masadan sipariş gelmiştir"
                         };
 
                         string json = Newtonsoft.Json.JsonConvert.SerializeObject(foo);
@@ -1141,6 +1184,28 @@ namespace Menu.Api.Controllers
                         var response = await httpClient.PostAsync("https://fcm.googleapis.com/fcm/send", stringContent);
 
                         await response.Content.ReadAsStringAsync();
+
+                        var newNotifition = new NotificationWaiterSubject
+                        {
+                            Type = "Order",
+                            Status = true,
+                            CreatedDate = DateTime.Now,
+                            TableId = tableId,
+                            Title = "Sipariş var",
+                            Body = table.Name + " isimli masadan sipariş gelmiştir",
+                        };
+                        _notificationWaiterSubjectService.Create(newNotifition);
+                        _notificationWaiterSubjectService.SaveChanges();
+                        foreach (var item in waiters1)
+                        {
+                            var Allwaiternotification = new NotificationWaiter
+                            {
+                                NotificationWaiterSubject = newNotifition,
+                                WaiterId = item.WaiterId
+                            };
+                            _notificationWaiterService.Create(Allwaiternotification);
+                        }
+                        _notificationWaiterService.SaveChanges();
                     }
 
                     return Ok(new
@@ -1262,11 +1327,16 @@ namespace Menu.Api.Controllers
                 {
                     dynamic foo = new ExpandoObject();
                     foo.registration_ids = tokens;
+                    foo.data = new
+                    {
+                        TableId = tableId,
+                        Type = "Order"
+
+                    };
                     foo.notification = new
                     {
                         title = "Sipariş var",
-                        body = table.Name + " isimli masadan sipariş gelmiştir",
-                        data = new { tableId }
+                        body = table.Name + " isimli masadan sipariş gelmiştir"
                     };
 
                     string json = Newtonsoft.Json.JsonConvert.SerializeObject(foo);
@@ -1282,6 +1352,28 @@ namespace Menu.Api.Controllers
                     var response = await httpClient.PostAsync("https://fcm.googleapis.com/fcm/send", stringContent);
 
                     await response.Content.ReadAsStringAsync();
+
+                    var newNotifition = new NotificationWaiterSubject
+                    {
+                        Type = "Order",
+                        Status = true,
+                        CreatedDate = DateTime.Now,
+                        TableId = tableId,
+                        Title = "Sipariş var",
+                        Body = table.Name + " isimli masadan sipariş gelmiştir",
+                    };
+                    _notificationWaiterSubjectService.Create(newNotifition);
+                    _notificationWaiterSubjectService.SaveChanges();
+                    foreach (var item in waiters)
+                    {
+                        var Allwaiternotification = new NotificationWaiter
+                        {
+                            NotificationWaiterSubject = newNotifition,
+                            WaiterId = item.WaiterId
+                        };
+                        _notificationWaiterService.Create(Allwaiternotification);
+                    }
+                    _notificationWaiterService.SaveChanges();
                 }
 
                 return Ok(new

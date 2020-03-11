@@ -61,6 +61,10 @@ namespace Menu.Business
 
             services.AddScoped<IProductService, ProductService>();
 
+            services.AddScoped<IOptionService, OptionService>();
+
+            services.AddScoped<IOptionItemService, OptionItemService>();
+
             services.AddDbContext<MenuContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddControllersWithViews();

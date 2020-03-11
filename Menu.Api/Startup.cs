@@ -112,6 +112,10 @@ namespace Menu.Api
 
             services.AddScoped<ICashService, CashService>();
 
+            services.AddScoped<INotificationWaiterSubjectService, NotificationWaiterSubjectService>();
+
+            services.AddScoped<INotificationWaiterService, NotificationWaiterService>();
+
             services.AddTransient<ISmsSender, SmsSender>();
 
             services.AddSingleton(Configuration);
