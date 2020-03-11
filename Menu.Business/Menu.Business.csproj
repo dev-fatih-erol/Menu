@@ -19,6 +19,9 @@
     <Folder Include="Views\Dashboard\" />
     <Folder Include="Models\WaiterViewModels\" />
     <Folder Include="Views\Waiter\" />
+    <Folder Include="Models\ProductViewModels\" />
+    <Folder Include="Views\Product\" />
+    <Folder Include="wwwroot\images\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Menu.Core\Menu.Core.csproj">

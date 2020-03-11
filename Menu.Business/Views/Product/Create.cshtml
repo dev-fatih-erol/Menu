@@ -1,0 +1,386 @@
+﻿@model Menu.Business.Models.ProductViewModels.CreateViewModel
+
+@{
+    ViewData["Title"] = "Ürün Ekle";
+}
+
+<div class="main-content">
+    <form asp-action="Create" asp-controller="Product" method="post" enctype="multipart/form-data">
+        <div class="page-header no-gutters has-tab">
+            <div class="d-md-flex m-b-15 align-items-center justify-content-between">
+                <div class="media align-items-center m-b-15">
+                    <div class="avatar avatar-image rounded" style="height: 70px; width: 70px">
+                        <img src="assets/images/others/thumb-16.jpg" alt="">
+                    </div>
+                    <div class="m-l-15">
+                        <h4 class="m-b-0">Ürün Oluştur</h4>
+                        <p class="text-muted m-b-0">Code: #5325</p>
+                    </div>
+                </div>
+                <div class="m-b-15">
+                    <input class="btn btn-primary" type="submit" value="Kaydet">
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="tab-content m-t-15">
+                <div class="tab-pane fade show active">
+                    <div class="row">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">
+                                        Ürün Fotoğrafı <span>
+                                            <input type="file" id="customFile" asp-for="Photo" hidden>
+                                        </span>
+                                        <label style="float:right; font-size:25px;" for="customFile">
+                                            <i class="fas fa-plus-square"></i>
+                                        </label>
+                                    </h4>
+                                    <div class="d-flex align-items-center position-relative m-v-50" style="height:auto; background:darkgray;">
+                                        <button style="display:none; position: absolute; top: 10px; left: 10px;" id="reset-photo" class="btn btn-icon btn-default">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                        <img id="photo-preview" style="width:100%; height:auto;" src="http://placehold.it/240x240" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="card-header">
+                                                <h4 class="card-title">Ürün Detayları</h4>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                        <span style="background:#fbfbfb;color:#ff00b1; width:120px; font-weight:500;" class="input-group-text" id="inputGroup-sizing-default">Ürün Kodu</span>
+                                                    </div>
+                                                    <input asp-for="Code" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" readonly />
+                                                </div>
+                                                <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                        <span style="background:#fbfbfb;color:#ff00b1; width:120px; font-weight:500;" class="input-group-text" id="inputGroup-sizing-default">Ürün Kategorisi</span>
+                                                    </div>
+                                                    <select asp-for="Category" asp-items="@Model.Categories" class="form-control">
+                                                        <option value="">Lütfen Seçiniz</option>
+                                                    </select>
+                                                    <div style="width:100%">
+                                                        <span asp-validation-for="Category"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                        <span style="background:#fbfbfb;color:#ff00b1; width:120px;font-weight:500;" class="input-group-text" id="inputGroup-sizing-default">Ürün Adı</span>
+                                                    </div>
+                                                    <input asp-for="Name" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" />
+                                                    <div style="width:100%">
+                                                        <span asp-validation-for="Name"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                        <span style="background:#fbfbfb;color:#ff00b1; width:120px; font-weight:500;" class="input-group-text">Ürün Fiyatı </span>
+                                                    </div>
+                                                    <input type="text" asp-for="Price" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" placeholder="0,00" value="0,00">
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text">₺</span>
+                                                    </div>
+                                                    <div style="width:100%">
+                                                        <span asp-validation-for="Price"></span>
+                                                    </div>
+                                                </div>
+                                                <h5 class="card-title">Ürün Gösterim Saatleri</h5>
+                                                <div class="input-group mb-3">
+                                                    <div class="radio">
+                                                        <input id="radio1" value="0" name="Radio" type="radio" checked>
+                                                        <label for="radio1">Her Zaman</label>
+                                                    </div>
+                                                    <div class="radio">
+                                                        <input id="radio2" value="1" name="Radio" type="radio">
+                                                        <label for="radio2">Belirli Saatler</label>
+                                                    </div>
+                                                </div>
+                                                <div style="padding-left:0px;padding-right:0px;" class="col-md-12">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="input-group mb-3">
+                                                                <select asp-for="OpeningTime" id="inputState" class="form-control">
+                                                                    <option value="06:00"> 06:00 </option>
+                                                                    <option value="07:00"> 07:00  </option>
+                                                                    <option value="08:00"> 08:00  </option>
+                                                                    <option value="09:00"> 09:00  </option>
+                                                                    <option value="10:00"> 10:00  </option>
+                                                                    <option value="11:00"> 11:00  </option>
+                                                                    <option value="12:00"> 12:00  </option>
+                                                                    <option value="13:00"> 13:00  </option>
+                                                                    <option value="14:00"> 14:00  </option>
+                                                                    <option value="15:00"> 15:00  </option>
+                                                                    <option value="16:00"> 16:00  </option>
+                                                                    <option value="17:00"> 17:00  </option>
+                                                                    <option value="18:00"> 18:00  </option>
+                                                                    <option value="19:00"> 19:00  </option>
+                                                                    <option value="20:00"> 20:00  </option>
+                                                                    <option value="21:00"> 21:00  </option>
+                                                                    <option value="22:00"> 22:00  </option>
+                                                                    <option value="23:00"> 23:00  </option>
+                                                                    <option value="24:00"> 00:00  </option>
+                                                                    <option value="01:00"> 01:00  </option>
+                                                                    <option value="02:00"> 02:00  </option>
+                                                                    <option value="03:00"> 03:00  </option>
+                                                                    <option value="04:00"> 04:00  </option>
+                                                                    <option value="05:00"> 05:00  </option>
+                                                                </select>
+                                                                <div class="input-group-append">
+                                                                    <span class="input-group-text"><i class="fas fa-clock"></i></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="input-group mb-3">
+                                                                <select asp-for="ClosingTime" id="inputState" class="form-control">
+                                                                    <option value="06:00"> 06:00 </option>
+                                                                    <option value="07:00"> 07:00  </option>
+                                                                    <option value="08:00"> 08:00  </option>
+                                                                    <option value="09:00"> 09:00  </option>
+                                                                    <option value="10:00"> 10:00  </option>
+                                                                    <option value="11:00"> 11:00  </option>
+                                                                    <option value="12:00"> 12:00  </option>
+                                                                    <option value="13:00"> 13:00  </option>
+                                                                    <option value="14:00"> 14:00  </option>
+                                                                    <option value="15:00"> 15:00  </option>
+                                                                    <option value="16:00"> 16:00  </option>
+                                                                    <option value="17:00"> 17:00  </option>
+                                                                    <option value="18:00"> 18:00  </option>
+                                                                    <option value="19:00"> 19:00  </option>
+                                                                    <option value="20:00"> 20:00  </option>
+                                                                    <option value="21:00"> 21:00  </option>
+                                                                    <option value="22:00"> 22:00  </option>
+                                                                    <option value="23:00"> 23:00  </option>
+                                                                    <option value="24:00"> 00:00  </option>
+                                                                    <option value="01:00"> 01:00  </option>
+                                                                    <option value="02:00"> 02:00  </option>
+                                                                    <option value="03:00"> 03:00  </option>
+                                                                    <option value="04:00"> 04:00  </option>
+                                                                    <option value="05:00"> 05:00  </option>
+                                                                </select>
+                                                                <div class="input-group-append">
+                                                                    <span class="input-group-text"><i class="fas fa-clock"></i></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="card-header">
+                                                <h4 class="card-title">Ürün Açıklaması</h4>
+                                            </div>
+                                            <div class="card-body">
+                                                <textarea asp-for="Description" style="border:1px solid rgb(224, 224, 224); width:100% !important;" id="txtArea" rows="15" cols="50"></textarea>
+                                                <p>Eğer ürünün bir özelliği var ise kısa ve öz bir şekilde ürünün içeriğinden ve özelliklerinden bahsedebilirsiniz. Unutmayın ; Müşterileriniz bu özelliklere göre sipariş verecektir..</p>
+                                                <div style="width:100%">
+                                                    <span asp-validation-for="Description"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h5>Ana Özellik Ekle</h5>
+                                    </div>
+                                    <div class="m-t-30">
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Ana Özellik</th>
+
+                                                        <th scope="col">Seçim ?</th>
+
+                                                        <th scope="col">İşlem</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td> <input type="text" class="form-control" aria-label="Sizing example input" placeholder="Başlığı Yazın" aria-describedby="inputGroup-sizing-sm"></td>
+                                                        <th>
+                                                            <div class="radio">
+                                                                <input id="radio3" name="radioDemo" type="radio" checked="">
+                                                                <label for="radio3">Tekli</label>
+                                                            </div>
+                                                            <div class="radio">
+                                                                <input id="radio4" name="radioDemo" type="radio">
+                                                                <label for="radio4">Seçmeli</label>
+                                                            </div>
+                                                        </th>
+                                                        <td class="text-right">
+                                                            <button class="btn btn-icon btn-hover btn-sm btn-rounded pull-right">
+                                                                <i class="anticon anticon-delete"></i>
+                                                            </button>
+                                                            <button class="btn btn-icon btn-hover btn-sm btn-rounded">
+                                                                <i class="far fa-save"></i>
+                                                            </button>
+                                                            <button class="btn btn-icon btn-hover btn-sm btn-rounded">
+                                                                <i class="fas fa-plus"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h5>Alt Özellik Ekle</h5>
+
+                                    </div>
+                                    <div class="m-t-30">
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+
+                                                        <th scope="col">Ana Özellik</th>
+                                                        <th scope="col">Özellik Adı</th>
+                                                        <th scope="col">Özellik Fiyatı</th>
+                                                        <th scope="col">İşlem</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+
+                                                        <th>
+                                                            <select id="inputState" class="form-control">
+                                                                <option selected>Seçiniz</option>
+                                                                <option>...</option>
+                                                            </select>
+                                                        </th>
+                                                        <td> <input type="text" class="form-control" aria-label="Sizing example input" placeholder="Adını Yazın" aria-describedby="inputGroup-sizing-sm"></td>
+                                                        <td>
+                                                            <div class="input-group mb-3">
+
+                                                                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" placeholder="0,00" value="0,00">
+                                                                <div class="input-group-append">
+                                                                    <span class="input-group-text">₺</span>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+
+                                                        <td class="text-right">
+                                                            <button class="btn btn-icon btn-hover btn-sm btn-rounded pull-right">
+                                                                <i class="anticon anticon-delete"></i>
+                                                            </button>
+                                                            <button class="btn btn-icon btn-hover btn-sm btn-rounded">
+                                                                <i class="far fa-save"></i>
+                                                            </button>
+                                                            <button class="btn btn-icon btn-hover btn-sm btn-rounded">
+                                                                <i class="fas fa-plus"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Styles {
+    <style>
+
+
+
+
+
+
+        .form-control:not([disabled]):focus {
+            box-shadow: 0 0 0 1px rgb(179, 176, 176);
+        }
+
+        .form-control:not([disabled]):hover, .form-control:not([disabled]):focus {
+            border-color: #ffffff;
+        }
+
+        .field-validation-error {
+            color: #e80c4d;
+        }
+
+        .field-validation-valid {
+            display: none;
+        }
+
+        input.input-validation-error {
+            border: 1px solid #e80c4d;
+        }
+
+        .validation-summary-errors {
+            color: #e80c4d;
+            font-size: 1.1em;
+        }
+
+        .validation-summary-valid {
+            display: none;
+        }
+    </style>
+}
+
+@section Scripts{
+
+    <script>$(function () {
+            $(document).on("change", "#customFile", function () {
+                readURL(this);
+            });
+
+            $(document).on("click", "#reset-photo", function () {
+                resetURL();
+            });
+        });
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var image = $('#photo-preview');
+                var reset = $('#reset-photo');
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    image.attr('src', e.target.result);
+                    reset.css({ display: 'block' });
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        function resetURL() {
+            var input = document.getElementById("customFile");
+            var image = $('#photo-preview');
+            var reset = $('#reset-photo');
+            if (input.files && input.files[0]) {
+                input.value = '';
+                image.attr('src', "http://placehold.it/240x240");
+                reset.css({ display: 'none' });
+            }
+        }</script>
+}
