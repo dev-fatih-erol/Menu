@@ -1,0 +1,172 @@
+﻿@model IEnumerable<Menu.Business.Models.TableViewModels.IndexViewModel>
+@{
+    ViewData["Title"] = "Masa";
+}
+
+<div class="main-content">
+    <div class="page-header no-gutters">
+        <div class="row align-items-md-center">
+            <div class="col-md-6">
+                <div class="media m-v-10">
+                    <div class="avatar avatar-cyan avatar-icon avatar-square">
+                        <i class="anticon anticon-star"></i>
+                    </div>
+                    <div class="media-body m-l-15">
+                        <h6 class="mb-0">Tüm Masalar</h6>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <a href="/Table/Create">
+
+                    <div class="text-md-right m-v-10">
+
+                        <div class="btn btn-primary">
+                            <i class="anticon anticon-plus"></i>
+                            <span class="m-l-5">Masa Ekle</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-11 mx-auto">
+
+            <div class=" row">
+
+                @foreach (var item in Model)
+                {
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="m-t-20 text-center">
+
+                                    <h4 class="m-t-30">@item.Name</h4>
+
+                                </div>
+                                <div class="text-center m-t-30">
+                                    <a asp-controller="Table"
+                                       asp-action="Edit"
+                                       asp-route-id="@item.Id" class="btn btn-primary btn-tone">
+
+                                        <span class="m-l-5">Güncelle</span>
+                                    </a>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                }
+
+
+
+
+            </div>
+
+        </div>
+    </div>
+    <hr class="m-v-25">
+    <div class="page-header no-gutters">
+        <div class="row align-items-md-center">
+            <div class="col-md-6">
+                <div class="media m-v-10">
+                    <div class="avatar avatar-cyan avatar-icon avatar-square">
+                        <i class="anticon anticon-star"></i>
+                    </div>
+                    <div class="media-body m-l-15">
+                        <h6 class="mb-0">Tüm QR Kodlar</h6>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+
+
+                <div class="text-md-right m-v-10">
+
+                    <button type="button" onclick="printDiv('printableArea')" value="print a div!" class="btn btn-warning "><i class="fa fa-print"></i> QR Tamamını Yazdır</button>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+    <div class="row">
+        <div id="printableArea" class="col-lg-11 mx-auto">
+
+            <div class=" row">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="m-t-20 text-center">
+                                <div class=" avatar-image">
+                                    <img src="https://1.bp.blogspot.com/-t4-NJpmpjn0/UCY0gHre_pI/AAAAAAAAABk/Z3K4m3TP7dI/s1600/img.png" alt="">
+                                </div>
+                                <h4 class="m-t-30">Masa 1</h4>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="m-t-20 text-center">
+                                <div class=" avatar-image">
+                                    <img src="https://1.bp.blogspot.com/-t4-NJpmpjn0/UCY0gHre_pI/AAAAAAAAABk/Z3K4m3TP7dI/s1600/img.png" alt="">
+                                </div>
+                                <h4 class="m-t-30">Masa 1</h4>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="m-t-20 text-center">
+                                <div class=" avatar-image">
+                                    <img src="https://1.bp.blogspot.com/-t4-NJpmpjn0/UCY0gHre_pI/AAAAAAAAABk/Z3K4m3TP7dI/s1600/img.png" alt="">
+                                </div>
+                                <h4 class="m-t-30">Masa 1</h4>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="m-t-20 text-center">
+                                <div class=" avatar-image">
+                                    <img src="https://1.bp.blogspot.com/-t4-NJpmpjn0/UCY0gHre_pI/AAAAAAAAABk/Z3K4m3TP7dI/s1600/img.png" alt="">
+                                </div>
+                                <h4 class="m-t-30">Masa 1</h4>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+

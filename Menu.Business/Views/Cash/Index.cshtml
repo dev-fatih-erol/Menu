@@ -1,0 +1,79 @@
+﻿@model IEnumerable<Menu.Business.Models.CashViewModels.IndexViewModel>
+@{
+    ViewData["Title"] = "Kasa";
+}
+
+<div class="main-content">
+    <div class="page-header no-gutters">
+        <div class="row align-items-md-center">
+            <div class="col-md-6">
+                <div class="media m-v-10">
+                    <div class="avatar avatar-cyan avatar-icon avatar-square">
+                        <i class="anticon anticon-star"></i>
+                    </div>
+                    <div class="media-body m-l-15">
+                        <h6 class="mb-0">Kasa</h6>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="alert alert-warning">
+                    <div class="d-flex justify-content-start">
+                        <span class="alert-icon m-r-20 font-size-30">
+                            <i class="anticon anticon-exclamation-circle"></i>
+                        </span>
+                        <div>
+                            <h5 class="alert-heading">Dikkat</h5>
+                            <p>Kasaya Yeni bir Kullanıcı adı, Kasa Adı ve Şifre belirlemeniz gerekmektedir.</p>
+                            <p>Sadece 1 adet Kasanız olabilir !</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-11 mx-auto">
+            <!-- Card View -->
+            <div class="row">
+                @foreach (var item in Model)
+                {
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="m-t-20 text-center">
+                                    <div class="avatar avatar-image" style="height: 100px; width: 100px;">
+                                        <img src="https://www.pngitem.com/pimgs/m/110-1104077_buy-with-cash-icon-credit-card-png-transparent.png" alt="">
+                                    </div>
+                                    <h4 class="m-t-30">Kasa Adı: @item.Name</h4>
+                                    <hr class="m-v-25">
+                                    <b>K.Adı: @item.Username</b>
+                                </div>
+                                <div class="text-center m-t-15">
+                                    <p style="color:red;">@item.CreatedDate</p>
+                                    <p>Bu Tarihte Oluşturuldu.</p>
+                                </div>
+                                <div class="text-center m-t-30">
+
+                                    <a asp-controller="Cash"
+                                       asp-action="Edit"
+                                       asp-route-id="@item.Id" class="btn btn-primary btn-tone">
+
+                                        <span class="m-l-5">Güncelle</span>
+                                    </a>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+        </div>
+    </div>
+
+</div>

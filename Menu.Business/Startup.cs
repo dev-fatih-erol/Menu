@@ -65,6 +65,8 @@ namespace Menu.Business
 
             services.AddScoped<IOptionItemService, OptionItemService>();
 
+            services.AddScoped<ICashService, CashService>();
+
             services.AddDbContext<MenuContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddControllersWithViews();

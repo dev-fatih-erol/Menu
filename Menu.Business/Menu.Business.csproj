@@ -24,6 +24,12 @@
     <Folder Include="wwwroot\images\" />
     <Folder Include="Views\Option\" />
     <Folder Include="Models\OptionViewModels\" />
+    <Folder Include="Models\TableViewModels\" />
+    <Folder Include="Models\CashViewModels\" />
+    <Folder Include="Models\KitchenViewModels\" />
+    <Folder Include="Views\Cash\" />
+    <Folder Include="Views\Kitchen\" />
+    <Folder Include="Views\Table\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Menu.Core\Menu.Core.csproj">

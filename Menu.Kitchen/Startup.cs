@@ -51,6 +51,10 @@ namespace Menu.Kitchen
 
             services.AddScoped<ITableService, TableService>();
 
+            services.AddScoped<INotificationWaiterService, NotificationWaiterService>();
+
+            services.AddScoped<INotificationWaiterSubjectService, NotificationWaiterSubjectService>();
+
             services.AddRouting(options => options.LowercaseUrls = true);
 
             services.AddAntiforgery(options => options.Cookie.Name = "x-csrf-token");

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Menu.Core.Models;
 using Menu.Data;
 
@@ -11,6 +12,19 @@ namespace Menu.Service
         public KitchenService(MenuContext context)
         {
             _context = context;
+        }
+
+        public Kitchen GetByIds(int id)
+        {
+            return _context.Kitchens.Where(k => k.Id == id)
+                                  .FirstOrDefault();
+        }
+
+        public List<Kitchen> GetByVenueId(int venueId)
+        {
+            return _context.Kitchens
+                           .Where(w => w.Venue.Id == venueId)
+                           .ToList();
         }
 
         public Kitchen GetByUsernameAndPassword(string username, string password)

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Menu.Core.Models;
 using Menu.Data;
 
@@ -11,6 +12,19 @@ namespace Menu.Service
         public CashService(MenuContext context)
         {
             _context = context;
+        }
+
+        public Cash GetByIds(int id)
+        {
+            return _context.Cashes.Where(c => c.Id == id)
+                                 .FirstOrDefault();
+        }
+
+        public List<Cash> GetByVenueId(int venueId)
+        {
+            return _context.Cashes
+                           .Where(w => w.Venue.Id == venueId)
+                           .ToList();
         }
 
         public Cash GetByUsernameAndPassword(string username, string password)

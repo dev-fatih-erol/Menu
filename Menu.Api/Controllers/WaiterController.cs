@@ -137,7 +137,7 @@ namespace Menu.Api.Controllers
                     StatusCode = (int)HttpStatusCode.OK,
                     Result = pols.Select(t => new
                     {
-                        t.Id,
+                        t.NotificationWaiterSubject.Id,
                         t.NotificationWaiterSubject.TableId,
                         t.WaiterId,
                         t.NotificationWaiterSubject.Status,
