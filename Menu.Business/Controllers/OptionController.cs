@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Menu.Business.Models.OptionViewModels;
+using Menu.Core.Enums;
 using Menu.Core.Models;
 using Menu.Service;
 using Microsoft.AspNetCore.Mvc;
@@ -13,23 +12,32 @@ namespace Menu.Business.Controllers
     {
         private readonly IOptionService _optionService;
 
+        private readonly IOptionItemService _optionItemService;
+
         private readonly IProductService _productService;
 
         public OptionController(IOptionService optionService,
+            IOptionItemService optionItemService,
             IProductService productService)
         {
             _optionService = optionService;
+            _optionItemService = optionItemService;
             _productService = productService;
         }
 
         [HttpGet]
         [Route("Product/{id:int}/Option/Create")]
-        public IActionResult Create()
+        public IActionResult Create(int id)
         {
+            var product = _productService.GetById(id);
 
-            var model = new CreateViewModel
+            if (product != null)
             {
-                OptionItems = new List<Models.OptionViewModels.OptionItem> {
+                ViewBag.Name = product.Name;
+
+                var model = new CreateViewModel
+                {
+                    OptionItems = new List<Models.OptionViewModels.OptionItem> {
                     new Models.OptionViewModels.OptionItem{
                         Name = string.Empty,
                         Price = 0
@@ -39,9 +47,12 @@ namespace Menu.Business.Controllers
                         Price = 0
                     }
                 }
-            };
+                };
 
-            return View(model);
+                return View(model);
+            }
+
+            return NotFound();
         }
 
         [HttpPost]
@@ -55,15 +66,31 @@ namespace Menu.Business.Controllers
                 var newOption = new Option
                 {
                     ProductId = product.Id,
-                    Title = model.Title
+                    Title = model.Title,
+                    CreatedDate = DateTime.Now,
+                    OptionType = (OptionType)Enum.Parse(typeof(OptionType), model.OptionType)
                 };
 
                 _optionService.Create(newOption);
+
                 _optionService.SaveChanges();
 
+                foreach (var optionItem in model.OptionItems)
+                {
+                    var newOptionItem = new Core.Models.OptionItem
+                    {
+                        Name = optionItem.Name,
+                        Price = optionItem.Price,
+                        CreatedDate = DateTime.Now,
+                        OptionId = newOption.Id
+                    };
+
+                    _optionItemService.Create(newOptionItem);
+                    _optionItemService.SaveChanges();
+                }
             }
 
-            return View();
+            return RedirectToAction("Create", "Option");
         }
     }
 }
