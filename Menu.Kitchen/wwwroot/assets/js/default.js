@@ -27,26 +27,30 @@ $(document).ready(function () {
 
 function loadData() {
     $.get(host + "/orders?orderStatus=Approved", function (data) {
-        console.log(data)
+        console.log(data.orders)
         var template = $("#template-orders-approved").html();
         var compiledCode = Handlebars.compile(template);
-        var result = compiledCode(data);
+        var result = compiledCode(data.orders);
         $("#orders-approved").html(result);
+        $("#approved-count").text(data.count);
+
     });
 
     $.get(host + "/orders?orderStatus=Preparing", function (data) {
-        console.log(data)
+        console.log(data.orders)
         var template = $("#template-orders-preparing").html();
         var compiledCode = Handlebars.compile(template);
-        var result = compiledCode(data);
+        var result = compiledCode(data.orders);
         $("#orders-preparing").html(result);
+        $("#preparing-count").text(data.count);
     });
 
     $.get(host + "/orders?orderStatus=Prepared", function (data) {
-        console.log(data)
+        console.log(data.orders)
         var template = $("#template-orders-prepared").html();
         var compiledCode = Handlebars.compile(template);
-        var result = compiledCode(data);
+        var result = compiledCode(data.orders);
         $("#orders-prepared").html(result);
+        $("#prepared-count").text(data.count);
     });
 }

@@ -200,42 +200,48 @@ namespace Menu.Kitchen.Controllers
 
                     var orders = _orderService.GetByVenueId(kitchen.Venue.Id, orderStatus);
 
-                    return Ok(orders.Select(order => new
+                    return Ok(new
                     {
-                        order.Id,
-                        order.Code,
-                        order.Description,
-                        OrderStatus = order.OrderStatus.ToOrderStatus(),
-                        CreatedDate = order.CreatedDate.ToString("HH:mm"),
-                        orderDetails = order.OrderDetail.Select(orderDetail => new
+                        count = orders.Count,
+                        orders = orders.Select(order => new
                         {
-                            orderDetail.Id,
-                            orderDetail.Name,
-                            orderDetail.Photo,
-                            orderDetail.OptionItem,
-                            orderDetail.Quantity
-                        }),
-                        Table = new
-                        {
-                            order.OrderTable.Table.Id,
-                            order.OrderTable.Table.Name,
-                        },
-                        User = new
-                        {
-                            order.OrderTable.User.Id,
-                            order.OrderTable.User.Name,
-                            order.OrderTable.User.Surname,
-                            order.OrderTable.User.Photo
-                        },
-                        Waiter = new
-                        {
-                            order.OrderWaiter.Waiter.Name,
-                            order.OrderWaiter.Waiter.Surname
-                        },
-                        OrderTable = new {
-                            order.OrderTable.Id
-                        }
-                    }));
+                            count = orders.Count(),
+                            order.Id,
+                            order.Code,
+                            order.Description,
+                            OrderStatus = order.OrderStatus.ToOrderStatus(),
+                            CreatedDate = order.CreatedDate.ToString("HH:mm"),
+                            orderDetails = order.OrderDetail.Select(orderDetail => new
+                            {
+                                orderDetail.Id,
+                                orderDetail.Name,
+                                orderDetail.Photo,
+                                orderDetail.OptionItem,
+                                orderDetail.Quantity
+                            }),
+                            Table = new
+                            {
+                                order.OrderTable.Table.Id,
+                                order.OrderTable.Table.Name,
+                            },
+                            User = new
+                            {
+                                order.OrderTable.User.Id,
+                                order.OrderTable.User.Name,
+                                order.OrderTable.User.Surname,
+                                order.OrderTable.User.Photo
+                            },
+                            Waiter = new
+                            {
+                                order.OrderWaiter.Waiter.Name,
+                                order.OrderWaiter.Waiter.Surname
+                            },
+                            OrderTable = new
+                            {
+                                order.OrderTable.Id
+                            }
+                        })
+                    });
                 }
 
                 return NotFound("Sipariş tipi bulunamadı");
