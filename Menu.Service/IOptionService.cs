@@ -5,6 +5,10 @@ namespace Menu.Service
 {
     public interface IOptionService
     {
+        Option GetByIdWithOptionItem(int id);
+
+        void Delete(Option option);
+
         List<Option> GetByProductId(int productId);
 
         Option GetById(int id);

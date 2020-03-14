@@ -27,6 +27,30 @@ namespace Menu.Business.Controllers
             _productService = productService;
         }
 
+        [HttpPost]
+        [Route("Product/{id:int}/Option")]
+        public IActionResult Delete(int id, int optionId)
+        {
+            var product = _productService.GetById(id);
+
+            if (product != null)
+            {
+                var option = _optionService.GetByIdWithOptionItem(optionId);
+
+                if (option is null)
+                {
+                    return NotFound();
+                }
+
+                _optionService.Delete(option);
+                _optionService.SaveChanges();
+
+                return RedirectToAction("Delete", "Option");
+            }
+
+            return NotFound();
+        }
+
         [HttpGet]
         [Route("Product/{id:int}/Option")]
         public IActionResult Index(int id)
@@ -124,7 +148,7 @@ namespace Menu.Business.Controllers
                 }
             }
 
-            return RedirectToAction("Index", "Option");
+            return RedirectToAction("Index", "Option", new { id = product.Id });
         }
     }
 }

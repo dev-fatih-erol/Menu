@@ -6,72 +6,53 @@
     <div class="card">
         <div class="card-body">
             <h4>Seçenekler</h4>
+            <h4>@ViewBag.Name</h4>
+            <div>
+                <a class="btn btn-primary" href="/product/@ViewContext.RouteData.Values["id"]/option/create" role="button">Seçenek Ekle</a>
+            </div>
             <div class="row">
                 @foreach (var item in Model)
                 {
-                    <div class="col-md-3">
-                        <div class="m-t-25">
-                            <div class="card">
-                                <div class="card-header border-bottom">
-                                    <h4 class="card-title">@item.Title</h4>
-                                    <div class="m-b-0 opacity-07 font-size-13">@item.OptionType</div>
-                                </div>
-                                <div class="card-body p-0">
-                                    <ul class="list-group list-group-flush">
-                                        @foreach (var item1 in item.OptionItems)
-                                        {
-                                            <li class="list-group-item">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="m-l-10">
-                                                        <div class="m-b-0 text-dark font-weight-semibold">
-                                                            @item1.Name
+                        <div class="col-md-3">
+                            <div class="m-t-25">
+
+                                <form asp-action="Delete" asp-controller="Option" method="post">
+                                    <input type="hidden" value="@item.Id" name="optionId" />
+                                    <div class="card">
+                                        <div class="card-header border-bottom">
+                                            <h4 class="card-title">@item.Title</h4>
+                                            <div class="m-b-0 opacity-07 font-size-13">@item.OptionType</div>
+                                        </div>
+                                        <div class="card-body p-0">
+                                            <ul class="list-group list-group-flush">
+                                                @foreach (var item1 in item.OptionItems)
+                                                {
+                                                    <li class="list-group-item">
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="m-l-10">
+                                                                <div class="m-b-0 text-dark font-weight-semibold">
+                                                                    @item1.Name
+                                                                </div>
+                                                                <div class="m-b-0 opacity-07 font-size-13">
+                                                                    @item1.Price TL
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                        <div class="m-b-0 opacity-07 font-size-13">
-                                                            @item1.Price
-                                                        </div>
-                                                    </div>
+                                                    </li>
+                                                }
+                                            </ul>
+                                            <div class="card-footer">
+                                                <div class="text-center m-t-5">
+                                                    <button class="btn btn-icon btn-danger">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
                                                 </div>
-                                            </li>
-                                        }
-                                    </ul>
-                                    <div class="card-footer">
-                                        <div class="text-center m-t-5">
-                                            <button class="btn btn-icon btn-danger">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                </form>
                             </div>
                         </div>
-                    </div>
-                }
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-11 mx-auto">
-            <!-- Card View -->
-            <div class="row">
-                @foreach (var item in Model)
-                {
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-body">
-                                @item.Title
-                                @item.OptionType
-
-                                @foreach (var item1 in item.OptionItems)
-                                {
-                                    @item1.Name
-
-                                    @item1.Price
-                                    <br />
-                                }
-                                <br />
-                            </div>
-                        </div>
-                    </div>
                 }
             </div>
         </div>

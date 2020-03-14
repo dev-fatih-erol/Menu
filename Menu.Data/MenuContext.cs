@@ -120,7 +120,10 @@ namespace Menu.Data
                 .ToTable("Product");
 
             modelBuilder.Entity<Option>()
-                .ToTable("Option");
+                .ToTable("Option")
+                .HasMany(x => x.OptionItem)
+                .WithOne(x => x.Option)
+                .OnDelete(DeleteBehavior.Cascade);     
 
             modelBuilder.Entity<OptionItem>()
                 .ToTable("OptionItem");

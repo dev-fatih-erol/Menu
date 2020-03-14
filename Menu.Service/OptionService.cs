@@ -14,6 +14,19 @@ namespace Menu.Service
             _context = context;
         }
 
+        public Option GetByIdWithOptionItem(int id)
+        {
+            return _context.Options
+                           .Where(o => o.Id == id)
+                           .Select(x => new Option {
+                               Id = x.Id,
+                               Title = x.Title,
+                               CreatedDate = x.CreatedDate,
+                               OptionItem = x.OptionItem,
+                           })
+                           .FirstOrDefault();
+        }
+
         public List<Option> GetByProductId(int productId)
         {
             return _context.Options
@@ -44,6 +57,12 @@ namespace Menu.Service
         public void SaveChanges()
         {
             _context.SaveChanges();
+        }
+
+        public void Delete(Option option)
+        {
+            _context.Attach(option);
+            _context.Remove(option);
         }
     }
 }
