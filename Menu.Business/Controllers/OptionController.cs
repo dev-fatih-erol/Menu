@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Menu.Business.Extensions;
 using Menu.Business.Models.OptionViewModels;
 using Menu.Core.Enums;
 using Menu.Core.Models;
@@ -26,6 +28,38 @@ namespace Menu.Business.Controllers
         }
 
         [HttpGet]
+        [Route("Product/{id:int}/Option")]
+        public IActionResult Index(int id)
+        {
+            var product = _productService.GetById(id);
+
+            if (product != null)
+            {
+                ViewBag.Name = product.Name;
+
+                var options = _optionService.GetByProductId(id);
+
+                var model = options.Select(x => new IndexViewModel
+                {
+                    Id = x.Id,
+                    Title = x.Title,
+                    OptionType = x.OptionType.ToOptionType(),
+                    OptionItems = x.OptionItem.Select(y => new Models.OptionViewModels.OptionItem
+                    {
+                        Id = y.Id,
+                        Name = y.Name,
+                        Price = y.Price
+                    }).ToList()
+                });
+
+                return View(model);
+            }
+
+            return NotFound();
+        }
+
+
+        [HttpGet]
         [Route("Product/{id:int}/Option/Create")]
         public IActionResult Create(int id)
         {
@@ -46,7 +80,7 @@ namespace Menu.Business.Controllers
                         Name = string.Empty,
                         Price = 0
                     }
-                }
+                  }
                 };
 
                 return View(model);
@@ -90,7 +124,7 @@ namespace Menu.Business.Controllers
                 }
             }
 
-            return RedirectToAction("Create", "Option");
+            return RedirectToAction("Index", "Option");
         }
     }
 }
