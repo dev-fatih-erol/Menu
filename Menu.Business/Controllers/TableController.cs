@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using Menu.Business.Extensions;
 using Menu.Business.Models.TableViewModels;
@@ -6,6 +8,7 @@ using Menu.Core.Models;
 using Menu.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using QRCoder;
 
 namespace Menu.Business.Controllers
 {
@@ -23,12 +26,12 @@ namespace Menu.Business.Controllers
         [Route("Table")]
         public IActionResult Index()
         {
-
             var model = _tableService.GetByVenueId(User.Identity.GetVenueId()).Select(x => new IndexViewModel
             {
                 Name = x.Name,
                 CreatedDate = x.CreatedDate.ToString("dd/MM/yyyy HH:mm"),
                 Id = x.Id,
+                Qr = CreateQr($"{Request.Scheme}://{Request.Host}{Request.PathBase}/user/order/venue/{User.Identity.GetVenueId()}/table/{x.Id}")
             });
 
             return View(model);
@@ -122,5 +125,26 @@ namespace Menu.Business.Controllers
             return BadRequest();
         }
 
+        private byte[] CreateQr(string url)
+        {
+            QRCodeGenerator qrGenerator = new QRCodeGenerator();
+            QRCodeData qrCodeData = qrGenerator.CreateQrCode(url,
+            QRCodeGenerator.ECCLevel.Q);
+            QRCode qrCode = new QRCode(qrCodeData);
+            Bitmap qrCodeImage = qrCode.GetGraphic(20);
+
+            var bytes = BitmapToBytes(qrCodeImage);
+
+            return bytes;      
+        }
+
+        private static byte[] BitmapToBytes(Bitmap img)
+        {
+            using (MemoryStream stream = new MemoryStream())
+            {
+                img.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
+                return stream.ToArray();
+            }
+        }
     }
 }

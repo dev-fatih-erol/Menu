@@ -62,10 +62,6 @@
                         </div>
                     </div>
                 }
-
-
-
-
             </div>
 
         </div>
@@ -101,68 +97,24 @@
         <div id="printableArea" class="col-lg-11 mx-auto">
 
             <div class=" row">
-                <div class="col-md-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="m-t-20 text-center">
-                                <div class=" avatar-image">
-                                    <img src="https://1.bp.blogspot.com/-t4-NJpmpjn0/UCY0gHre_pI/AAAAAAAAABk/Z3K4m3TP7dI/s1600/img.png" alt="">
+                @foreach (var item in Model)
+                {
+
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="m-t-20 text-center">
+                                    <div class=" avatar-image">
+                                        <img src="@String.Format("data:image/png;base64,{0}", Convert.ToBase64String(item.Qr))" />
+                                    </div>
+                                    <h4 class="m-t-30">Masa 1</h4>
+
                                 </div>
-                                <h4 class="m-t-30">Masa 1</h4>
 
                             </div>
-
-
                         </div>
                     </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="m-t-20 text-center">
-                                <div class=" avatar-image">
-                                    <img src="https://1.bp.blogspot.com/-t4-NJpmpjn0/UCY0gHre_pI/AAAAAAAAABk/Z3K4m3TP7dI/s1600/img.png" alt="">
-                                </div>
-                                <h4 class="m-t-30">Masa 1</h4>
-
-                            </div>
-
-
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="m-t-20 text-center">
-                                <div class=" avatar-image">
-                                    <img src="https://1.bp.blogspot.com/-t4-NJpmpjn0/UCY0gHre_pI/AAAAAAAAABk/Z3K4m3TP7dI/s1600/img.png" alt="">
-                                </div>
-                                <h4 class="m-t-30">Masa 1</h4>
-
-                            </div>
-
-
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="m-t-20 text-center">
-                                <div class=" avatar-image">
-                                    <img src="https://1.bp.blogspot.com/-t4-NJpmpjn0/UCY0gHre_pI/AAAAAAAAABk/Z3K4m3TP7dI/s1600/img.png" alt="">
-                                </div>
-                                <h4 class="m-t-30">Masa 1</h4>
-
-                            </div>
-
-
-                        </div>
-                    </div>
-                </div>
-
-
+                }
             </div>
 
         </div>

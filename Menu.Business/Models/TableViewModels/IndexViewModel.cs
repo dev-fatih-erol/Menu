@@ -8,5 +8,7 @@
         public string Name { get; set; }
 
         public string CreatedDate { get; set; }
+
+        public byte[] Qr { get; set; }
     }
 }
